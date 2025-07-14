@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>LAndroid - Android 14(U) Easter Egg game online</title>
+    <meta name="description" content="LAndroid - Play Android 14(U) Easter Egg game online in the browser!">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        .play-link {
+            font-size: 1.5em;
+        }
+
+        .play-link-main>button {
+            color: #0366d6;
+        }
+
+        .play-link>button:hover {
+            text-decoration: underline;
+        }
+
+        .daily-radio+label+.daily-seed {
+            display: none;
+        }
+
+        .daily-radio:checked+label+.daily-seed {
+            display: inline;
+        }
+
+        .seed-code {
+            user-select: all;
+            -moz-user-select: all;
+            -webkit-user-select: all;
+            -ms-user-select: all;
+        }
+
+        .fixed-radio+label+.seed-label {
+            display: none;
+        }
+
+        .fixed-radio:checked+label+.seed-label {
+            display: inline;
+        }
+
+        .fixed-radio+label+.seed-label+.seed-range {
+            display: none;
+        }
+
+        .fixed-radio:checked+label+.seed-label+.seed-range {
+            display: inline;
+        }
+
+        label,
+        input[type="radio"] {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-lg px-3 my-5 markdown-body">
+        <h1>LAndroid-Web</h1>
+        <section>
+            <p>Play <b>Android 14 (Upside Down Cake) Easter Egg</b> game online!</p>
+            <a class="play-link play-link-main" href="player.html"><button><b>Click here to play Android 14(U) Easter Egg</b></button></a>
+        </section>
+        <section>
+            <h2>Introduction</h2>
+            <p>Play Android 14 (Upside Down Cake) Easter Egg game in your browser with LAndroid-Web, no download required.</p>
+            <p>At the bottom left, you can see the current coordinates and speed of the spacecraft, as well as the planet that is landing.
+                At the top left, you can see the name, class, radius, mass of the star closest to your location, as well as the number of bodies that orbit it.</p>
+            <p>By using the above information, you can use the spaceship to search for celestial bodies in the orbit of a star and then land. You can even crash into a celestial body if you want to.</p>
+        </section>
+        <section>
+            <h2>Advanced options</h2>
+            <fieldset>
+                <legend>Random seed</legend>
+                <input class="daily-radio" name="seed" type="radio" id="dailySeed" checked>
+                <label for="dailySeed">Daily (Default)</label>
+                <b class="daily-seed"><br>Random seed of the day: <code class="seed-code" id="dailySeedCode"></code> (The month has been decreased by one)</b>
+                <br>
+                <label><input name="seed" type="radio" id="evergreenSeed"> Evergreen</label>
+                <br>
+                <input class="fixed-radio" name="seed" type="radio" id="fixedSeed">
+                <label for="fixedSeed">Fixed</label>
+                <label class="seed-label">seed: <input id="seedInput" type="number" min="-9223372036854775808" max="9223372036854775807" value="5038"></label>
+                <span class="seed-range"><br>The valid seed range is <code class="seed-code">-9223372036854775808</code> to <code class="seed-code">9223372036854775807</code>. Seeds that are negative and not equal to <code class="seed-code">-9223372036854775808</code> will be converted to positive numbers.</span>
+            </fieldset>
+            <fieldset>
+                <legend>Zoom</legend>
+                <label><input name="zoom" type="radio" id="fixedZoom" checked> Fixed zoom</label>
+                <br>
+                <label><input name="zoom" type="radio" id="dynamicZoom"> Dynamic zoom</label>
+                <br>
+                <label><input name="zoom" type="radio" id="manualZoom"> Manual zoom</label>
+            </fieldset>
+            <br>
+            <p>After setting the advanced options, <b>click the button below</b> to run the game with the options.</p>
+            <button id="playAdvanced" class="play-link">Apply advanced options & Play</button>
+        </section>
+        <section>
+            <h2>License</h2>
+            <p>This project is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</a>. This project is not affiliated with Android or Google.</p>
+            <p>The source code for this project can be found <a href="https://github.com/lll69/landroid-web">here</a>.</p>
+        </section>
+    </div>
+    <script>
+        function dailySeed() {
+            var today = new Date();
+            return today.getFullYear() * 10000 + today.getMonth() * 100 + today.getDate();
+        }
+        document.getElementById("dailySeedCode").innerHTML = dailySeed();
+        document.getElementById("playAdvanced").addEventListener("click", function () {
+            let seedOption;
+            const seedInput = document.getElementById("seedInput");
+            if (document.getElementById("dailySeed").checked) {
+                seedOption = "daily";
+            } else if (document.getElementById("evergreenSeed").checked) {
+                seedOption = "evergreen";
+            } else try {
+                const SEED_MAX = 9223372036854775807n;
+                const SEED_MIN = -9223372036854775808n;
+                let seed = BigInt(document.getElementById("seedInput").value);
+                if (seed > SEED_MAX || seed < SEED_MIN) {
+                    alert("Invalid seed! The valid seed range is -9223372036854775808 to 9223372036854775807.");
+                    seedInput.focus();
+                    seedInput.select();
+                    return;
+                }
+                seedOption = String(seed);
+            } catch (e) {
+                console.log(e);
+                alert("Invalid seed! The valid seed range is -9223372036854775808 to 9223372036854775807.");
+                seedInput.focus();
+                seedInput.select();
+                return;
+            }
+            let zoomOption;
+            if (document.getElementById("fixedZoom").checked) {
+                zoomOption = "fixed";
+            } else if (document.getElementById("dynamicZoom").checked) {
+                zoomOption = "dynamic";
+            } else {
+                zoomOption = "manual";
+            }
+            location.href = "player.html#seed=" + seedOption + "&zoom=" + zoomOption;
+        });
+    </script>
+</body>
+
+</html>
