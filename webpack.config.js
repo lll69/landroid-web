@@ -2,6 +2,7 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const HtmlMinimizerPlugin = require("html-minimizer-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = {
   entry: "./src/player.ts",
@@ -30,8 +31,19 @@ module.exports = {
   },
   optimization: {
     minimizer: [
-      new TerserPlugin(),
-      new HtmlMinimizerPlugin({ minimizerOptions: { conservativeCollapse: false } })
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            passes: 5
+          }
+        }
+      }),
+      new HtmlMinimizerPlugin({
+        minimizerOptions: {
+          conservativeCollapse: false
+        }
+      }),
+      new CssMinimizerPlugin()
     ]
   }
 };
