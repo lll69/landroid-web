@@ -28,6 +28,7 @@
  * limitations under the License.
  */
 
+import { CanvasHelper } from "./CanvasHelper";
 import { Colors } from "./Colors";
 import { lerp } from "./MathHelpers";
 import { clamp } from "./Maths";
@@ -58,6 +59,8 @@ const thrustPath = createPolygon(-3, 3, -4, 0);
 export class ZoomedDrawScope {
     zoom: number;
     context: CanvasRenderingContext2D;
+    helper: CanvasHelper;
+    containerDash: Array<number> = [0, 0];
 
     drawUniverse(universe: VisibleUniverse) {
         // triggerDraw.value // Please recompose when this value changes.
@@ -95,13 +98,11 @@ export class ZoomedDrawScope {
 
     drawContainer(container: Container) {
         const context = this.context;
-        context.save();
-        context.strokeStyle = "#800000";
-        context.lineWidth = 1 / this.zoom;
-        context.setLineDash([8 / this.zoom, 8 / this.zoom]);
-        context.beginPath();
-        context.arc(0, 0, container.radius, 0, 2 * Math.PI);
-        context.stroke();
+        const helper = this.helper;
+        const dash = this.containerDash;
+        dash[0] = dash[1] = 8 / this.zoom;
+        context.setLineDash(dash);
+        helper.drawCircle("#800000", 1 / this.zoom, 0, 0, container.radius);
         //    val path = Path().apply {
         //        fillType = PathFillType.EvenOdd
         //        addOval(Rect(center = Vec2.Zero, radius = container.radius))
@@ -111,11 +112,11 @@ export class ZoomedDrawScope {
         //        path = path,
         //
         //    )
-        context.restore();
+        helper.clearLineDash();
     }
 
     drawGravitationalField(planet: Planet) {
-        const context = this.context;
+        const helper = this.helper;
         const rings = 8;
         for (let i = 0; i < rings; i++) {
             const force = lerp(
@@ -124,22 +125,15 @@ export class ZoomedDrawScope {
                 i / rings
             ); // first rings at force = 1N, dropping off after that
             const r = Math.sqrt(UniverseConst.GRAVITATION * planet.mass * UniverseConst.SPACECRAFT_MASS / force);
-            context.strokeStyle = "rgba(255,0,0," + lerp(0.5, 0.1, i / rings) + ")";
-            context.lineWidth = 2 / this.zoom;
-            context.beginPath();
-            context.arc(planet.pos.x, planet.pos.y, r, 0, 2 * Math.PI);
-            context.stroke();
+            helper.drawCircle("rgba(255,0,0," + lerp(0.5, 0.1, i / rings) + ")", 2 / this.zoom, planet.pos.x, planet.pos.y, r);
         }
     }
 
     drawPlanet(planet: Planet) {
         const context = this.context;
+        const helper = this.helper;
         if (DRAW_ORBITS) {
-            context.strokeStyle = "#00FFFF80";
-            context.lineWidth = 1 / this.zoom;
-            context.beginPath();
-            context.arc(planet.orbitCenter.x, planet.orbitCenter.y, planet.pos.distance(planet.orbitCenter), 0, 2 * Math.PI);
-            context.stroke();
+            helper.drawCircle("#00FFFF80", 1 / this.zoom, planet.orbitCenter.x, planet.orbitCenter.y, planet.pos.distance(planet.orbitCenter));
         }
 
         if (DRAW_GRAVITATIONAL_FIELDS) {
@@ -147,26 +141,21 @@ export class ZoomedDrawScope {
         }
 
 
-        context.fillStyle = Colors.Eigengrau;
-        context.beginPath();
-        context.arc(planet.pos.x, planet.pos.y, planet.radius, 0, 2 * Math.PI);
-        context.fill();
-        context.strokeStyle = planet.color;
-        context.lineWidth = 2 / this.zoom;
-        context.beginPath();
-        context.arc(planet.pos.x, planet.pos.y, planet.radius, 0, 2 * Math.PI);
-        context.stroke();
+        helper.fillCircle(Colors.Eigengrau, planet.pos.x, planet.pos.y, planet.radius);
+        helper.drawCircle(planet.color, 2 / this.zoom, planet.pos.x, planet.pos.y, planet.radius);
     }
 
     drawStar(star: Star) {
         const context = this.context;
+        const helper = this.helper;
+        const oldHelperX = helper.x;
+        const oldHelperY = helper.y;
+        helper.x -= star.pos.x;
+        helper.y -= star.pos.y;
         context.save();
         context.translate(star.pos.x, star.pos.y);
 
-        context.fillStyle = star.color;
-        context.beginPath();
-        context.arc(0, 0, star.radius, 0, 2 * Math.PI);
-        context.fill();
+        helper.fillCircle(star.color, 0, 0, star.radius);
 
         if (DRAW_STAR_GRAVITATIONAL_FIELDS) this.drawGravitationalField(star);
 
@@ -191,9 +180,16 @@ export class ZoomedDrawScope {
             VisibleUniverseConst.STAR_POINTS + 1
         ));
         context.restore();
+        helper.x = oldHelperX;
+        helper.y = oldHelperY;
     }
     drawSpacecraft(ship: Spacecraft) {
         const context = this.context;
+        const helper = this.helper;
+        const oldHelperX = helper.x;
+        const oldHelperY = helper.y;
+        helper.x -= ship.pos.x;
+        helper.y -= ship.pos.y;
         context.save();
         context.translate(ship.pos.x, ship.pos.y);
         context.rotate(ship.angle);
@@ -233,6 +229,8 @@ export class ZoomedDrawScope {
         //            strokeWidth = 3f / zoom
         //        )
         context.restore();
+        helper.x = oldHelperX;
+        helper.y = oldHelperY;
         this.drawTrack(ship.track);
     }
     drawLanding(landing: Landing) {
@@ -299,18 +297,18 @@ export class ZoomedDrawScope {
     }
     drawTrack(track: Track) {
         const context = this.context;
+        const helper = this.helper;
         if (SIMPLE_TRACK_DRAWING) {
-            context.strokeStyle = Colors.Green;
-            context.lineWidth = 1 / this.zoom;
-            context.beginPath();
+            const lineWidth = 1 / this.zoom;
+            let prevX: number;
+            let prevY: number;
             track.positions.forEach((point, idx) => {
-                if (idx === 0) {
-                    context.moveTo(point.x, point.y);
-                } else {
-                    context.lineTo(point.x, point.y);
+                if (idx !== 0) {
+                    helper.drawLine(Colors.Green, lineWidth, prevX, prevY, point.x, point.y);
                 }
+                prevX = point.x;
+                prevY = point.y;
             });
-            context.stroke();
             //            if (positions.size < 2) return
             //            drawPath(Path()
             //                .apply {

@@ -36,6 +36,7 @@ import { Namer } from "./Namer";
 import { Colors } from "./Colors";
 import { Vec2_makeWithAngleMag } from "./Vec2";
 import { clamp, lexp } from "./Maths";
+import { CanvasHelper } from "./CanvasHelper";
 
 const TEST_UNIVERSE = false
 
@@ -50,7 +51,7 @@ let RANDOM_SEED_TYPE = RandomSeedType.Daily;
 let FIXED_RANDOM_SEED = 5038n;
 export const DEFAULT_CAMERA_ZOOM = 1;
 const MIN_CAMERA_ZOOM = 250 / UniverseConst.UNIVERSE_RANGE; // 0.0025f
-const MAX_CAMERA_ZOOM = 3; // 5;
+const MAX_CAMERA_ZOOM = 5;
 const TOUCH_CAMERA_PAN = false;
 const TOUCH_CAMERA_ZOOM = true;
 let DYNAMIC_ZOOM = false;
@@ -205,7 +206,7 @@ function FlightStick(
     }
     return {
         pointerInput: pointerInput,
-        draw: (context: CanvasRenderingContext2D) => {
+        draw: (context: CanvasRenderingContext2D, helper: CanvasHelper) => {
             if (isDown) {
                 const deltaX = targetX - originX;
                 const deltaY = targetY - originY;
@@ -221,7 +222,7 @@ function FlightStick(
                 context.beginPath();
                 context.arc(originX, originY, r, 0, Math.PI * 2);
                 context.stroke();
-                context.setLineDash([]);
+                helper.clearLineDash();
                 context.beginPath();
                 context.moveTo(originX, originY);
                 context.lineTo(originX + Math.cos(a) * mag, originY + Math.sin(a) * mag);
@@ -242,7 +243,7 @@ function Spaaaace(
     const centerFracX = 0.5;
     const centerFracY = 0.5;
 
-    return (context: CanvasRenderingContext2D) => {
+    return (context: CanvasRenderingContext2D, helper: CanvasHelper) => {
         const canvasWidth = context.canvas.width;
         const canvasHeight = context.canvas.height;
         context.fillStyle = Colors.Eigengrau;
@@ -288,6 +289,11 @@ function Spaaaace(
             (-visibleSpaceRectMeterCenterX + canvasWidth * 0.5 / cameraZoom),
             (-visibleSpaceRectMeterCenterY + canvasHeight * 0.5 / cameraZoom)
         );
+        helper.x = visibleSpaceRectMeterLeft;
+        helper.y = visibleSpaceRectMeterTop;
+        helper.width = visibleSpaceSizeMeterWidth;
+        helper.height = visibleSpaceSizeMeterHeight;
+        helper.radius = Math.sqrt((visibleSpaceSizeMeterWidth * visibleSpaceSizeMeterWidth + visibleSpaceSizeMeterHeight * visibleSpaceSizeMeterHeight) / 4);
         // All coordinates are space coordinates now.
 
         // debug outer frame
@@ -321,6 +327,7 @@ function Spaaaace(
 
         zoomedDrawScope.zoom = cameraZoom;
         zoomedDrawScope.context = context;
+        zoomedDrawScope.helper = helper;
         zoomedDrawScope.drawUniverse(u);
 
         context.restore();
@@ -397,10 +404,10 @@ export function MainActivity(topText: HTMLElement, bottomText: HTMLElement) {
 
     return {
         pointerInput: flightStick.pointerInput,
-        draw: (millis: number, context: CanvasRenderingContext2D) => {
+        draw: (millis: number, context: CanvasRenderingContext2D, helper: CanvasHelper) => {
             universe.simulateFrame(millis);
-            space(context);
-            flightStickDraw(context);
+            space(context, helper);
+            flightStickDraw(context, helper);
             telemetry(millis);
         }
     };

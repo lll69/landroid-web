@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { CanvasHelper } from "./CanvasHelper";
 import { DEFAULT_CAMERA_ZOOM, getCamZoom, MainActivity, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setRandomSeedType } from "./MainActivity";
 
 const unsupportedFeatures: Array<String> = [];
@@ -29,12 +30,13 @@ if (unsupportedFeatures.length > 0) {
 }
 
 const canvas = document.getElementById("canvasMain") as HTMLCanvasElement;
-const canvasContext = canvas.getContext("2d");
+const canvasContext: CanvasRenderingContext2D = canvas.getContext("2d") as CanvasRenderingContext2D;
 let manualZoom = false;
 if (!canvasContext) {
     alert("Unable to get canvas 2d context.\nThe app will exit now.");
     throw new Error("Unable to get canvas 2d context");
 }
+const helper = new CanvasHelper(canvasContext);
 
 function loadParams() {
     const hash = location.hash;
@@ -72,7 +74,7 @@ const pointerInput = activity.pointerInput;
 const drawFn = activity.draw;
 
 function animation(millis: number) {
-    drawFn(millis, canvasContext!!);
+    drawFn(millis, canvasContext, helper);
     requestAnimationFrame(animation);
 }
 

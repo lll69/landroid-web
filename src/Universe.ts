@@ -568,7 +568,7 @@ export class Spacecraft extends Body {
                 true,
                 1,
                 SparkStyle.RING,
-                "40FFFFFF",
+                "#FFFFFF40",
                 3
             );
             Vec2_copy(spark.pos, this.pos);
