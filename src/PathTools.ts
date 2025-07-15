@@ -39,6 +39,17 @@ export function createPolygon(radius: number, sides: number, offX: number, offY:
     return path;
 }
 
+export function drawPolygon(context: CanvasRenderingContext2D, radius: number, sides: number) {
+    context.beginPath();
+    context.moveTo(radius, 0);
+    const angleStep = Math.PI * 2 / sides;
+    for (let i = 1; i < sides; i++) {
+        context.lineTo(radius * Math.cos(angleStep * i), radius * Math.sin(angleStep * i));
+    }
+    context.closePath();
+    context.stroke();
+}
+
 export function createStar(radius1: number, radius2: number, points: number): Path2D {
     const path = new Path2D();
     const angleStep = Math.PI * 2 / points;
@@ -52,19 +63,4 @@ export function createStar(radius1: number, radius2: number, points: number): Pa
     return path;
 }
 
-export function parseSvgPathData(d: String): Path2D {
-    const path = new Path2D();
-    for (const it of d.trim().matchAll(/([A-Z])([-.,0-9e ]+)/g)) {
-        const cmd = it[1];
-        const args = it[2] ? it[2].split(/\s+/).map(parseFloat) : [];
-        console.log("Landroid", "cmd = " + cmd + ", args = " + args.join(","));
-        switch (cmd) {
-            case "M": path.moveTo(args[0], args[1]); break;
-            case "C": path.bezierCurveTo(args[0], args[1], args[2], args[3], args[4], args[5]); break;
-            case "L": path.lineTo(args[0], args[1]); break;
-            case "Z": path.closePath(); break;
-            default: console.log("Landroid", "unsupported SVG command: " + cmd); break;
-        }
-    }
-    return path;
-}
+export const parseSvgPathData = (d: string) => new Path2D(d);

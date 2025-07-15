@@ -28,31 +28,17 @@
  * limitations under the License.
  */
 
-/** smoothstep. Ken Perlin's version */
-export function smooth(x: number): number {
-    return x * x * x * (x * (x * 6 - 15) + 10);
-}
+import { Removable } from "./Universe";
 
-/** Kind of like an inverted smoothstep, but */
-export function invsmoothish(x: number): number {
-    return 0.25 * (Math.pow(2 * x - 1, 5) + 1) + 0.5 * x;
-}
-
-/** Compute the fraction that progress represents between start and end (inverse of lerp). */
-export function lexp(start: number, end: number, progress: number): number {
-    return (progress - start) / (end - start);
-}
-
-export function clamp(value: number, min: number, max: number): number {
-    if (value < min) {
-        return min;
-    } else if (value > max){
-        return max;
+export class Fuse implements Removable {
+    lifetime: number;
+    constructor(lifetime: number) {
+        this.lifetime = lifetime;
     }
-    return value;
-}
-
-/** Exponentially smooth current toward target by a factor of speed. */
-export function expSmooth(current: number, target: number, dt: number, speed: number): number {
-    return current + (target - current) * (1 - Math.exp(-dt * speed))
+    update(dt: number) {
+        this.lifetime -= dt
+    }
+    canBeRemoved(): boolean {
+        return this.lifetime < 0
+    }
 }

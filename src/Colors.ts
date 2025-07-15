@@ -55,5 +55,7 @@ export const enum Colors {
     White = "#FFFFFF",
     Black = "#000000",
     Red = "#FF0000",
-    Green = "#00FF00"
+    Green = "#00FF00",
+    Flag = "#C6FF00",
+    AutopilotTranslucent = "#4285F480"
 }

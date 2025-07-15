@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>LAndroid 15(V) Easter Egg Player</title>
+    <meta name="description" content="LAndroid - Play Android 15(V) Easter Egg game online in the browser!">
+    <link rel="stylesheet" href="player.css">
+    <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg">
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="app" class="fill">
+        <canvas id="canvasMain" class="canvas fill" hidden></canvas>
+        <div class="top-container" id="topContainer" hidden>
+            <pre id="autopilotText" class="container-text autopilot"></pre>
+            <pre id="topText" class="container-text"></pre>
+        </div>
+        <pre id="bottomText" class="bottom-text" hidden></pre>
+        <div id="loading" class="loading">Loading...</div>
+        <div class="top-right-container">
+            <select id="zoomSelect">
+                <option>Fixed zoom</option>
+                <option>Dynamic zoom</option>
+                <option>Manual zoom</option>
+            </select>
+            <br>
+            <label class="autopilot-label"><input type="checkbox" id="autopilotCheck">Auto Pilot</label>
+        </div>
+    </div>
+    <script src="playerLoad.js"></script>
+    <script src="player15.js"></script>
+</body>
+
+</html>

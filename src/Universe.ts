@@ -65,9 +65,9 @@ export const enum UniverseConst {
     TRACK_LENGTH = 10_000
 }
 
-const SCALED_THRUST = true;
+export const SCALED_THRUST = true;
 
-interface Removable {
+export interface Removable {
     canBeRemoved(): boolean;
 }
 
@@ -119,7 +119,7 @@ export class Planet extends Body {
     }
 }
 
-const enum StarClass {
+export const enum StarClass {
     O,
     B,
     A,
@@ -129,7 +129,7 @@ const enum StarClass {
     M
 }
 
-const StarClasses: readonly StarClass[] = Object.freeze([
+export const StarClasses: readonly StarClass[] = Object.freeze([
     StarClass.O,
     StarClass.B,
     StarClass.A,
@@ -428,10 +428,10 @@ export class Universe extends Simulator {
 }
 
 export class Landing implements Constraint {
-    readonly ship: Spacecraft;
+    ship: Spacecraft | null;
     readonly planet: Planet;
     readonly angle: number;
-    private landingVector:Vec2;
+    private landingVector: Vec2;
     constructor(ship: Spacecraft, planet: Planet, angle: number) {
         this.ship = ship;
         this.planet = planet;
@@ -439,9 +439,11 @@ export class Landing implements Constraint {
         this.landingVector = Vec2_makeWithAngleMag(Vec2.Zero(), angle, ship.radius + planet.radius);
     }
     solve(sim: Simulator, dt: number) {
-        this.ship.pos.x = this.ship.pos.x * 0 + (this.planet.pos.x + this.landingVector.x) * 1;
-        this.ship.pos.y = this.ship.pos.y * 0 + (this.planet.pos.y + this.landingVector.y) * 1; // @@@ FIXME
-        this.ship.angle = this.angle;
+        if (this.ship !== null) {
+            this.ship.pos.x = this.ship.pos.x * 0 + (this.planet.pos.x + this.landingVector.x) * 1;
+            this.ship.pos.y = this.ship.pos.y * 0 + (this.planet.pos.y + this.landingVector.y) * 1; // @@@ FIXME
+            this.ship.angle = this.angle;
+        }
     }
 }
 

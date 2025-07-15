@@ -5,7 +5,10 @@ const HtmlMinimizerPlugin = require("html-minimizer-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = {
-  entry: "./src/player.ts",
+  entry: {
+    player: "./src/player.ts",
+    player15: "./src/player15.ts"
+  },
   module: {
     rules: [
       {
@@ -26,7 +29,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
   },
   output: {
-    filename: "player.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
   },
   optimization: {

@@ -31,12 +31,16 @@
 import { SYSTEM } from "@thi.ng/random";
 import { sprintf } from "sprintf-js";
 import { Spacecraft, StarClassNames, UniverseConst } from "./Universe";
-import { VisibleUniverse, ZoomedDrawScope } from "./VisibleUniverse";
-import { Namer } from "./Namer";
+import { VisibleUniverse } from "./VisibleUniverse";
+import { Namer15 } from "./Namer15";
 import { Colors } from "./Colors";
 import { Vec2_makeWithAngleMag } from "./Vec2";
 import { clamp, lexp } from "./Maths";
 import { CanvasHelper } from "./CanvasHelper";
+import { VisibleUniverse15, ZoomedDrawScope15 } from "./VisibleUniverse15";
+import { FlightStick } from "./MainActivity";
+import { Autopilot15 } from "./Autopilot15";
+import { Spacecraft15 } from "./Universe15";
 
 const TEST_UNIVERSE = false
 
@@ -79,7 +83,7 @@ function toLocalPx(sz: number): number {
     return sz * window.devicePixelRatio;
 }
 
-function Telemetry(universe: VisibleUniverse, topText: HTMLElement, bottomText: HTMLElement) {
+function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: HTMLElement, bottomText: HTMLElement, topContainer: HTMLElement, autopilotText: HTMLElement) {
     let topVisible = false;
     let bottomVisible = false;
     let startMillis = -1;
@@ -87,6 +91,8 @@ function Telemetry(universe: VisibleUniverse, topText: HTMLElement, bottomText: 
     topText.appendChild(topTextNode);
     const bottomTextNode = document.createTextNode("");
     bottomText.appendChild(bottomTextNode);
+    const autopilotTextNode = document.createTextNode("");
+    autopilotText.appendChild(autopilotTextNode);
     return (millis: number) => {
         if (startMillis === -1) {
             startMillis = millis;
@@ -105,13 +111,18 @@ function Telemetry(universe: VisibleUniverse, topText: HTMLElement, bottomText: 
         }
         if (!topVisible) {
             if (millisDelta >= 3000) {
-                topText.hidden = false;
-                topText.style.opacity = String(1);
+                topContainer.hidden = false;
+                topContainer.style.opacity = String(1);
                 topVisible = true;
             } else if (millisDelta > 2000) {
-                topText.hidden = false;
-                topText.style.opacity = String((Math.random() * (millis - 2000) / 1000));
+                topContainer.hidden = false;
+                topContainer.style.opacity = String((Math.random() * (millis - 2000) / 1000));
             }
+        }
+        if (autopilot.enabled) {
+            autopilotTextNode.textContent = autopilot.getTelemetry();
+        } else {
+            autopilotTextNode.textContent = "";
         }
         const star = universe.star;
         const explored = universe.planets
@@ -151,90 +162,9 @@ function Telemetry(universe: VisibleUniverse, topText: HTMLElement, bottomText: 
     }
 }
 
-export function FlightStick(
-    minRadius: number,
-    maxRadius: number,
-    color: string,
-    onStickChanged: (x: number, y: number) => void
-) {
-    let originX: number;
-    let originY: number;
-    let targetX: number;
-    let targetY: number;
-    let isDown: boolean = false;
-
-    function pointerInput(e: Event) {
-        if (!isDown) {
-            if (e.type === "touchstart") {
-                if ((e as TouchEvent).touches.length === 1) {
-                    const touch = (e as TouchEvent).touches[0];
-                    originX = targetX = touch.clientX * window.devicePixelRatio;
-                    originY = targetY = touch.clientY * window.devicePixelRatio;
-                    isDown = true;
-                    e.preventDefault();
-                }
-            } else if (e.type === "pointerdown") {
-                originX = targetX = (e as PointerEvent).clientX * window.devicePixelRatio;
-                originY = targetY = (e as PointerEvent).clientY * window.devicePixelRatio;
-                isDown = true;
-                e.preventDefault();
-                (e.target as Element).setPointerCapture((e as PointerEvent).pointerId);
-            }
-        } else {
-            if (e.type === "touchend" || e.type === "touchcancel" || e.type === "pointerup" || e.type === "pointercancel") {
-                isDown = false;
-                onStickChanged(0, 0);
-                e.preventDefault();
-            } else if (e.type === "touchmove") {
-                const touch = (e as TouchEvent).touches[0];
-                targetX = touch.clientX * window.devicePixelRatio;
-                targetY = touch.clientY * window.devicePixelRatio;
-                onStickChanged(targetX - originX, targetY - originY);
-                e.preventDefault();
-            } else if (e.type === "pointermove") {
-                targetX = (e as PointerEvent).clientX * window.devicePixelRatio;
-                targetY = (e as PointerEvent).clientY * window.devicePixelRatio;
-                onStickChanged(targetX - originX, targetY - originY);
-                e.preventDefault();
-            } else if (e.type === "touchstart") {
-                if ((e as TouchEvent).touches.length > 1) {
-                    isDown = false;
-                    onStickChanged(0, 0);
-                }
-            }
-        }
-    }
-    return {
-        pointerInput: pointerInput,
-        draw: (context: CanvasRenderingContext2D, helper: CanvasHelper) => {
-            if (isDown) {
-                const deltaX = targetX - originX;
-                const deltaY = targetY - originY;
-                const mag = Math.min(maxRadius, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
-                const r = Math.max(minRadius, mag);
-                const a = Math.atan2(deltaY, deltaX);
-                context.strokeStyle = color;
-                context.lineWidth = 2;
-                if (mag < minRadius) {
-                    const density = (window.visualViewport ? (window.visualViewport.scale || 1) : 1);
-                    context.setLineDash([density, density * 2]);
-                }
-                context.beginPath();
-                context.arc(originX, originY, r, 0, Math.PI * 2);
-                context.stroke();
-                helper.clearLineDash();
-                context.beginPath();
-                context.moveTo(originX, originY);
-                context.lineTo(originX + Math.cos(a) * mag, originY + Math.sin(a) * mag);
-                context.stroke();
-            }
-        }
-    };
-}
-
 function Spaaaace(
     u: VisibleUniverse,
-    zoomedDrawScope: ZoomedDrawScope
+    zoomedDrawScope: ZoomedDrawScope15
 ) {
     let cameraZoom = camZoom;
     let cameraOffsetX = 0;
@@ -354,9 +284,9 @@ export function setFixedRandomSeed(seed: bigint) {
     FIXED_RANDOM_SEED = seed;
 }
 
-export function MainActivity(topText: HTMLElement, bottomText: HTMLElement) {
-    const universe = new VisibleUniverse(new Namer(), randomSeed());
-    const zoomedDrawScope = new ZoomedDrawScope();
+export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement, topContainer: HTMLElement, autopilotText: HTMLElement) {
+    const universe = new VisibleUniverse15(new Namer15(), randomSeed());
+    const zoomedDrawScope = new ZoomedDrawScope15();
 
     if (TEST_UNIVERSE) {
         universe.initTest();
@@ -399,11 +329,23 @@ export function MainActivity(topText: HTMLElement, bottomText: HTMLElement) {
             }
         }
     );
+    const autopilot = new Autopilot15(universe.ship as Spacecraft15, universe);
     const flightStickDraw = flightStick.draw;
-    const telemetry = Telemetry(universe, topText, bottomText);
+    const telemetry = Telemetry(universe, autopilot, topText, bottomText, topContainer, autopilotText);
+    const ship = universe.ship as Spacecraft15;
+    ship.autopilot = autopilot;
+    universe.addEntity(autopilot);
+
+    function setAutopilot(enabled: boolean) {
+        if (autopilot.enabled && !enabled) {
+            ship.thrust.x = ship.thrust.y = 0;
+        }
+        autopilot.enabled = enabled;
+    }
 
     return {
         pointerInput: flightStick.pointerInput,
+        setAutopilot: setAutopilot,
         draw: (millis: number, context: CanvasRenderingContext2D, helper: CanvasHelper) => {
             universe.simulateFrame(millis);
             space(context, helper);
