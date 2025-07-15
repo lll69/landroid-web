@@ -482,6 +482,9 @@ export class Spark extends Body implements Removable {
     canBeRemoved(): boolean {
         return this.lifetime < 0;
     }
+    postUpdate(sim: Simulator, dt: number): void {
+        // The speed of Spark is unchangeable
+    }
 }
 
 export class Track {

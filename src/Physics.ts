@@ -92,9 +92,9 @@ export class Body implements Entity {
     }
 
     postUpdate(sim: Simulator, dt: number) {
-        //if (dt <= 0) return;
-        //this.velocity.x = (this.pos.x - this.opos.x) / dt;
-        //this.velocity.y = (this.pos.y - this.opos.y) / dt;
+        if (dt <= 0) return;
+        this.velocity.x = (this.pos.x - this.opos.x) / dt;
+        this.velocity.y = (this.pos.y - this.opos.y) / dt;
     }
 }
 
