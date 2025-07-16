@@ -61,7 +61,12 @@ export class ZoomedDrawScope15 extends ZoomedDrawScope {
                 this.drawPlanet(it);
             }
         });
-        this.drawSpacecraft(universe.ship);
+        const ship = universe.ship as Spacecraft15;
+        const autopilot = ship.autopilot;
+        if (autopilot !== null && autopilot.enabled) {
+            this.drawAutopilot(autopilot);
+        }
+        this.drawSpacecraft(ship);
     }
     drawSpacecraft(ship: Spacecraft) {
         const context = this.context;
