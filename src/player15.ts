@@ -188,7 +188,7 @@ setTimeout(function () {
     new ResizeObserver(onCanvasResize).observe(canvas);
     const isConfirmed = confirm("This project is licensed under the Apache License 2.0.\nThis project is not affiliated with Android or Google.\n\nClick OK to continue running this app, or click Cancel to close this app.");
     if (isConfirmed) {
-        document.getElementById("topRightContainer")!!.hidden = false;
+        document.getElementById("rightContainer")!!.hidden = false;
         setTimeout(() => requestAnimationFrame(animation), 0);
     }
 }, 0);
