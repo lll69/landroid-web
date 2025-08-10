@@ -32,16 +32,18 @@ import { Autopilot15 } from "./Autopilot15";
 import { Colors } from "./Colors";
 import { drawFlag } from "./Flag15";
 import { lerp } from "./MathHelpers";
+import { Namer15 } from "./Namer15";
 import { createPolygon, drawPolygon, parseSvgPathData } from "./PathTools";
-import { Container } from "./Physics";
+import { Constraint, Container, Simulator } from "./Physics";
 import { chooseRandom } from "./Randomness";
-import { Landing, Planet, Spacecraft, Spark, Star, StarClass, StarClasses, UniverseConst } from "./Universe";
-import { Spacecraft15 } from "./Universe15";
-import { Vec2, Vec2_makeWithAngleMag } from "./Vec2";
+import { Landing, Planet, Spacecraft, Spark, SparkStyle, Star, StarClass, StarClasses, UniverseConst } from "./Universe";
+import { Landing15, Spacecraft15 } from "./Universe15";
+import { Vec2, Vec2_angle, Vec2_copy, Vec2_makeWithAngleMag } from "./Vec2";
 import { spaceshipPath, VisibleUniverse, ZoomedDrawScope } from "./VisibleUniverse";
 
 const spaceshipLegs = parseSvgPathData("\nM-7   -6.5\nl-3.5  0\nl-1   -2\nl 0    4\nl 1   -2\nZ\nM-7    6.5\nl-3.5  0\nl-1   -2\nl 0    4\nl 1   -2\nZ\n")
 const thrustPath = createPolygon(-3, 3, -5, 0);
+const solveSimulator = Simulator.prototype.solveAll;
 
 export class ZoomedDrawScope15 extends ZoomedDrawScope {
     drawUniverse(universe: VisibleUniverse) {
@@ -288,5 +290,82 @@ export class VisibleUniverse15 extends VisibleUniverse {
         this.addConstraint(this.ringfence);
 
         this.follow = this.ship;
+    }
+
+    solveAll(dt: number, constraints: Set<Constraint>) {
+        if (this.ship.landing === null) {
+            const planet = this.closestPlanet();
+
+            if (planet.collides) {
+                const d = (this.ship.pos.distance(planet.pos)) - this.ship.radius - planet.radius;
+                const a = Vec2_angle(this.ship.pos, planet.pos);
+
+                if (d < 0) {
+                    // landing, or impact?
+
+                    // 1. relative speed
+                    const vDiff = (this.ship.velocity.distance(planet.velocity));
+                    // 2. landing angle
+                    const aDiff = Math.abs(this.ship.angle - a);
+
+                    // landing criteria
+                    if (aDiff < Math.PI / 4
+                        //                        &&
+                        //                        vDiff < 100f
+                    ) {
+                        const landing = new Landing15(this.ship, planet, a, (this.namer as Namer15).describeActivity(this.rng, planet));
+                        this.ship.landing = landing;
+                        Vec2_copy(this.ship.velocity, planet.velocity);
+                        this.addConstraint(landing);
+
+                        planet.explored = true;
+                        this.latestDiscovery = planet;
+                    } else {
+                        const impact = Vec2_makeWithAngleMag(Vec2.Zero(), a, planet.radius).addSelf(planet.pos);
+                        Vec2_makeWithAngleMag(this.ship.pos, a, planet.radius + this.ship.radius - d).addSelf(planet.pos);
+
+                        //                        add(Spark(
+                        //                            lifetime = 1f,
+                        //                            style = Spark.Style.DOT,
+                        //                            color = Color.Yellow,
+                        //                            size = 10f
+                        //                        ).apply {
+                        //                            pos = impact
+                        //                            opos = impact
+                        //                            velocity = Vec2.Zero
+                        //                        })
+                        //
+                        for (let it = 1; it <= 10; it++) {
+                            const spark = new Spark(
+                                this.rng.minmax(0.5, 2),
+                                false,
+                                0,
+                                SparkStyle.DOT,
+                                Colors.White,
+                                1
+                            );
+                            Vec2_makeWithAngleMag(
+                                spark.pos,
+                                this.rng.minmax(0, 2 * Math.PI),
+                                this.rng.minmax(0.1, 0.5)
+                            ).addSelf(impact);
+                            Vec2_copy(spark.opos, spark.pos);
+                            Vec2_makeWithAngleMag(
+                                spark.velocity,
+                                //                                            a +
+                                // rng.nextFloatInRange(-PIf, PIf),
+                                this.rng.minmax(0, 2 * Math.PI),
+                                this.rng.minmax(0.1, 0.5)
+                            );
+                            spark.velocity.x += this.ship.velocity.x * 0.8;
+                            spark.velocity.y += this.ship.velocity.y * 0.8;
+                            this.addEntity(spark);
+                        }
+                    }
+                }
+            }
+        }
+
+        solveSimulator.call(this, dt, constraints);
     }
 }

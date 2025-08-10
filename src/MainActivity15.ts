@@ -40,7 +40,7 @@ import { CanvasHelper } from "./CanvasHelper";
 import { VisibleUniverse15, ZoomedDrawScope15 } from "./VisibleUniverse15";
 import { FlightStick } from "./MainActivity";
 import { Autopilot15 } from "./Autopilot15";
-import { Spacecraft15 } from "./Universe15";
+import { Landing15, Spacecraft15 } from "./Universe15";
 
 const TEST_UNIVERSE = false
 
@@ -148,6 +148,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
         let bottomString = "";
         if (ship.landing !== null) {
             bottomString += "LND: " + ship.landing.planet.name;
+            bottomString += "\nJOB: " + (ship.landing as Landing15).text;
         } else if (distToClosest < 10_000) {
             bottomString += "ALT: " + distToClosest;
         }

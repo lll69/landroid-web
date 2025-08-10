@@ -38,13 +38,18 @@ import { Vec2_makeWithAngleMag, Vec2_makeWithAngleMagAdd } from "./Vec2";
 
 const updateBody = Body.prototype.update;
 
+const enum Universe15Const {
+    LANDING_REMOVAL_TIME = 60 * 15 // 15 min of simulation time
+}
+
 export class Landing15 extends Landing implements Removable {
     text: string;
-    private fuse: Fuse;
+    private readonly fuse: Fuse;
 
     constructor(ship: Spacecraft, planet: Planet, angle: number, text: string) {
         super(ship, planet, angle);
         this.text = text;
+        this.fuse = new Fuse(Universe15Const.LANDING_REMOVAL_TIME);
     }
 
     solve(sim: Simulator, dt: number): void {
