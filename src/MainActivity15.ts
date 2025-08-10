@@ -99,7 +99,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
             return;
         }
         let millisDelta = millis - startMillis;
-        if (!bottomVisible) {
+        if (!bottomVisible && universe.realDt !== 0) {
             if (millisDelta >= 2000) {
                 bottomText.hidden = false;
                 bottomText.style.opacity = 1 as any;
@@ -109,7 +109,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
                 bottomText.style.opacity = (Math.random() * (millis - 1000) / 1000) as any;
             }
         }
-        if (!topVisible) {
+        if (!topVisible && universe.realDt !== 0) {
             if (millisDelta >= 3000) {
                 topContainer.hidden = false;
                 topContainer.style.opacity = String(1);
@@ -137,8 +137,8 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
             "RADIUS: " + Math.floor(star.radius) + "\n" +
             sprintf("  MASS: %.3e\n", star.mass) +
             "BODIES: " + explored.length + " / " + universe.planets.length + "\n" +
-            "   FPS: " + (1000 / universe.realDt).toFixed(0) + "\n" +
-            "  vFPS: " + (1 / universe.dt).toFixed(0)
+            "   FPS: " + (universe.realDt === 0 ? "Paused" : (1000 / universe.realDt).toFixed(0)) + "\n" +
+            "  vFPS: " + (universe.dt === 0 ? "Paused" : (1 / universe.dt).toFixed(0))
             + "\n\n"
             + explored.join("\n");
         topTextNode.textContent = topString;
