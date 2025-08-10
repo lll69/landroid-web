@@ -57,7 +57,8 @@ function zoomSelectChange() {
     }
     const newHash = params.toString();
     if (location.hash !== newHash) {
-        location.hash = "#" + params.toString();
+        history.replaceState({}, "", "#" + params.toString());
+        loadParams();
     }
 }
 zoomSelect.addEventListener("change", zoomSelectChange);
