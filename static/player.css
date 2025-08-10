@@ -72,6 +72,15 @@ body {
     position: fixed;
     bottom: 0;
     right: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.2s, opacity 0.2s ease-in-out;
+}
+
+.controls-show {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
 }
 
 .autopilot {

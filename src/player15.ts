@@ -39,6 +39,7 @@ if (!canvasContext) {
 }
 const helper = new CanvasHelper(canvasContext);
 
+const controlsContainer = document.getElementById("rightContainer")!!;
 let selectedZoomIndex = 0;
 const zoomSelect = document.getElementById("zoomSelect") as HTMLSelectElement;
 function zoomSelectChange() {
@@ -110,10 +111,14 @@ const activity = MainActivity15(document.getElementById("topText")!!, document.g
 const pointerInput = activity.pointerInput;
 const drawFn = activity.draw;
 const setAutopilot = activity.setAutopilot;
+let animationID = -1;
+let pauseOffset = 0;
+let pauseTime = 0;
+let paused = false;
 
 function animation(millis: number) {
-    drawFn(millis, canvasContext, helper);
-    requestAnimationFrame(animation);
+    drawFn((paused ? pauseTime : millis) - pauseOffset, canvasContext, helper);
+    animationID = requestAnimationFrame(animation);
 }
 
 document.getElementById("loading")!!.hidden = true;
@@ -125,18 +130,48 @@ function onCanvasResize() {
 }
 
 canvas.hidden = false;
-canvas.addEventListener("touchstart", pointerInput);
-canvas.addEventListener("touchmove", pointerInput);
-canvas.addEventListener("touchend", pointerInput);
-canvas.addEventListener("touchcancel", pointerInput);
-canvas.addEventListener("pointerdown", pointerInput);
-canvas.addEventListener("pointermove", pointerInput);
-canvas.addEventListener("pointerup", pointerInput);
-canvas.addEventListener("pointercancel", pointerInput);
+function enableTouch() {
+    canvas.addEventListener("touchstart", pointerInput);
+    canvas.addEventListener("touchmove", pointerInput);
+    canvas.addEventListener("touchend", pointerInput);
+    canvas.addEventListener("touchcancel", pointerInput);
+    canvas.addEventListener("pointerdown", pointerInput);
+    canvas.addEventListener("pointermove", pointerInput);
+    canvas.addEventListener("pointerup", pointerInput);
+    canvas.addEventListener("pointercancel", pointerInput);
+}
+function disableTouch() {
+    canvas.removeEventListener("touchstart", pointerInput);
+    canvas.removeEventListener("touchmove", pointerInput);
+    canvas.removeEventListener("touchend", pointerInput);
+    canvas.removeEventListener("touchcancel", pointerInput);
+    canvas.removeEventListener("pointerdown", pointerInput);
+    canvas.removeEventListener("pointermove", pointerInput);
+    canvas.removeEventListener("pointerup", pointerInput);
+    canvas.removeEventListener("pointercancel", pointerInput);
+}
+enableTouch();
 
 let isTwoFingerDown = false;
 let downZoom = 0;
 let downDistance = 0;
+let controlsInterval: any = -1;
+
+function hideControls() {
+    zoomSelect.blur();
+    clearInterval(controlsInterval);
+    controlsContainer.classList.remove("controls-show");
+}
+
+function showControlsNoHide() {
+    controlsContainer.classList.add("controls-show");
+    clearInterval(controlsInterval);
+}
+
+function showControlsAutoHide() {
+    showControlsNoHide();
+    controlsInterval = setInterval(hideControls, 2000);
+}
 
 function handleZoom(e: TouchEvent) {
     if (!isTwoFingerDown) {
@@ -147,14 +182,17 @@ function handleZoom(e: TouchEvent) {
             downZoom = getCamZoom();
             downDistance = Math.sqrt(dx * dx + dy * dy);
             e.preventDefault();
+            showControlsNoHide();
         }
     } else {
         if (e.type === "touchstart") {
             if (e.touches.length !== 2) {
                 isTwoFingerDown = false;
+                showControlsAutoHide();
             }
         } else if (e.type === "touchend" || e.type === "touchcancel") {
             isTwoFingerDown = false;
+            showControlsAutoHide();
         } else if (e.type === "touchmove") {
             const dx = e.touches[1].clientX - e.touches[0].clientX;
             const dy = e.touches[1].clientY - e.touches[0].clientY;
@@ -175,6 +213,7 @@ function handleWheel(e: WheelEvent) {
         e.preventDefault();
         setCamZoom(getCamZoom() * (1 - e.deltaY / 1000));
     }
+    showControlsAutoHide();
 }
 
 document.addEventListener("wheel", handleWheel);
@@ -182,14 +221,32 @@ document.addEventListener("wheel", handleWheel);
 const autopilotCheck = document.getElementById("autopilotCheck") as HTMLInputElement;
 autopilotCheck.addEventListener("change", function () {
     setAutopilot(autopilotCheck.checked);
+    showControlsAutoHide();
 });
+const pauseCheck = document.getElementById("pauseCheck") as HTMLInputElement;
+pauseCheck.addEventListener("change", function () {
+    if (pauseCheck.checked) {
+        pauseTime = performance.now();
+        paused = true;
+        disableTouch();
+    } else {
+        pauseOffset += performance.now() - pauseTime;
+        paused = false;
+        enableTouch();
+    }
+    showControlsAutoHide();
+})
+
+zoomSelect.addEventListener("focus", showControlsAutoHide);
+zoomSelect.addEventListener("blur", showControlsAutoHide);
+zoomSelect.addEventListener("change", showControlsAutoHide);
 
 setTimeout(function () {
     onCanvasResize();
     new ResizeObserver(onCanvasResize).observe(canvas);
     const isConfirmed = confirm("This project is licensed under the Apache License 2.0.\nThis project is not affiliated with Android or Google.\n\nClick OK to continue running this app, or click Cancel to close this app.");
     if (isConfirmed) {
-        document.getElementById("rightContainer")!!.hidden = false;
-        setTimeout(() => requestAnimationFrame(animation), 0);
+        showControlsAutoHide();
+        setTimeout(() => animationID = requestAnimationFrame(animation), 0);
     }
 }, 0);
