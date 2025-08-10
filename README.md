@@ -1,12 +1,14 @@
 # LAndroid-Web
 
-Play **Android 14 (Upside Down Cake) Easter Egg** game online!
+Play **Android 14 (Upside Down Cake) and Android 15 (Vanilla Ice Cream) Easter Egg** game online!
 
-<!--[Click here to play Android 14(U) Easter Egg]()-->
+[Click here to play Android 14(U) Easter Egg](https://landroid.js.org/player.html)
+
+[Click here to play Android 15(V) Easter Egg](https://landroid.js.org/player15.html)
 
 ## Introduction
 
-Play Android 14 (Upside Down Cake) Easter Egg game in your browser with LAndroid-Web, no download required.
+Play Android 14 (Upside Down Cake) and Android 15 (Vanilla Ice Cream) Easter Egg game in your browser with LAndroid-Web, no download required.
 
 At the bottom left, you can see the current coordinates and speed of the spacecraft, as well as the planet that is landing.  
 At the top left, you can see the name, class, radius, mass of the star closest to your location, as well as the number of bodies that orbit it.
