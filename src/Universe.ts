@@ -339,6 +339,16 @@ export class Universe extends Simulator {
         return bodiesByDist[0][1] as Planet;
     }
 
+    closestPlanetForZoom(): Planet {
+        const newArray = Array.from(this.planets);
+        newArray.push(this.star);
+        const bodiesByDist = newArray
+            .map(planet => [planet.pos, planet])
+            .sort((a, b) => ((a[0] as Vec2).distance(this.ship.pos) - (a[1] as Planet).radius * 1.2) - ((b[0] as Vec2).distance(this.ship.pos) - (b[1] as Planet).radius * 1.2));
+
+        return bodiesByDist[0][1] as Planet;
+    }
+
     solveAll(dt: number, constraints: Set<Constraint>) {
         if (this.ship.landing === null) {
             const planet = this.closestPlanet();

@@ -249,10 +249,10 @@ function Spaaaace(
         context.fillStyle = Colors.Eigengrau;
         context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        const closest = u.closestPlanet();
-        const distToNearestSurf = Math.max(0, (u.ship.pos.distance(closest.pos)) - closest.radius * 1.2);
         //        val normalizedDist = clamp(distToNearestSurf, 50f, 50_000f) / 50_000f
         if (DYNAMIC_ZOOM) {
+            const closest = u.closestPlanetForZoom();
+            const distToNearestSurf = Math.max(0, (u.ship.pos.distance(closest.pos)) - closest.radius * 1.2);
             //            cameraZoom = lerp(0.1f, 5f, smooth(1f-normalizedDist))
             cameraZoom = clamp(500 / distToNearestSurf, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
         } else if (!TOUCH_CAMERA_ZOOM) cameraZoom = DEFAULT_CAMERA_ZOOM;
