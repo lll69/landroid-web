@@ -93,6 +93,9 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
     bottomText.appendChild(bottomTextNode);
     const autopilotTextNode = document.createTextNode("");
     autopilotText.appendChild(autopilotTextNode);
+    let frames = 0;
+    let lastFpsTime = 0;
+    let fps = 0;
     return (millis: number) => {
         if (startMillis === -1) {
             startMillis = millis;
@@ -124,6 +127,12 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
         } else {
             autopilotTextNode.textContent = "";
         }
+        if (millis - lastFpsTime >= 1000) {
+            fps = frames * 1000 / (millis - lastFpsTime);
+            lastFpsTime = millis;
+            frames = 0;
+        }
+        frames++;
         const star = universe.star;
         const explored = universe.planets
             .filter(it => it.explored)
@@ -137,7 +146,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
             "RADIUS: " + Math.floor(star.radius) + "\n" +
             sprintf("  MASS: %.3e\n", star.mass) +
             "BODIES: " + explored.length + " / " + universe.planets.length + "\n" +
-            "   FPS: " + (universe.realDt === 0 ? "Paused" : (1000 / universe.realDt).toFixed(0)) + "\n" +
+            "   FPS: " + (universe.realDt === 0 ? "Paused" : fps.toFixed(1)) + "\n" +
             "  vFPS: " + (universe.dt === 0 ? "Paused" : (1 / universe.dt).toFixed(0))
             + "\n\n"
             + explored.join("\n");
