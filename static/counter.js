@@ -1,18 +1,21 @@
 (function () {
-    window.goatcounter = { allow_frame: true };
+    window.goatcounter = {
+        allow_frame: true,
+        path: function (p) { return location.host + p }
+    };
     function filter() {
-		if ('visibilityState' in document && document.visibilityState === 'prerender')
-			return 'visibilityState';
-		if (!goatcounter.allow_frame && location !== parent.location)
-			return 'frame';
-		if (!goatcounter.allow_local && location.hostname.match(/(localhost$|^127\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\.|^192\.168\.|^0\.0\.0\.0$)/))
-			return 'localhost';
-		if (!goatcounter.allow_local && location.protocol === 'file:')
-			return 'localfile';
-		if (localStorage && localStorage.getItem('skipgc') === 't')
-			return 'disabled with #toggle-goatcounter';
-		return false;
-	}
+        if ('visibilityState' in document && document.visibilityState === 'prerender')
+            return 'visibilityState';
+        if (!goatcounter.allow_frame && location !== parent.location)
+            return 'frame';
+        if (!goatcounter.allow_local && location.hostname.match(/(localhost$|^127\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\.|^192\.168\.|^0\.0\.0\.0$)/))
+            return 'localhost';
+        if (!goatcounter.allow_local && location.protocol === 'file:')
+            return 'localfile';
+        if (localStorage && localStorage.getItem('skipgc') === 't')
+            return 'disabled with #toggle-goatcounter';
+        return false;
+    }
     if (!filter() && !sessionStorage.getItem("doNotTrack") && !localStorage.getItem("doNotTrack")) {
         s = document.createElement("script");
         s.src = "/count.js";
