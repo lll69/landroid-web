@@ -347,6 +347,7 @@ export class VisibleUniverse extends Universe {
         super(namer, randomSeed);
         this.triggerDraw = Infinity;
         this.realDt = Infinity;
+        console.log("VisibleUniverse Random Seed:", randomSeed);
     }
 
     simulateFrame(millis: number) {
