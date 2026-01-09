@@ -7,6 +7,11 @@
     --color-Autopilot: #4285F4;
 }
 
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("RobotoMono-Regular.ttf");
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -30,7 +35,7 @@ body {
     margin: 8px;
     pointer-events: none;
     font-size: 12px;
-    font-family: monospace;
+    font-family: "Roboto Mono", monospace;
     position: fixed;
     top: 0;
     left: 0;
@@ -42,7 +47,7 @@ body {
     margin: 0;
     pointer-events: none;
     font-size: 12px;
-    font-family: monospace;
+    font-family: "Roboto Mono", monospace;
     display: block;
     top: 0;
     left: 0;
@@ -53,7 +58,7 @@ body {
     margin: 8px;
     pointer-events: none;
     font-size: 12px;
-    font-family: monospace;
+    font-family: "Roboto Mono", monospace;
     position: fixed;
     top: 0;
     left: 0;
@@ -99,7 +104,7 @@ body {
     margin: 8px;
     pointer-events: none;
     font-size: 12px;
-    font-family: monospace;
+    font-family: "Roboto Mono", monospace;
     position: fixed;
     bottom: 0;
     left: 0;
