@@ -91,7 +91,7 @@ export class Namer15 extends Namer {
         "gases"
     ]);
 
-    private readonly TEMPLATE_REGEX = /(flora|fauna|planet|atmo)/;
+    private readonly TEMPLATE_REGEX = /{(flora|fauna|planet|atmo)}/;
 
     floraPlural(rng: ARandom): string {
         return this.floraGenericPlurals.pull(rng);
