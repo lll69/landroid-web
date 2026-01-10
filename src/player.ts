@@ -69,7 +69,7 @@ function loadParams() {
 loadParams();
 window.addEventListener("hashchange", loadParams);
 
-const activity = MainActivity(document.getElementById("topText")!!, document.getElementById("bottomText")!!);
+const activity = MainActivity(document.getElementById("topText")!, document.getElementById("bottomText")!);
 const pointerInput = activity.pointerInput;
 const drawFn = activity.draw;
 
@@ -78,7 +78,7 @@ function animation(millis: number) {
     requestAnimationFrame(animation);
 }
 
-document.getElementById("loading")!!.hidden = true;
+document.getElementById("loading")!.hidden = true;
 
 function onCanvasResize() {
     const clientRect = canvas.getBoundingClientRect();

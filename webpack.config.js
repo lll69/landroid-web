@@ -21,7 +21,8 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "static", to: "" }
+        { from: "static", to: "" },
+        { from: "node_modules/@fontsource/roboto-mono/files/roboto-mono-latin-400-normal.(woff|woff2)", to: "fonts/[name][ext]" },
       ]
     })
   ],

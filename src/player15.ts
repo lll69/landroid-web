@@ -39,7 +39,7 @@ if (!canvasContext) {
 }
 const helper = new CanvasHelper(canvasContext);
 
-const controlsContainer = document.getElementById("rightContainer")!!;
+const controlsContainer = document.getElementById("rightContainer")!;
 let selectedZoomIndex = 0;
 const zoomSelect = document.getElementById("zoomSelect") as HTMLSelectElement;
 function zoomSelectChange() {
@@ -107,7 +107,7 @@ function loadParams() {
 loadParams();
 window.addEventListener("hashchange", loadParams);
 
-const activity = MainActivity15(document.getElementById("topText")!!, document.getElementById("bottomText")!!, document.getElementById("topContainer")!!, document.getElementById("autopilotText")!!);
+const activity = MainActivity15(document.getElementById("topText")!, document.getElementById("bottomText")!, document.getElementById("topContainer")!, document.getElementById("autopilotText")!);
 const pointerInput = activity.pointerInput;
 const drawFn = activity.draw;
 const setAutopilot = activity.setAutopilot;
@@ -121,7 +121,7 @@ function animation(millis: number) {
     animationID = requestAnimationFrame(animation);
 }
 
-document.getElementById("loading")!!.hidden = true;
+document.getElementById("loading")!.hidden = true;
 
 function onCanvasResize() {
     const clientRect = canvas.getBoundingClientRect();
