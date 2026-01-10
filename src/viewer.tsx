@@ -6,7 +6,7 @@ import '@fontsource/roboto/700.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { sprintf } from 'sprintf-js';
-import { AppBar, Avatar, Box, Card, CardHeader, Container, CssBaseline, Divider, Slide, Toolbar, Typography, useScrollTrigger } from '@mui/material';
+import { AppBar, Avatar, Box, Button, Card, CardHeader, Container, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Radio, RadioGroup, Slide, Toolbar, Typography, useScrollTrigger } from '@mui/material';
 import { CalendarPicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { red, blue } from '@mui/material/colors';
@@ -16,6 +16,9 @@ import * as moment from 'moment';
 import { VisibleUniverse15 } from './VisibleUniverse15';
 import { Namer15 } from './Namer15';
 import { Planet, Star, StarClassNames } from './Universe';
+
+let lastSeed = 0n;
+let lastUniverse: VisibleUniverse15 | null = null;
 
 if (navigator.language !== "en") {
     let dateLocalized = false;
@@ -130,10 +133,22 @@ const PlanetCard = ({ planet, index, count }: { planet: Planet, index: number, c
 
 const AppContent = () => {
     const [date, setDate] = React.useState(moment());
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [version, setVersion] = React.useState("v15");
     const seed = momentToSeed(date);
-    const universe = new VisibleUniverse15(new Namer15(), seed);
-    universe.initRandom();
+    const universe = (lastSeed === seed && lastUniverse !== null) ? lastUniverse : (() => {
+        const u = new VisibleUniverse15(new Namer15(), seed);
+        u.initRandom();
+        lastSeed = seed;
+        lastUniverse = u;
+        return u;
+    })();
     const count = universe.planets.length;
+    const closeDialog = () => setShowDialog(false);
+    const play = () => {
+        setShowDialog(false);
+        location.href = "player" + (version === "v15" ? "15" : "") + ".html#seed=" + String(seed);
+    }
     return (
         <React.Fragment>
             <Box textAlign="center">
@@ -151,12 +166,37 @@ const AppContent = () => {
                 </div>
             </Box>
             <Box>
-                <p>Number of planets: <b>{count}</b></p>
+                <p>
+                    Number of planets: <b>{count}</b>
+                    <Button style={{ margin: "0 8px 0 8px" }} variant="contained" onClick={() => setShowDialog(true)}>Play Online</Button>
+                </p>
             </Box>
             <Box>
                 <PlanetCard planet={universe.star} index={0} count={count} />
                 {universe.planets.map((planet, index) => (<PlanetCard planet={planet} index={index} count={count} />))}
             </Box>
+            <Dialog
+                open={showDialog}
+                onClose={closeDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">Select Version</DialogTitle>
+                <DialogContent>
+                    <FormControl id="alert-dialog-description">
+                        <RadioGroup
+                            value={version}
+                            onChange={e => setVersion(e.target.value)}
+                            name="radio-buttons-group">
+                            <FormControlLabel value="v14" control={<Radio />} label="Android 14 (Upside Down Cake)" />
+                            <FormControlLabel value="v15" control={<Radio />} label="Android 15 (Vanilla Ice Cream)" />
+                        </RadioGroup>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog}>Cancel</Button>
+                    <Button onClick={play} autoFocus>Play</Button>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     );
 }
@@ -178,7 +218,7 @@ const App = () => {
             <Container>
                 <Box sx={{ my: 2 }}>
                     <p>
-                        Check the daily content of LAndroid Easter Egg, including the names, types, and total numbers of stars and planets.
+                        Check the daily content of LAndroid Easter Egg (Android 14 and Android 15 Easter Egg), including the names, types, and total numbers of stars and planets.
                         You can also view the content for past or future days.
                     </p>
                     <p>
