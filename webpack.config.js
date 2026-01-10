@@ -7,7 +7,8 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 module.exports = {
   entry: {
     player: "./src/player.ts",
-    player15: "./src/player15.ts"
+    player15: "./src/player15.ts",
+    viewer: "./src/viewer.tsx"
   },
   module: {
     rules: [
@@ -15,6 +16,10 @@ module.exports = {
         test: /\.tsx?$/,
         use: "ts-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
