@@ -9,8 +9,7 @@ import { sprintf } from 'sprintf-js';
 import { AppBar, Avatar, Box, Button, Card, CardHeader, Container, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Radio, RadioGroup, Slide, Toolbar, Typography, useScrollTrigger } from '@mui/material';
 import { CalendarPicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { red, blue } from '@mui/material/colors';
-import StarIcon from '@mui/icons-material/Star';
+import { blue } from '@mui/material/colors';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { VisibleUniverse15 } from './VisibleUniverse15';
@@ -52,15 +51,9 @@ const PlanetCard = ({ planet, index, count }: { planet: Planet, index: number, c
         <Card raised style={{ margin: "12px 0 12px 0" }}>
             <CardHeader
                 avatar={
-                    isStar ? (
-                        <Avatar sx={{ bgcolor: red[500] }}>
-                            <StarIcon />
-                        </Avatar>
-                    ) : (
-                        <Avatar sx={{ bgcolor: blue[500] }}>
-                            {index + 1}
-                        </Avatar>
-                    )
+                    <Avatar sx={{ bgcolor: blue[500] }}>
+                        {String(index + 1)}
+                    </Avatar>
                 }
                 title={planet.name}
                 subheader={isStar ? "Star" : "Planet"}
@@ -85,7 +78,7 @@ const PlanetCard = ({ planet, index, count }: { planet: Planet, index: number, c
                     <Box sx={{ p: 2 }}>
                         <Typography variant="body2">Mass</Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {sprintf("%.3e", planet.mass)}
+                            {sprintf("%.2e", planet.mass)}
                         </Typography>
                     </Box>
                     <Divider />
@@ -102,6 +95,20 @@ const PlanetCard = ({ planet, index, count }: { planet: Planet, index: number, c
                         <Typography variant="body2">Type</Typography>
                         <Typography variant="body2" color="text.secondary">
                             {planet.description}
+                        </Typography>
+                    </Box>
+                    <Divider />
+                    <Box sx={{ p: 2 }}>
+                        <Typography variant="body2">Radius</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {Math.floor(planet.radius)}
+                        </Typography>
+                    </Box>
+                    <Divider />
+                    <Box sx={{ p: 2 }}>
+                        <Typography variant="body2">Speed</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {sprintf("%.2f", planet.speed)}
                         </Typography>
                     </Box>
                     <Divider />
@@ -172,7 +179,7 @@ const AppContent = () => {
                 </p>
             </Box>
             <Box>
-                <PlanetCard planet={universe.star} index={0} count={count} />
+                <PlanetCard planet={universe.star} index={-1} count={count} />
                 {universe.planets.map((planet, index) => (<PlanetCard planet={planet} index={index} count={count} />))}
             </Box>
             <Dialog
