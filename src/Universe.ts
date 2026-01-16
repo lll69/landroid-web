@@ -36,6 +36,7 @@ import { Namer } from "./Namer";
 import { Body, Constraint, Container, Entity, Simulator } from "./Physics";
 import { chooseRandom } from "./Randomness";
 import { Vec2, Vec2_angle, Vec2_copy, Vec2_makeWithAngleMag, Vec2_makeWithAngleMagAdd } from "./Vec2";
+import { LOG } from "./Debug";
 
 const PI = Math.PI;
 const abs = Math.abs;
@@ -225,7 +226,7 @@ export class Universe extends Simulator {
                 speed,
                 Colors.Eigengrau4
             );
-            console.log(
+            LOG && console.log(
                 "Landroid",
                 "created planet", p, "with period", period, "and vel", speed
             );
@@ -281,7 +282,7 @@ export class Universe extends Simulator {
                 speed,
                 Colors.Eigengrau4
             );
-            console.log(
+            LOG && console.log(
                 "Landroid",
                 "created planet", p, "with period", period, "and vel", speed
             );

@@ -30,6 +30,7 @@
 
 import { CanvasHelper } from "./CanvasHelper";
 import { Colors } from "./Colors";
+import { LOG } from "./Debug";
 import { lerp } from "./MathHelpers";
 import { clamp } from "./Maths";
 import { Namer } from "./Namer";
@@ -352,7 +353,7 @@ export class VisibleUniverse extends Universe {
         super(namer, randomSeed);
         this.triggerDraw = Infinity;
         this.realDt = Infinity;
-        console.log("VisibleUniverse Random Seed:", randomSeed);
+        LOG && console.log("VisibleUniverse Random Seed:", randomSeed);
     }
 
     simulateFrame(millis: number) {

@@ -62,7 +62,7 @@ function loadParams() {
             setRandomSeedType(RandomSeedType.Fixed);
             setFixedRandomSeed(seed);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
 }

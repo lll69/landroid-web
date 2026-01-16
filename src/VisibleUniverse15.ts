@@ -30,6 +30,7 @@
 
 import { Autopilot15 } from "./Autopilot15";
 import { Colors } from "./Colors";
+import { LOG } from "./Debug";
 import { drawFlag } from "./Flag15";
 import { lerp } from "./MathHelpers";
 import { Namer15 } from "./Namer15";
@@ -209,7 +210,7 @@ export class VisibleUniverse15 extends VisibleUniverse {
                 speed,
                 Colors.Eigengrau4
             );
-            console.log(
+            LOG && console.log(
                 "Landroid",
                 "created planet", p, "with period", period, "and vel", speed
             );
@@ -265,7 +266,7 @@ export class VisibleUniverse15 extends VisibleUniverse {
                 speed,
                 Colors.Eigengrau4
             );
-            console.log(
+            LOG && console.log(
                 "Landroid",
                 "created planet", p, "with period", period, "and vel", speed
             );

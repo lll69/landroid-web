@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { VisibleUniverse15 } from './VisibleUniverse15';
 import { Namer15 } from './Namer15';
 import { Planet, Star, StarClassNames } from './Universe';
+import { setLogEnabled } from './Debug';
 
 let lastSeed = 0n;
 let lastUniverse: VisibleUniverse15 | null = null;
@@ -29,6 +30,8 @@ if (navigator.language !== "en") {
     localizeDate(navigator.language);
     navigator.languages.forEach(localizeDate);
 }
+
+setLogEnabled(false);
 
 const momentToSeed = (moment: Moment) => {
     const date = moment.toDate();
