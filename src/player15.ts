@@ -210,7 +210,6 @@ canvas.addEventListener("touchcancel", handleZoom);
 
 function handleWheel(e: WheelEvent) {
     if (manualZoom) {
-        e.preventDefault();
         setCamZoom(getCamZoom() * (1 - e.deltaY / 1000));
     }
     showControlsAutoHide();
