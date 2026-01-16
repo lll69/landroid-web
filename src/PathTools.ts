@@ -28,12 +28,16 @@
  * limitations under the License.
  */
 
+const PI = Math.PI;
+const cos = Math.cos;
+const sin = Math.sin;
+
 export function createPolygon(radius: number, sides: number, offX: number, offY: number): Path2D {
     const path = new Path2D();
     path.moveTo(radius + offX, offY);
-    const angleStep = Math.PI * 2 / sides;
+    const angleStep = PI * 2 / sides;
     for (let i = 1; i < sides; i++) {
-        path.lineTo(radius * Math.cos(angleStep * i) + offX, radius * Math.sin(angleStep * i) + offY);
+        path.lineTo(radius * cos(angleStep * i) + offX, radius * sin(angleStep * i) + offY);
     }
     path.closePath();
     return path;
@@ -42,9 +46,9 @@ export function createPolygon(radius: number, sides: number, offX: number, offY:
 export function drawPolygon(context: CanvasRenderingContext2D, radius: number, sides: number) {
     context.beginPath();
     context.moveTo(radius, 0);
-    const angleStep = Math.PI * 2 / sides;
+    const angleStep = PI * 2 / sides;
     for (let i = 1; i < sides; i++) {
-        context.lineTo(radius * Math.cos(angleStep * i), radius * Math.sin(angleStep * i));
+        context.lineTo(radius * cos(angleStep * i), radius * sin(angleStep * i));
     }
     context.closePath();
     context.stroke();
@@ -52,12 +56,12 @@ export function drawPolygon(context: CanvasRenderingContext2D, radius: number, s
 
 export function createStar(radius1: number, radius2: number, points: number): Path2D {
     const path = new Path2D();
-    const angleStep = Math.PI * 2 / points;
+    const angleStep = PI * 2 / points;
     path.moveTo(radius1, 0);
-    path.lineTo(radius2 * Math.cos(angleStep * (0.5)), radius2 * Math.sin(angleStep * (0.5)));
+    path.lineTo(radius2 * cos(angleStep * (0.5)), radius2 * sin(angleStep * (0.5)));
     for (let i = 1; i < points; i++) {
-        path.lineTo(radius1 * Math.cos(angleStep * i), radius1 * Math.sin(angleStep * i));
-        path.lineTo(radius2 * Math.cos(angleStep * (i + 0.5)), radius2 * Math.sin(angleStep * (i + 0.5)));
+        path.lineTo(radius1 * cos(angleStep * i), radius1 * sin(angleStep * i));
+        path.lineTo(radius2 * cos(angleStep * (i + 0.5)), radius2 * sin(angleStep * (i + 0.5)));
     }
     path.closePath();
     return path;

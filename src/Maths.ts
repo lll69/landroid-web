@@ -28,6 +28,9 @@
  * limitations under the License.
  */
 
+const exp = Math.exp;
+const pow = Math.pow;
+
 /** smoothstep. Ken Perlin's version */
 export function smooth(x: number): number {
     return x * x * x * (x * (x * 6 - 15) + 10);
@@ -35,7 +38,7 @@ export function smooth(x: number): number {
 
 /** Kind of like an inverted smoothstep, but */
 export function invsmoothish(x: number): number {
-    return 0.25 * (Math.pow(2 * x - 1, 5) + 1) + 0.5 * x;
+    return 0.25 * (pow(2 * x - 1, 5) + 1) + 0.5 * x;
 }
 
 /** Compute the fraction that progress represents between start and end (inverse of lerp). */
@@ -54,5 +57,5 @@ export function clamp(value: number, min: number, max: number): number {
 
 /** Exponentially smooth current toward target by a factor of speed. */
 export function expSmooth(current: number, target: number, dt: number, speed: number): number {
-    return current + (target - current) * (1 - Math.exp(-dt * speed))
+    return current + (target - current) * (1 - exp(-dt * speed))
 }

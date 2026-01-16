@@ -62,6 +62,12 @@ let DYNAMIC_ZOOM = false;
 
 let camZoom = DEFAULT_CAMERA_ZOOM;
 
+const atan2 = Math.atan2;
+const floor = Math.floor;
+const max = Math.max;
+const random = Math.random;
+const sqrt = Math.sqrt;
+
 function absN(num: bigint): bigint {
     return num >= 0 || num === -9223372036854775808n ? num : -num;
 }
@@ -109,7 +115,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
                 bottomVisible = true;
             } else if (millisDelta > 1000) {
                 bottomText.hidden = false;
-                bottomText.style.opacity = (Math.random() * (millis - 1000) / 1000) as any;
+                bottomText.style.opacity = (random() * (millis - 1000) / 1000) as any;
             }
         }
         if (!topVisible && universe.realDt !== 0) {
@@ -119,7 +125,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
                 topVisible = true;
             } else if (millisDelta > 2000) {
                 topContainer.hidden = false;
-                topContainer.style.opacity = String((Math.random() * (millis - 2000) / 1000));
+                topContainer.style.opacity = String((random() * (millis - 2000) / 1000));
             }
         }
         if (autopilot.enabled) {
@@ -143,7 +149,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
                 " FLORA: " + it.flora + "\n");
         const topString = "  STAR: " + star.name + " (UDC-" + (universe.randomSeed % 100_000n) + ")\n" +
             " CLASS: " + StarClassNames[star.cls] + "\n" +
-            "RADIUS: " + Math.floor(star.radius) + "\n" +
+            "RADIUS: " + floor(star.radius) + "\n" +
             sprintf("  MASS: %.3e\n", star.mass) +
             "BODIES: " + explored.length + " / " + universe.planets.length + "\n" +
             "   FPS: " + (universe.realDt === 0 ? "Paused" : fps.toFixed(1)) + "\n" +
@@ -153,7 +159,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
         topTextNode.textContent = topString;
         const ship = universe.ship;
         const closest = universe.closestPlanet();
-        const distToClosest = Math.floor(closest.pos.distance(ship.pos));
+        const distToClosest = floor(closest.pos.distance(ship.pos));
         let bottomString = "";
         if (ship.landing !== null) {
             bottomString += "LND: " + ship.landing.planet.name;
@@ -192,7 +198,7 @@ function Spaaaace(
         //        val normalizedDist = clamp(distToNearestSurf, 50f, 50_000f) / 50_000f
         if (DYNAMIC_ZOOM) {
             const closest = u.closestPlanetForZoom();
-            const distToNearestSurf = Math.max(0, (u.ship.pos.distance(closest.pos)) - closest.radius * 1.2);
+            const distToNearestSurf = max(0, (u.ship.pos.distance(closest.pos)) - closest.radius * 1.2);
             //            cameraZoom = lerp(0.1f, 5f, smooth(1f-normalizedDist))
             cameraZoom = clamp(500 / distToNearestSurf, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
         } else if (!TOUCH_CAMERA_ZOOM) cameraZoom = DEFAULT_CAMERA_ZOOM;
@@ -233,7 +239,7 @@ function Spaaaace(
         helper.y = visibleSpaceRectMeterTop;
         helper.width = visibleSpaceSizeMeterWidth;
         helper.height = visibleSpaceSizeMeterHeight;
-        helper.radius = Math.sqrt((visibleSpaceSizeMeterWidth * visibleSpaceSizeMeterWidth + visibleSpaceSizeMeterHeight * visibleSpaceSizeMeterHeight) / 4);
+        helper.radius = sqrt((visibleSpaceSizeMeterWidth * visibleSpaceSizeMeterWidth + visibleSpaceSizeMeterHeight * visibleSpaceSizeMeterHeight) / 4);
         // All coordinates are space coordinates now.
 
         // debug outer frame
@@ -244,7 +250,7 @@ function Spaaaace(
         //     style = Stroke(width = 10f / cameraZoom)
         // )
 
-        var x = Math.floor(visibleSpaceRectMeterLeft / gridStep) * gridStep;
+        var x = floor(visibleSpaceRectMeterLeft / gridStep) * gridStep;
         context.strokeStyle = Colors.Eigengrau2;
         while (x < visibleSpaceRectMeterRight) {
             context.lineWidth = (((x % (gridStep * 10) === 0)) ? 3 : 1.5) / cameraZoom;
@@ -255,7 +261,7 @@ function Spaaaace(
             x += gridStep;
         }
 
-        var y = Math.floor(visibleSpaceRectMeterTop / gridStep) * gridStep;
+        var y = floor(visibleSpaceRectMeterTop / gridStep) * gridStep;
         while (y < visibleSpaceRectMeterBottom) {
             context.lineWidth = (((y % (gridStep * 10) === 0)) ? 3 : 1.5) / cameraZoom;
             context.beginPath();
@@ -320,10 +326,10 @@ export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement, to
                     ship.thrust.x = 0;
                     ship.thrust.y = 0;
                 } else {
-                    const a = Math.atan2(y, x);
+                    const a = atan2(y, x);
                     ship.angle = a;
 
-                    const m = Math.sqrt(x * x + y * y);
+                    const m = sqrt(x * x + y * y);
                     if (m < minRadius) {
                         // within this radius, just reorient
                         ship.thrust.x = 0;

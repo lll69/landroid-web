@@ -37,6 +37,11 @@ import { Planet, Universe, UniverseConst } from "./Universe";
 import { Spacecraft15 } from "./Universe15";
 import { Vec2, Vec2_angle, Vec2_makeWithAngleMag } from "./Vec2";
 
+const PI = Math.PI;
+const min = Math.min;
+const sign = Math.sign;
+const sqrt = Math.sqrt;
+
 const enum AutopilotConst {
     BRAKING_TIME = 5,
     SIGHTSEEING_TIME = 15,
@@ -127,16 +132,16 @@ export class Autopilot15 implements Entity {
                 const targetV = this.target.velocity;
                 const targetVectorX = (this.target.pos.x - this.ship.pos.x);
                 const targetVectorY = (this.target.pos.y - this.ship.pos.y);
-                const targetVectorMag = Math.sqrt(targetVectorX * targetVectorX + targetVectorY * targetVectorY);
+                const targetVectorMag = sqrt(targetVectorX * targetVectorX + targetVectorY * targetVectorY);
                 const altitude = targetVectorMag - this.target.radius;
 
-                this.landingAltitude = Math.min(this.target.radius, 100);
+                this.landingAltitude = min(this.target.radius, 100);
 
                 // the following is in the moving reference frame of the target
                 const relativeVx = shipV.x - targetV.x;
                 const relativeVy = shipV.y - targetV.y;
                 const projection = (relativeVx * targetVectorX + relativeVy * targetVectorY) / targetVectorMag;
-                const relativeSpeed = Math.sqrt(relativeVx * relativeVx + relativeVy * relativeVy) * Math.sign(projection);
+                const relativeSpeed = sqrt(relativeVx * relativeVx + relativeVy * relativeVy) * sign(projection);
                 const timeToTarget = (relativeSpeed !== 0) ? altitude / relativeSpeed : 1_000;
 
                 const newBrakingDistance =
@@ -149,7 +154,7 @@ export class Autopilot15 implements Entity {
                 Vec2_makeWithAngleMag(
                     this.leadingPos,
                     this.target.velocity.angle(),
-                    Math.min(altitude / 2, this.target.velocity.mag())
+                    min(altitude / 2, this.target.velocity.mag())
                 ).addSelf(this.target.pos);
                 this.leadingVector.x = this.leadingPos.x - this.ship.pos.x;
                 this.leadingVector.y = this.leadingPos.y - this.ship.pos.y;
@@ -172,7 +177,7 @@ export class Autopilot15 implements Entity {
                         // Strategy: Just slow down. If we get caught in the gravity well, it will
                         // gradually start pulling us more in the direction of the planet, which
                         // will create a graceful deceleration
-                        this.ship.angle = (this.ship.velocity.angle() + Math.PI);
+                        this.ship.angle = (this.ship.velocity.angle() + PI);
 
                         // We want to bleed off velocity over time. Specifically, relativeSpeed px/s
                         // over timeToTarget seconds.

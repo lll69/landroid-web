@@ -32,6 +32,9 @@ import { ARandom, SYSTEM } from "@thi.ng/random";
 import { newRandom } from "./RandomKt";
 import { Vec2, Vec2_copy } from "./Vec2";
 
+const cos = Math.cos;
+const sin = Math.sin;
+
 const enum PhysicsConst {
     /** artificially speed up or slow down the simulation */
     TIME_SCALE = 1,
@@ -129,8 +132,8 @@ export class Container implements Constraint {
             if ((p.pos.mag() + p.radius) > this.radius) {
                 const angle = p.pos.angle();
                 const m = this.radius - p.radius;
-                const offX = m * Math.cos(angle);
-                const offY = m * Math.sin(angle);
+                const offX = m * cos(angle);
+                const offY = m * sin(angle);
                 p.pos.x = p.pos.x * (this.softness) + offX * (1 - this.softness);
                 p.pos.y = p.pos.y * (this.softness) + offY * (1 - this.softness);
             }

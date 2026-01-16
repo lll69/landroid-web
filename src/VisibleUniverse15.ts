@@ -45,6 +45,10 @@ const spaceshipLegs = parseSvgPathData("\nM-7   -6.5\nl-3.5  0\nl-1   -2\nl 0   
 const thrustPath = createPolygon(-3, 3, -5, 0);
 const solveSimulator = Simulator.prototype.solveAll;
 
+const PI = Math.PI;
+const abs = Math.abs;
+const sqrt = Math.sqrt;
+
 export class ZoomedDrawScope15 extends ZoomedDrawScope {
     drawUniverse(universe: VisibleUniverse) {
         universe.constraints.forEach(it => {
@@ -138,7 +142,7 @@ export class ZoomedDrawScope15 extends ZoomedDrawScope {
             context.save();
 
             context.translate(target.pos.x, target.pos.y);
-            context.rotate(autopilot.universe.now * 2 * Math.PI / 10);
+            context.rotate(autopilot.universe.now * 2 * PI / 10);
             context.strokeStyle = color;
             context.lineWidth = 1 / zoom;
             drawPolygon(
@@ -195,13 +199,13 @@ export class VisibleUniverse15 extends VisibleUniverse {
             const orbitRadius =
                 lerp(UniverseConst.PLANET_ORBIT_RANGE_MIN, UniverseConst.PLANET_ORBIT_RANGE_MAX, thisPlanetFrac);
 
-            const period = Math.sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
-            const speed = 2 * Math.PI * orbitRadius / period;
+            const period = sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
+            const speed = 2 * PI * orbitRadius / period;
 
             const p = new Planet(
                 this.star.pos.copy(),
                 radius,
-                Vec2_makeWithAngleMag(Vec2.Zero(), thisPlanetFrac * Math.PI * 2, orbitRadius).addSelf(this.star.pos),
+                Vec2_makeWithAngleMag(Vec2.Zero(), thisPlanetFrac * PI * 2, orbitRadius).addSelf(this.star.pos),
                 speed,
                 Colors.Eigengrau4
             );
@@ -224,7 +228,7 @@ export class VisibleUniverse15 extends VisibleUniverse {
 
         this.ship = new Spacecraft15();
 
-        Vec2_makeWithAngleMag(this.ship.pos, Math.PI / 4, UniverseConst.PLANET_ORBIT_RANGE_MIN).addSelf(this.star.pos);
+        Vec2_makeWithAngleMag(this.ship.pos, PI / 4, UniverseConst.PLANET_ORBIT_RANGE_MIN).addSelf(this.star.pos);
         this.ship.angle = 0;
         this.addEntity(this.ship);
 
@@ -251,13 +255,13 @@ export class VisibleUniverse15 extends VisibleUniverse {
                 );
 
             // Kepler's third law
-            const period = Math.sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
-            const speed = 2 * Math.PI * orbitRadius / period;
+            const period = sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
+            const speed = 2 * PI * orbitRadius / period;
 
             const p = new Planet(
                 this.star.pos,
                 radius,
-                Vec2_makeWithAngleMag(Vec2.Zero(), this.rngForInit.float() * Math.PI * 2, orbitRadius).addSelf(this.star.pos),
+                Vec2_makeWithAngleMag(Vec2.Zero(), this.rngForInit.float() * PI * 2, orbitRadius).addSelf(this.star.pos),
                 speed,
                 Colors.Eigengrau4
             );
@@ -280,10 +284,10 @@ export class VisibleUniverse15 extends VisibleUniverse {
 
         Vec2_makeWithAngleMag(
             this.ship.pos,
-            this.rngForInit.float() * Math.PI * 2,
+            this.rngForInit.float() * PI * 2,
             this.rngForInit.minmax(UniverseConst.PLANET_ORBIT_RANGE_MIN, UniverseConst.PLANET_ORBIT_RANGE_MAX)
         ).addSelf(this.star.pos);
-        this.ship.angle = this.rngForInit.float() * Math.PI * 2;
+        this.ship.angle = this.rngForInit.float() * PI * 2;
         this.addEntity(this.ship);
 
         this.ringfence.add(this.ship);
@@ -306,10 +310,10 @@ export class VisibleUniverse15 extends VisibleUniverse {
                     // 1. relative speed
                     const vDiff = (this.ship.velocity.distance(planet.velocity));
                     // 2. landing angle
-                    const aDiff = Math.abs(this.ship.angle - a);
+                    const aDiff = abs(this.ship.angle - a);
 
                     // landing criteria
-                    if (aDiff < Math.PI / 4
+                    if (aDiff < PI / 4
                         //                        &&
                         //                        vDiff < 100f
                     ) {
@@ -346,7 +350,7 @@ export class VisibleUniverse15 extends VisibleUniverse {
                             );
                             Vec2_makeWithAngleMag(
                                 spark.pos,
-                                this.rng.minmax(0, 2 * Math.PI),
+                                this.rng.minmax(0, 2 * PI),
                                 this.rng.minmax(0.1, 0.5)
                             ).addSelf(impact);
                             Vec2_copy(spark.opos, spark.pos);
@@ -354,7 +358,7 @@ export class VisibleUniverse15 extends VisibleUniverse {
                                 spark.velocity,
                                 //                                            a +
                                 // rng.nextFloatInRange(-PIf, PIf),
-                                this.rng.minmax(0, 2 * Math.PI),
+                                this.rng.minmax(0, 2 * PI),
                                 this.rng.minmax(0.1, 0.5)
                             );
                             spark.velocity.x += this.ship.velocity.x * 0.8;

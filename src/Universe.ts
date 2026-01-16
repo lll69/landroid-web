@@ -37,6 +37,14 @@ import { Body, Constraint, Container, Entity, Simulator } from "./Physics";
 import { chooseRandom } from "./Randomness";
 import { Vec2, Vec2_angle, Vec2_copy, Vec2_makeWithAngleMag, Vec2_makeWithAngleMagAdd } from "./Vec2";
 
+const PI = Math.PI;
+const abs = Math.abs;
+const pow = Math.pow;
+const sqrt = Math.sqrt;
+
+// in kotlin 4/3==1 (Int)
+const FOUR_OVER_THREE = 1;
+
 export const enum UniverseConst {
     UNIVERSE_RANGE = 200_000,
 
@@ -98,13 +106,13 @@ export class Planet extends Body {
         this.color = color;
         this.orbitRadius = pos.distance(orbitCenter)
         // in kotlin 4/3==1 (Int)
-        this.mass = Math.floor(4 / 3) * Math.PI * radius * radius * radius * UniverseConst.PLANETARY_DENSITY;
+        this.mass = FOUR_OVER_THREE * PI * radius * radius * radius * UniverseConst.PLANETARY_DENSITY;
     }
 
     update(sim: Simulator, dt: number) {
         const orbitAngle = Vec2_angle(this.pos, this.orbitCenter);
         // constant linear velocity
-        Vec2_makeWithAngleMag(this.velocity, orbitAngle + Math.PI / 2, this.speed);
+        Vec2_makeWithAngleMag(this.velocity, orbitAngle + PI / 2, this.speed);
 
         super.update(sim, dt);
     }
@@ -168,7 +176,7 @@ export class Star extends Planet {
         super(Vec2.Zero(), radius, Vec2.Zero(), 0, starColor(cls));
         this.cls = cls;
         // in kotlin 4/3==1 (Int)
-        this.mass = Math.floor(4 / 3) * Math.PI * Math.pow(radius, 3) * UniverseConst.STELLAR_DENSITY;
+        this.mass = FOUR_OVER_THREE * PI * pow(radius, 3) * UniverseConst.STELLAR_DENSITY;
         this.collides = false;
     }
     anim = 0;
@@ -207,13 +215,13 @@ export class Universe extends Simulator {
             const orbitRadius =
                 lerp(UniverseConst.PLANET_ORBIT_RANGE_MIN, UniverseConst.PLANET_ORBIT_RANGE_MAX, thisPlanetFrac);
 
-            const period = Math.sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
-            const speed = 2 * Math.PI * orbitRadius / period;
+            const period = sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
+            const speed = 2 * PI * orbitRadius / period;
 
             const p = new Planet(
                 this.star.pos.copy(),
                 radius,
-                Vec2_makeWithAngleMag(Vec2.Zero(), thisPlanetFrac * Math.PI * 2, orbitRadius).addSelf(this.star.pos),
+                Vec2_makeWithAngleMag(Vec2.Zero(), thisPlanetFrac * PI * 2, orbitRadius).addSelf(this.star.pos),
                 speed,
                 Colors.Eigengrau4
             );
@@ -236,7 +244,7 @@ export class Universe extends Simulator {
 
         this.ship = new Spacecraft();
 
-        Vec2_makeWithAngleMag(this.ship.pos, Math.PI / 4, UniverseConst.PLANET_ORBIT_RANGE_MIN).addSelf(this.star.pos);
+        Vec2_makeWithAngleMag(this.ship.pos, PI / 4, UniverseConst.PLANET_ORBIT_RANGE_MIN).addSelf(this.star.pos);
         this.ship.angle = 0;
         this.addEntity(this.ship);
 
@@ -263,13 +271,13 @@ export class Universe extends Simulator {
                 );
 
             // Kepler's third law
-            const period = Math.sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
-            const speed = 2 * Math.PI * orbitRadius / period;
+            const period = sqrt(orbitRadius * orbitRadius * orbitRadius / this.star.mass) * UniverseConst.KEPLER_CONSTANT;
+            const speed = 2 * PI * orbitRadius / period;
 
             const p = new Planet(
                 this.star.pos,
                 radius,
-                Vec2_makeWithAngleMag(Vec2.Zero(), this.rngForInit.float() * Math.PI * 2, orbitRadius).addSelf(this.star.pos),
+                Vec2_makeWithAngleMag(Vec2.Zero(), this.rngForInit.float() * PI * 2, orbitRadius).addSelf(this.star.pos),
                 speed,
                 Colors.Eigengrau4
             );
@@ -292,10 +300,10 @@ export class Universe extends Simulator {
 
         Vec2_makeWithAngleMag(
             this.ship.pos,
-            this.rngForInit.float() * Math.PI * 2,
+            this.rngForInit.float() * PI * 2,
             this.rngForInit.minmax(UniverseConst.PLANET_ORBIT_RANGE_MIN, UniverseConst.PLANET_ORBIT_RANGE_MAX)
         ).addSelf(this.star.pos);
-        this.ship.angle = this.rngForInit.float() * Math.PI * 2;
+        this.ship.angle = this.rngForInit.float() * PI * 2;
         this.addEntity(this.ship);
 
         this.ringfence.add(this.ship);
@@ -363,10 +371,10 @@ export class Universe extends Simulator {
                     // 1. relative speed
                     const vDiff = (this.ship.velocity.distance(planet.velocity));
                     // 2. landing angle
-                    const aDiff = Math.abs(this.ship.angle - a);
+                    const aDiff = abs(this.ship.angle - a);
 
                     // landing criteria
-                    if (aDiff < Math.PI / 4
+                    if (aDiff < PI / 4
                         //                        &&
                         //                        vDiff < 100f
                     ) {
@@ -403,7 +411,7 @@ export class Universe extends Simulator {
                             );
                             Vec2_makeWithAngleMag(
                                 spark.pos,
-                                this.rng.minmax(0, 2 * Math.PI),
+                                this.rng.minmax(0, 2 * PI),
                                 this.rng.minmax(0.1, 0.5)
                             ).addSelf(impact);
                             Vec2_copy(spark.opos, spark.pos);
@@ -411,7 +419,7 @@ export class Universe extends Simulator {
                                 spark.velocity,
                                 //                                            a +
                                 // rng.nextFloatInRange(-PIf, PIf),
-                                this.rng.minmax(0, 2 * Math.PI),
+                                this.rng.minmax(0, 2 * PI),
                                 this.rng.minmax(0.1, 0.5)
                             );
                             spark.velocity.x += this.ship.velocity.x * 0.8;

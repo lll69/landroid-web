@@ -19,12 +19,14 @@
 
 import { ARandom } from "@thi.ng/random";
 
+const clz32 = Math.clz32;
+
 function takeUpperBits(num: number, bitCount: number): number {
     return (num >>> (32 - bitCount)) & ((-bitCount) >> (31));
 }
 
 function fastLog2(value: number): number {
-    return 31 - Math.clz32(value);
+    return 31 - clz32(value);
 }
 
 function nextBits(rnd: XorWowRandom, bitCount: number) {

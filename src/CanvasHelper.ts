@@ -16,10 +16,14 @@
 
 const emptyLineDash = [];
 
+const PI = Math.PI;
+const abs = Math.abs;
+const sqrt = Math.sqrt;
+
 function distance(x: number, y: number, x0: number, y0: number, x1: number, y1: number): number {
     return ((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0) < 1e-20)
-        ? Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0))
-        : Math.abs((x1 - x0) * (y0 - y) - (x0 - x) * (y1 - y0)) / Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
+        ? sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0))
+        : abs((x1 - x0) * (y0 - y) - (x0 - x) * (y1 - y0)) / sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
 }
 
 export class CanvasHelper {
@@ -44,16 +48,16 @@ export class CanvasHelper {
         const dx = x - cx;
         const dy = y - cy;
         const thisRadius = this.radius;
-        if (Math.sqrt(dx * dx + dy * dy) - radius - width > thisRadius) {
+        if (sqrt(dx * dx + dy * dy) - radius - width > thisRadius) {
             return;
-        } else if (Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)) + thisRadius + width < radius) {
+        } else if (sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)) + thisRadius + width < radius) {
             return;
         }
         const context = this.ctx;
         context.strokeStyle = color;
         context.lineWidth = width;
         context.beginPath();
-        context.arc(x, y, radius, 0, 2 * Math.PI);
+        context.arc(x, y, radius, 0, 2 * PI);
         context.stroke();
     }
 
@@ -63,13 +67,13 @@ export class CanvasHelper {
         const dx = x - cx;
         const dy = y - cy;
         const thisRadius = this.radius;
-        if (Math.sqrt(dx * dx + dy * dy) - radius > thisRadius) {
+        if (sqrt(dx * dx + dy * dy) - radius > thisRadius) {
             return;
         }
         const context = this.ctx;
         context.fillStyle = color;
         context.beginPath();
-        context.arc(x, y, radius, 0, 2 * Math.PI);
+        context.arc(x, y, radius, 0, 2 * PI);
         context.fill();
     }
 

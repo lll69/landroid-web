@@ -52,6 +52,11 @@ export const spaceshipPath = parseSvgPathData("\nM11.853 0\nC11.853 -4.418 8.374
 
 const thrustPath = createPolygon(-3, 3, -4, 0);
 
+const PI = Math.PI;
+const ceil = Math.ceil;
+const max = Math.max;
+const sqrt = Math.sqrt;
+
 /**
  * A zoomedDrawScope is one that is scaled, but remembers its zoom level, so you can correct for it
  * if you want to draw single-pixel lines. Which we do.
@@ -124,7 +129,7 @@ export class ZoomedDrawScope {
                 0.01,
                 i / rings
             ); // first rings at force = 1N, dropping off after that
-            const r = Math.sqrt(UniverseConst.GRAVITATION * planet.mass * UniverseConst.SPACECRAFT_MASS / force);
+            const r = sqrt(UniverseConst.GRAVITATION * planet.mass * UniverseConst.SPACECRAFT_MASS / force);
             helper.drawCircle("rgba(255,0,0," + lerp(0.5, 0.1, i / rings) + ")", 2 / this.zoom, planet.pos.x, planet.pos.y, r);
         }
     }
@@ -160,7 +165,7 @@ export class ZoomedDrawScope {
         if (DRAW_STAR_GRAVITATIONAL_FIELDS) this.drawGravitationalField(star);
 
         context.save();
-        context.rotate(star.anim / 23 * Math.PI * 2);
+        context.rotate(star.anim / 23 * PI * 2);
         context.strokeStyle = star.color;
         context.lineWidth = 3 / this.zoom;
         context.lineJoin = "round";
@@ -170,7 +175,7 @@ export class ZoomedDrawScope {
             VisibleUniverseConst.STAR_POINTS
         ));
         context.restore();
-        context.rotate(star.anim / -19 * Math.PI * 2);
+        context.rotate(star.anim / -19 * PI * 2);
         context.strokeStyle = star.color;
         context.lineWidth = 3 / this.zoom;
         context.lineJoin = "round";
@@ -274,20 +279,20 @@ export class ZoomedDrawScope {
             case SparkStyle.DOT:
                 context.fillStyle = spark.color;
                 context.beginPath();
-                context.arc(spark.pos.x, spark.pos.y, spark.size, 0, Math.PI * 2);
+                context.arc(spark.pos.x, spark.pos.y, spark.size, 0, PI * 2);
                 context.fill();
                 break;
             case SparkStyle.DOT_ABSOLUTE:
                 context.fillStyle = spark.color;
                 context.beginPath();
-                context.arc(spark.pos.x / this.zoom, spark.pos.y / this.zoom, spark.size, 0, Math.PI * 2);
+                context.arc(spark.pos.x / this.zoom, spark.pos.y / this.zoom, spark.size, 0, PI * 2);
                 context.fill();
                 break;
             case SparkStyle.RING:
                 context.strokeStyle = spark.color;
                 context.lineWidth = 1 / this.zoom;
                 context.beginPath();
-                context.arc(spark.pos.x, spark.pos.y, spark.size, 0, Math.PI * 2);
+                context.arc(spark.pos.x, spark.pos.y, spark.size, 0, PI * 2);
                 context.stroke();
                 break;
             //                drawPoints(listOf(pos), PointMode.Points, color, strokeWidth = 2f/zoom)
@@ -323,7 +328,7 @@ export class ZoomedDrawScope {
             if (track.positions.size() < 2) return;
             let prev: Vec2 | null = null;
             let a = 0.5;
-            context.lineWidth = Math.max(1, 1 / this.zoom);
+            context.lineWidth = max(1, 1 / this.zoom);
             track.positions.forEachReversed(pos => {
                 if (prev !== null) {
                     context.strokeStyle = "rgba(0,1,0," + a + ")";
@@ -356,7 +361,7 @@ export class VisibleUniverse extends Universe {
         this.triggerDraw = millis;
         this.realDt = dt;
         if (dt > VisibleUniverseConst.MIN_REFRESH_MILLIS) {
-            const count = Math.ceil(dt / VisibleUniverseConst.MIN_REFRESH_MILLIS);
+            const count = ceil(dt / VisibleUniverseConst.MIN_REFRESH_MILLIS);
             for (let i = 1; i <= count; i++) {
                 this.step(lastDraw + dt / count * i);
             }
