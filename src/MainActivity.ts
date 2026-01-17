@@ -202,9 +202,13 @@ export function FlightStick(
                 isDown = true;
                 e.preventDefault();
                 (e.target as Element).setPointerCapture((e as PointerEvent).pointerId);
+            } else if (e.type === "dblclick") {
+                originX = targetX = (e as MouseEvent).clientX * window.devicePixelRatio;
+                originY = targetY = (e as MouseEvent).clientY * window.devicePixelRatio;
+                isDown = true;
             }
         } else {
-            if (e.type === "touchend" || e.type === "touchcancel" || e.type === "pointerup" || e.type === "pointercancel") {
+            if (e.type === "touchend" || e.type === "touchcancel" || e.type === "pointerup" || e.type === "pointercancel" || e.type === "dblclick") {
                 isDown = false;
                 onStickChanged(0, 0);
                 e.preventDefault();
@@ -239,7 +243,7 @@ export function FlightStick(
                 context.strokeStyle = color;
                 context.lineWidth = 2;
                 if (mag < minRadius) {
-                    const density = (window.visualViewport ? (window.visualViewport.scale || 1) : 1);
+                    const density = window.devicePixelRatio;
                     context.setLineDash([density, density * 2]);
                 }
                 context.beginPath();

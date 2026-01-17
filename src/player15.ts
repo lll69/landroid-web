@@ -112,11 +112,21 @@ const pointerInput = activity.pointerInput;
 const drawFn = activity.draw;
 const setAutopilot = activity.setAutopilot;
 let animationID = -1;
+let lastDrawTime = -1;
 let pauseOffset = 0;
 let pauseTime = 0;
 let paused = false;
+const maxInactiveTime = 60000;
 
 function animation(millis: number) {
+    if (lastDrawTime !== -1) {
+        const timeDiff = millis - lastDrawTime;
+        if (timeDiff > maxInactiveTime) {
+            console.warn("Skipped", timeDiff, "ms");
+            pauseOffset += timeDiff;
+        }
+    }
+    lastDrawTime = millis;
     drawFn((paused ? pauseTime : millis) - pauseOffset, canvasContext, helper);
     animationID = requestAnimationFrame(animation);
 }
@@ -139,6 +149,7 @@ function enableTouch() {
     canvas.addEventListener("pointermove", pointerInput);
     canvas.addEventListener("pointerup", pointerInput);
     canvas.addEventListener("pointercancel", pointerInput);
+    canvas.addEventListener("dblclick", pointerInput);
 }
 function disableTouch() {
     canvas.removeEventListener("touchstart", pointerInput);
@@ -149,6 +160,7 @@ function disableTouch() {
     canvas.removeEventListener("pointermove", pointerInput);
     canvas.removeEventListener("pointerup", pointerInput);
     canvas.removeEventListener("pointercancel", pointerInput);
+    canvas.removeEventListener("dblclick", pointerInput);
 }
 enableTouch();
 

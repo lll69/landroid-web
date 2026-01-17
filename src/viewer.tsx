@@ -52,6 +52,7 @@ declare module "@mui/material/Badge" {
     }
 }
 
+const initialDate = moment();
 const minDate = moment("2020-01-01");
 const universeMap = new Map<number, VisibleUniverse15>();
 let lastYear = 0, lastMonth = 0;
@@ -225,7 +226,7 @@ const PlanetCard = ({ planet, index, count, color }: { planet: Planet, index: nu
 }
 
 const AppContent = () => {
-    const [date, setDate] = React.useState(moment());
+    const [date, setDate] = React.useState(initialDate);
     const [showCount, setShowCount] = React.useState(false);
     const [showDialog, setShowDialog] = React.useState(false);
     const [version, setVersion] = React.useState("v15");
@@ -242,11 +243,12 @@ const AppContent = () => {
         const universe = getUniverse(day);
         const cls = universe.star.cls;
         const color = ("Star_" + StarClassNames[cls]) as StarColor;
-
+        const click = () => setDate(day);
         if (cls === StarClass.F) {
             return (
                 <BorderedBadge
                     badgeContent={universe.planets.length}
+                    onClick={click}
                     color={color}
                     overlap="circular">
                     <PickersDay {...props} />
@@ -256,6 +258,7 @@ const AppContent = () => {
         return (
             <Badge
                 badgeContent={universe.planets.length}
+                onClick={click}
                 color={color}
                 overlap="circular">
                 <PickersDay {...props} />
