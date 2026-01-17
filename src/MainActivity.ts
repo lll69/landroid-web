@@ -57,6 +57,7 @@ const TOUCH_CAMERA_ZOOM = true;
 let DYNAMIC_ZOOM = false;
 
 let camZoom = DEFAULT_CAMERA_ZOOM;
+let cachedMassString = "";
 
 const PI = Math.PI;
 const atan2 = Math.atan2;
@@ -97,9 +98,9 @@ function Telemetry(universe: VisibleUniverse, topText: HTMLElement, bottomText: 
     topText.appendChild(topTextNode);
     const bottomTextNode = document.createTextNode("");
     bottomText.appendChild(bottomTextNode);
-    let frames = 0;
+    let frames = 0, totalDt = 0;
     let lastFpsTime = 0;
-    let fps = 0;
+    let fps = 0, vFps = 0;
     return (millis: number) => {
         if (startMillis === -1) {
             startMillis = millis;
@@ -128,10 +129,13 @@ function Telemetry(universe: VisibleUniverse, topText: HTMLElement, bottomText: 
         }
         if (millis - lastFpsTime >= 1000) {
             fps = frames * 1000 / (millis - lastFpsTime);
+            vFps = frames / totalDt;
             lastFpsTime = millis;
             frames = 0;
+            totalDt = 0;
         }
         frames++;
+        totalDt += universe.dt;
         const star = universe.star;
         const explored = universe.planets
             .filter(it => it.explored)
@@ -143,10 +147,10 @@ function Telemetry(universe: VisibleUniverse, topText: HTMLElement, bottomText: 
         const topString = "  STAR: " + star.name + " (UDC-" + (universe.randomSeed % 100_000n) + ")\n" +
             " CLASS: " + StarClassNames[star.cls] + "\n" +
             "RADIUS: " + floor(star.radius) + "\n" +
-            sprintf("  MASS: %.3e\n", star.mass) +
+            cachedMassString +
             "BODIES: " + explored.length + " / " + universe.planets.length + "\n" +
             "   FPS: " + fps.toFixed(1) + "\n" +
-            "  vFPS: " + (1 / universe.dt).toFixed(0)
+            "  vFPS: " + vFps.toFixed(1)
             + "\n\n"
             + explored.join("\n");
         topTextNode.textContent = topString;
@@ -382,6 +386,7 @@ export function MainActivity(topText: HTMLElement, bottomText: HTMLElement) {
     } else {
         universe.initRandom();
     }
+    cachedMassString = sprintf("  MASS: %.3e\n", universe.star.mass);
 
     const space = Spaaaace(universe, zoomedDrawScope);
 
