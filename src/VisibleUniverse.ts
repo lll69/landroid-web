@@ -139,7 +139,7 @@ export class ZoomedDrawScope {
         const context = this.context;
         const helper = this.helper;
         if (DRAW_ORBITS) {
-            helper.drawCircle("#00FFFF80", 1 / this.zoom, planet.orbitCenter.x, planet.orbitCenter.y, planet.pos.distance(planet.orbitCenter));
+            helper.drawCircle("rgba(0,255,255,0.5)", 1 / this.zoom, planet.orbitCenter.x, planet.orbitCenter.y, planet.pos.distance(planet.orbitCenter));
         }
 
         if (DRAW_GRAVITATIONAL_FIELDS) {
