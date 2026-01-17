@@ -52,11 +52,6 @@ declare module "@mui/material/Badge" {
     }
 }
 
-const initialDate = moment();
-const minDate = moment("2020-01-01");
-const universeMap = new Map<number, VisibleUniverse15>();
-let lastYear = 0, lastMonth = 0;
-
 if (navigator.language !== "en") {
     let dateLocalized = false;
     const localizeDate = (lang: string) => {
@@ -67,6 +62,11 @@ if (navigator.language !== "en") {
     localizeDate(navigator.language);
     navigator.languages.forEach(localizeDate);
 }
+
+const initialDate = moment();
+const minDate = moment("2020-01-01");
+const universeMap = new Map<number, VisibleUniverse15>();
+let lastYear = 0, lastMonth = 0;
 
 setLogEnabled(false);
 
