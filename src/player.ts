@@ -143,8 +143,5 @@ document.addEventListener("wheel", handleWheel);
 setTimeout(function () {
     onCanvasResize();
     new ResizeObserver(onCanvasResize).observe(canvas);
-    const isConfirmed = confirm("This project is licensed under the Apache License 2.0.\nThis project is not affiliated with Android or Google.\n\nClick OK to continue running this app, or click Cancel to close this app.");
-    if (isConfirmed) {
-        setTimeout(() => requestAnimationFrame(animation), 0);
-    }
+    requestAnimationFrame(animation);
 }, 0);
