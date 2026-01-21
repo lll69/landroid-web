@@ -90,7 +90,10 @@ function toLocalPx(sz: number): number {
     return sz * window.devicePixelRatio;
 }
 
-function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: HTMLElement, bottomText: HTMLElement, topContainer: HTMLElement, autopilotText: HTMLElement) {
+function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15,
+    topText: HTMLElement, bottomText: HTMLElement,
+    topContainer: HTMLElement, bottomContainer: HTMLElement,
+    autopilotText: HTMLElement) {
     let topVisible = false;
     let bottomVisible = false;
     let startMillis = -1;
@@ -111,12 +114,12 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15, topText: H
         let millisDelta = millis - startMillis;
         if (!bottomVisible && universe.realDt !== 0) {
             if (millisDelta >= 2000) {
-                bottomText.hidden = false;
-                bottomText.style.opacity = 1 as any;
+                bottomContainer.hidden = false;
+                bottomContainer.style.opacity = 1 as any;
                 bottomVisible = true;
             } else if (millisDelta > 1000) {
-                bottomText.hidden = false;
-                bottomText.style.opacity = (random() * (millis - 1000) / 1000) as any;
+                bottomContainer.hidden = false;
+                bottomContainer.style.opacity = (random() * (millis - 1000) / 1000) as any;
             }
         }
         if (!topVisible && universe.realDt !== 0) {
@@ -304,7 +307,8 @@ export function setFixedRandomSeed(seed: bigint) {
     FIXED_RANDOM_SEED = seed;
 }
 
-export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement, topContainer: HTMLElement, autopilotText: HTMLElement) {
+export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement,
+    topContainer: HTMLElement, bottomContainer: HTMLElement, autopilotText: HTMLElement) {
     const universe = new VisibleUniverse15(new Namer15(), randomSeed());
     const zoomedDrawScope = new ZoomedDrawScope15();
 
@@ -352,7 +356,7 @@ export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement, to
     );
     const autopilot = new Autopilot15(universe.ship as Spacecraft15, universe);
     const flightStickDraw = flightStick.draw;
-    const telemetry = Telemetry(universe, autopilot, topText, bottomText, topContainer, autopilotText);
+    const telemetry = Telemetry(universe, autopilot, topText, bottomText, topContainer, bottomContainer, autopilotText);
     const ship = universe.ship as Spacecraft15;
     ship.autopilot = autopilot;
     universe.addEntity(autopilot);

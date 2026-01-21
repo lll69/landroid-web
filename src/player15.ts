@@ -107,7 +107,7 @@ function loadParams() {
 loadParams();
 window.addEventListener("hashchange", loadParams);
 
-const activity = MainActivity15(document.getElementById("topText")!, document.getElementById("bottomText")!, document.getElementById("topContainer")!, document.getElementById("autopilotText")!);
+const activity = MainActivity15(document.getElementById("topText")!, document.getElementById("bottomText")!, document.getElementById("topContainer")!, document.getElementById("bottomContainer")!, document.getElementById("autopilotText")!);
 const pointerInput = activity.pointerInput;
 const drawFn = activity.draw;
 const setAutopilot = activity.setAutopilot;

@@ -68,6 +68,18 @@ body {
     color: var(--color-Console);
 }
 
+.bottom-container {
+    width: 100%;
+    margin: 8px;
+    pointer-events: none;
+    font-size: 12px;
+    font-family: "Roboto Mono", monospace;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    color: var(--color-Console);
+}
+
 .top-right-container {
     margin: 8px;
     position: fixed;
