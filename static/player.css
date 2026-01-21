@@ -130,3 +130,54 @@ body {
     margin: 8px;
     color: var(--color-Console);
 }
+
+#speedContainerMask {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(1px);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+}
+
+.speed-container-hide {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms linear, visibility 200ms step-end;
+}
+
+.speed-container-show {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 200ms linear, visibility 0ms step-start;
+}
+
+#speedContainerMask>table {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+#speedContainer {
+    display: inline-block;
+    background-color: white;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+#speedIntegral,
+#speedDecimal {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+#speedContainerButton {
+    text-align: left;
+}
+
+#speedButton,
+#speedIntegral>button,
+#speedDecimal>button,
+#speedContainerButton>button {
+    user-select: none;
+}

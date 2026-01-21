@@ -60,6 +60,7 @@ const TOUCH_CAMERA_PAN = false;
 const TOUCH_CAMERA_ZOOM = true;
 let DYNAMIC_ZOOM = false;
 
+let playSpeed = 1;
 let camZoom = DEFAULT_CAMERA_ZOOM;
 let cachedMassString = "";
 
@@ -137,8 +138,8 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15,
         } else {
             autopilotTextNode.textContent = "";
         }
-        if (millis - lastFpsTime >= 1000) {
-            fps = frames * 1000 / (millis - lastFpsTime);
+        if (millis - lastFpsTime >= 1000 * playSpeed) {
+            fps = frames * 1000 / (millis - lastFpsTime) * playSpeed;
             vFps = frames / totalDt;
             lastFpsTime = millis;
             frames = 0;
@@ -159,8 +160,9 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15,
             "RADIUS: " + floor(star.radius) + "\n" +
             cachedMassString +
             "BODIES: " + explored.length + " / " + universe.planets.length + "\n" +
-            "   FPS: " + (universe.realDt === 0 ? "Paused" : fps.toFixed(1)) + "\n" +
-            "  vFPS: " + (universe.dt === 0 ? "Paused" : vFps.toFixed(1))
+            "   FPS: " + ((universe.realDt * playSpeed) === 0 ? "Paused" : fps.toFixed(1)) + "\n" +
+            "  vFPS: " + ((universe.dt * playSpeed) === 0 ? "Paused" : vFps.toFixed(1)) + "\n" +
+            " SPEED: " + playSpeed.toFixed(2) + "x"
             + "\n\n"
             + explored.join("\n");
         topTextNode.textContent = topString;
@@ -305,6 +307,10 @@ export function setRandomSeedType(type: RandomSeedType) {
 
 export function setFixedRandomSeed(seed: bigint) {
     FIXED_RANDOM_SEED = seed;
+}
+
+export function setPlaySpeed(speed: number) {
+    playSpeed = speed;
 }
 
 export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement,

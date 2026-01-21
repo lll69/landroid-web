@@ -23,6 +23,7 @@
         </div>
         <div id="loading" class="loading">Loading...</div>
         <div id="rightContainer" class="bottom-right-container controls-hidden">
+            <div style="text-align:right;"><button id="speedButton">1.00x</button></div>
             <select id="zoomSelect">
                 <option>Fixed zoom</option>
                 <option>Dynamic zoom</option>
@@ -32,6 +33,15 @@
             <label class="autopilot-label"><input type="checkbox" id="autopilotCheck">Auto Pilot</label>
             <br>
             <label class="autopilot-label"><input type="checkbox" id="pauseCheck">Pause</label>
+        </div>
+        <div id="speedContainerMask" class="speed-container-hide">
+            <table><tbody><tr><td>
+                <div id="speedContainer">
+                    <div id="speedIntegral"></div>
+                    <div id="speedDecimal"></div>
+                    <div id="speedContainerButton"><button id="butIntegral"></button><button id="butDecimal"></button></div>
+                </div>
+            </td></tr></tbody></table>
         </div>
     </div>
     <script src="playerLoad.js"></script>

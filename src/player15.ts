@@ -16,7 +16,8 @@
 
 import { CanvasHelper } from "./CanvasHelper";
 import { setDrawFlag } from "./Flag15";
-import { DEFAULT_CAMERA_ZOOM, getCamZoom, MainActivity15, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setRandomSeedType } from "./MainActivity15";
+import { DEFAULT_CAMERA_ZOOM, getCamZoom, MainActivity15, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setPlaySpeed, setRandomSeedType } from "./MainActivity15";
+import { initSpeedControl } from "./playerSpeed";
 
 const unsupportedFeatures: Array<String> = [];
 if (typeof BigInt === "undefined") {
@@ -113,6 +114,7 @@ const drawFn = activity.draw;
 const setAutopilot = activity.setAutopilot;
 let animationID = -1;
 let lastDrawTime = -1;
+let playSpeed = 1;
 let pauseOffset = 0;
 let pauseTime = 0;
 let paused = false;
@@ -120,7 +122,7 @@ let needRedraw = false;
 const maxInactiveTime = 60000;
 
 function animation(millis: number) {
-    if (lastDrawTime !== -1) {
+    if (!paused && lastDrawTime !== -1) {
         const timeDiff = millis - lastDrawTime;
         if (timeDiff > maxInactiveTime) {
             console.warn("Skipped", timeDiff, "ms");
@@ -128,7 +130,7 @@ function animation(millis: number) {
         }
     }
     lastDrawTime = millis;
-    if (!paused || needRedraw) drawFn((paused ? pauseTime : millis) - pauseOffset, canvasContext, helper);
+    if (!paused || needRedraw) drawFn(playSpeed * (paused ? pauseTime : millis) - pauseOffset, canvasContext, helper);
     needRedraw = false;
     animationID = requestAnimationFrame(animation);
 }
@@ -248,7 +250,7 @@ pauseCheck.addEventListener("change", function () {
         paused = true;
         disableTouch();
     } else {
-        pauseOffset += performance.now() - pauseTime;
+        pauseOffset += playSpeed * (performance.now() - pauseTime);
         paused = false;
         enableTouch();
     }
@@ -258,6 +260,15 @@ pauseCheck.addEventListener("change", function () {
 zoomSelect.addEventListener("focus", showControlsAutoHide);
 zoomSelect.addEventListener("blur", showControlsAutoHide);
 zoomSelect.addEventListener("change", showControlsAutoHide);
+
+const speedButton = document.getElementById("speedButton")!;
+speedButton.addEventListener("click", initSpeedControl((newSpeed: number, text: string) => {
+    speedButton.textContent = text + "x";
+    const lastSpeed = playSpeed;
+    playSpeed = newSpeed;
+    pauseOffset += (newSpeed - lastSpeed) * performance.now();
+    setPlaySpeed(newSpeed);
+}));
 
 setTimeout(function () {
     onCanvasResize();
