@@ -77,6 +77,12 @@ export class CanvasHelper {
         context.fill();
     }
 
+    mayDrawLine(width: number, x0: number, y0: number, x1: number, y1: number): boolean {
+        const cx = this.x + this.width / 2;
+        const cy = this.y + this.height / 2;
+        return distance(cx, cy, x0, y0, x1, y1) <= this.radius + width;
+    }
+
     drawLine(color: string, width: number, x0: number, y0: number, x1: number, y1: number) {
         const cx = this.x + this.width / 2;
         const cy = this.y + this.height / 2;

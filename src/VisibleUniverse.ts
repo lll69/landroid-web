@@ -308,13 +308,30 @@ export class ZoomedDrawScope {
             const lineWidth = 1 / this.zoom;
             let prevX: number;
             let prevY: number;
+            let drawing = false;
+            context.strokeStyle = Colors.Green;
+            context.lineWidth = lineWidth;
             track.positions.forEach((point, idx) => {
                 if (idx !== 0) {
-                    helper.drawLine(Colors.Green, lineWidth, prevX, prevY, point.x, point.y);
+                    if (helper.mayDrawLine(lineWidth, prevX, prevY, point.x, point.y)) {
+                        if (!drawing) {
+                            drawing = true;
+                            context.beginPath();
+                            context.moveTo(prevX, prevY);
+                        }
+                        context.lineTo(point.x, point.y);
+                    } else if (drawing) {
+                        drawing = false;
+                        context.stroke();
+                    }
                 }
                 prevX = point.x;
                 prevY = point.y;
             });
+            if (drawing) {
+                drawing = false;
+                context.stroke();
+            }
             //            if (positions.size < 2) return
             //            drawPath(Path()
             //                .apply {
@@ -359,6 +376,7 @@ export class VisibleUniverse extends Universe {
     simulateFrame(millis: number) {
         const lastDraw = this.triggerDraw;
         const dt = millis - lastDraw;
+        if (dt === 0) return;
         this.triggerDraw = millis;
         this.realDt = dt;
         if (dt > VisibleUniverseConst.MIN_REFRESH_MILLIS) {

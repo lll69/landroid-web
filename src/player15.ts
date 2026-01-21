@@ -116,6 +116,7 @@ let lastDrawTime = -1;
 let pauseOffset = 0;
 let pauseTime = 0;
 let paused = false;
+let needRedraw = false;
 const maxInactiveTime = 60000;
 
 function animation(millis: number) {
@@ -127,7 +128,8 @@ function animation(millis: number) {
         }
     }
     lastDrawTime = millis;
-    drawFn((paused ? pauseTime : millis) - pauseOffset, canvasContext, helper);
+    if (!paused || needRedraw) drawFn((paused ? pauseTime : millis) - pauseOffset, canvasContext, helper);
+    needRedraw = false;
     animationID = requestAnimationFrame(animation);
 }
 
@@ -137,6 +139,7 @@ function onCanvasResize() {
     const clientRect = canvas.getBoundingClientRect();
     canvas.width = Math.round(clientRect.width * window.devicePixelRatio);
     canvas.height = Math.round(clientRect.height * window.devicePixelRatio);
+    needRedraw = true;
 }
 
 canvas.hidden = false;
@@ -209,7 +212,10 @@ function handleZoom(e: TouchEvent) {
             const dx = e.touches[1].clientX - e.touches[0].clientX;
             const dy = e.touches[1].clientY - e.touches[0].clientY;
             const newDistance = Math.sqrt(dx * dx + dy * dy);
-            if (manualZoom) setCamZoom(downZoom * newDistance / downDistance);
+            if (manualZoom) {
+                setCamZoom(downZoom * newDistance / downDistance);
+                needRedraw = true;
+            }
             e.preventDefault();
         }
     }
@@ -223,6 +229,7 @@ canvas.addEventListener("touchcancel", handleZoom);
 function handleWheel(e: WheelEvent) {
     if (manualZoom) {
         setCamZoom(getCamZoom() * (1 - e.deltaY / 1000));
+        needRedraw = true;
     }
     showControlsAutoHide();
 }
