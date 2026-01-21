@@ -61,20 +61,12 @@ export class Vec2 {
     angle(): number {
         return atan2(this.y, this.x);
     }
-    product(f: number): Vec2 {
-        return new Vec2(this.x * f, this.y * f);
-    }
     static Zero(): Vec2 {
         return new Vec2(0, 0);
     }
     addSelf(other: Vec2): Vec2 {
         this.x += other.x;
         this.y += other.y;
-        return this;
-    }
-    productSelf(f: number): Vec2 {
-        this.x *= f;
-        this.y *= f;
         return this;
     }
 }
