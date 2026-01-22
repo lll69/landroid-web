@@ -6,7 +6,7 @@ import '@fontsource/roboto/700.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { sprintf } from 'sprintf-js';
-import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useScrollTrigger } from '@mui/material';
+import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useScrollTrigger } from '@mui/material';
 import { CalendarPicker, LocalizationProvider, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { Moment } from 'moment';
@@ -70,6 +70,8 @@ let lastYear = 0, lastMonth = 0;
 
 setLogEnabled(false);
 
+const colorTransitionStr = "background-color 250ms cubic-bezier(0.4,0,0.2,1), color 250ms cubic-bezier(0.4,0,0.2,1)";
+
 let theme = createTheme();
 
 theme = createTheme(theme, {
@@ -83,6 +85,18 @@ theme = createTheme(theme, {
         Star_M: theme.palette.augmentColor({ color: { main: "#FF8800" } }),
     }
 });
+
+const themeB = createTheme(theme, { palette: { primary: theme.palette.Star_B } });
+const themeK = createTheme(theme, { palette: { primary: theme.palette.Star_K } });
+const themes = [
+    createTheme(theme, { palette: { primary: theme.palette.Star_O } }),
+    themeB,
+    themeB,
+    themeB,
+    themeK,
+    themeK,
+    createTheme(theme, { palette: { primary: theme.palette.Star_M } }),
+];
 
 const momentToSeed = (moment: Moment) => {
     return moment.year() * 10000 + moment.month() * 100 + moment.date();
@@ -106,6 +120,8 @@ const getUniverse: ((moment: Moment) => VisibleUniverse15) = moment => {
     return cached;
 }
 
+const initialStarClass = getUniverse(initialDate).star.cls;
+
 const borderedStyle = {
     border: "1px solid rgba(0, 0, 0, 0.87)"
 };
@@ -123,14 +139,16 @@ const HideOnScroll = ({ children }) => {
     );
 }
 
-const PlanetCard = ({ planet, index, count, color }: { planet: Planet, index: number, count: number, color: StarColor }) => {
+const PlanetCard = ({ planet, index, count, color, truncate }:
+    { planet: Planet, index: number, count: number, color: StarColor, truncate: boolean }) => {
     const isStar = planet instanceof Star;
+    const truncate3 = truncate ? ((n: number) => n.toFixed(3)) : ((n: number) => n);
     return (
-        <Card raised style={{ margin: "12px 0 12px 0" }}>
+        <Card raised style={{ margin: "16px 0", borderRadius: "16px" }}>
             <CardHeader
                 avatar={
                     <Avatar
-                        sx={{ bgcolor: color + ".main", color: color + ".contrastText" }}
+                        sx={{ bgcolor: color + ".main", color: color + ".contrastText", transition: colorTransitionStr }}
                         style={color === "Star_F" ? borderedStyle : undefined}>
                         {String(index + 1)}
                     </Avatar>
@@ -151,14 +169,14 @@ const PlanetCard = ({ planet, index, count, color }: { planet: Planet, index: nu
                     <Box sx={{ p: 2 }}>
                         <Typography variant="body2">Radius</Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {planet.radius.toFixed(3)}
+                            {truncate3(planet.radius)}
                         </Typography>
                     </Box>
                     <Divider />
                     <Box sx={{ p: 2 }}>
                         <Typography variant="body2">Mass</Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {sprintf("%.3e", planet.mass)}
+                            {truncate ? sprintf("%.3e", planet.mass) : sprintf("%e", planet.mass)}
                         </Typography>
                     </Box>
                     <Divider />
@@ -174,21 +192,21 @@ const PlanetCard = ({ planet, index, count, color }: { planet: Planet, index: nu
                     <Box sx={{ p: 2 }}>
                         <Typography variant="body2">Radius</Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {planet.radius.toFixed(3)}
+                            {truncate3(planet.radius)}
                         </Typography>
                     </Box>
                     <Divider />
                     <Box sx={{ p: 2 }}>
                         <Typography variant="body2">Orbit radius</Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {planet.pos.distance(planet.orbitCenter).toFixed(3)}
+                            {truncate3(planet.pos.distance(planet.orbitCenter))}
                         </Typography>
                     </Box>
                     <Divider />
                     <Box sx={{ p: 2 }}>
                         <Typography variant="body2">Speed</Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {planet.speed.toFixed(3)}
+                            {truncate3(planet.speed)}
                         </Typography>
                     </Box>
                     <Divider />
@@ -225,17 +243,9 @@ const PlanetCard = ({ planet, index, count, color }: { planet: Planet, index: nu
     )
 }
 
-const AppContent = () => {
-    const [date, setDate] = React.useState(initialDate);
-    const [showCount, setShowCount] = React.useState(false);
-    const [showDialog, setShowDialog] = React.useState(false);
-    const [version, setVersion] = React.useState("v15");
-    const seed = momentToSeed(date);
-    const universe = getUniverse(date);
-    const count = universe.planets.length;
-    const starColor = ("Star_" + StarClassNames[universe.star.cls]) as StarColor;
-    const link = "player" + (version === "v15" ? "15" : "") + ".html#seed=" + seed;
-    const closeDialog = () => setShowDialog(false);
+const CalendarPart = ({ topRef, showCount, setShowCount, date, setDate, truncate, setTruncate }:
+    { topRef: React.RefObject<HTMLElement>, showCount: boolean, setShowCount: (_: boolean) => void, date: Moment, setDate: (_: Moment) => void, truncate: boolean, setTruncate: (_: boolean) => void }
+) => {
     const renderDay = (day: Moment, _, props: PickersDayProps<Moment>) => {
         if (!showCount || props.outsideCurrentMonth) {
             return <PickersDay {...props} />;
@@ -266,25 +276,87 @@ const AppContent = () => {
         );
     }
     return (
-        <React.Fragment>
-            <Box textAlign="center" style={{ userSelect: "none" }}>
-                <FormControlLabel
-                    control={<Checkbox checked={showCount} onChange={e => setShowCount(e.target.checked)} />}
-                    label="Show the number of planets on the calendar" />
-                <br />
-                <div style={{ display: "inline-block" }}>
-                    <Card>
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
-                            <CalendarPicker
-                                dayOfWeekFormatter={x => x}
-                                minDate={minDate}
-                                date={date}
-                                onChange={(date) => { setDate(date!) }}
-                                renderDay={renderDay} />
-                        </LocalizationProvider>
-                    </Card>
-                </div>
-            </Box>
+        <Box id="top" textAlign="center" style={{ userSelect: "none" }} ref={topRef}>
+            <FormControlLabel
+                control={<Checkbox checked={!truncate} onChange={e => setTruncate(!e.target.checked)} />}
+                label="Show all decimal places"
+                style={{ textAlign: "left" }} />
+            <br />
+            <FormControlLabel
+                control={<Checkbox checked={showCount} onChange={e => setShowCount(e.target.checked)} />}
+                label="Show the number of planets on the calendar"
+                style={{ textAlign: "left" }} />
+            <br />
+            <div style={{ display: "inline-block" }}>
+                <Card elevation={4} style={{ borderRadius: "8px" }}>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <CalendarPicker
+                            dayOfWeekFormatter={x => x}
+                            minDate={minDate}
+                            date={date}
+                            onChange={(date) => { setDate(date!) }}
+                            reduceAnimations={false}
+                            renderDay={renderDay} />
+                    </LocalizationProvider>
+                </Card>
+            </div>
+        </Box>
+    );
+};
+
+const DialogPart = ({ seed, show, setShow }: { seed: number, show: boolean, setShow: (_: boolean) => void }) => {
+    const [version, setVersion] = React.useState("v15");
+    const link = "player" + (version === "v15" ? "15" : "") + ".html#seed=" + seed;
+    const closeDialog = () => setShow(false);
+    return (
+        <Dialog
+            open={show}
+            onClose={closeDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description">
+            <DialogTitle id="alert-dialog-title">Select Version</DialogTitle>
+            <DialogContent>
+                <FormControl id="alert-dialog-description">
+                    <RadioGroup
+                        value={version}
+                        onChange={e => setVersion(e.target.value)}
+                        name="radio-buttons-group">
+                        <FormControlLabel value="v14" control={<Radio />} label="Android 14 (Upside Down Cake)" />
+                        <FormControlLabel value="v15" control={<Radio />} label="Android 15 (Vanilla Ice Cream)" />
+                    </RadioGroup>
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={closeDialog}>Cancel</Button>
+                <Button href={link} onClick={closeDialog} autoFocus>Play</Button>
+            </DialogActions>
+        </Dialog>)
+}
+
+const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
+    const [date, setDate] = React.useState(initialDate);
+    const [showCount, setShowCount] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [truncateResult, setTruncateResult] = React.useState(true);
+    const topRef = React.useRef<HTMLElement>(null);
+    const seed = momentToSeed(date);
+    const universe = getUniverse(date);
+    const count = universe.planets.length;
+    const starColor = ("Star_" + StarClassNames[universe.star.cls]) as StarColor;
+    const setDateDispatch = (date: Moment) => {
+        setDate(date);
+        setTheme(getUniverse(date).star.cls);
+    }
+    return (
+        <>
+            <CalendarPart
+                topRef={topRef}
+                showCount={showCount}
+                setShowCount={setShowCount}
+                date={date}
+                setDate={setDateDispatch}
+                truncate={truncateResult}
+                setTruncate={setTruncateResult} />
             <Box>
                 <p>
                     <b>Easter egg content on {date.format("L")}:</b>
@@ -293,42 +365,26 @@ const AppContent = () => {
                 </p>
             </Box>
             <Box>
-                <PlanetCard planet={universe.star} index={-1} count={count} color={starColor} />
-                {universe.planets.map((planet, index) => (<PlanetCard key={index} planet={planet} index={index} count={count} color={starColor} />))}
+                <PlanetCard key={-1} planet={universe.star} index={-1} count={count} color={starColor} truncate={truncateResult} />
+                {universe.planets.map((planet, index) => (<PlanetCard key={index} planet={planet} index={index} count={count} color={starColor} truncate={truncateResult} />))}
             </Box>
-            <Dialog
-                open={showDialog}
-                onClose={closeDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description">
-                <DialogTitle id="alert-dialog-title">Select Version</DialogTitle>
-                <DialogContent>
-                    <FormControl id="alert-dialog-description">
-                        <RadioGroup
-                            value={version}
-                            onChange={e => setVersion(e.target.value)}
-                            name="radio-buttons-group">
-                            <FormControlLabel value="v14" control={<Radio />} label="Android 14 (Upside Down Cake)" />
-                            <FormControlLabel value="v15" control={<Radio />} label="Android 15 (Vanilla Ice Cream)" />
-                        </RadioGroup>
-                    </FormControl>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeDialog}>Cancel</Button>
-                    <Button href={link} onClick={closeDialog} autoFocus>Play</Button>
-                </DialogActions>
-            </Dialog>
-        </React.Fragment>
+            <Link href="#top" onClick={e => { if (topRef.current) { e.preventDefault(); topRef.current.scrollIntoView({ behavior: "smooth" }) } }}>Back to Top</Link>
+            <DialogPart
+                seed={seed}
+                show={showDialog}
+                setShow={setShowDialog} />
+        </>
     );
 }
 
 const App = () => {
+    const [themeIndex, setThemeIndex] = React.useState(initialStarClass as number);
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={themes[themeIndex]}>
             <CssBaseline />
             <HideOnScroll>
                 <AppBar>
-                    <Toolbar>
+                    <Toolbar sx={{ bgcolor: "primary.main", transition: colorTransitionStr }}>
                         <Typography variant="h6" component="h1">
                             LAndroid Easter Egg Planet Viewer
                         </Typography>
@@ -346,7 +402,7 @@ const App = () => {
                     <center>
                         <Typography variant="h5" component="p" gutterBottom>↓ SELECT A DATE BELOW TO VIEW THE CONTENT ↓</Typography>
                     </center>
-                    <AppContent />
+                    <AppContent setTheme={setThemeIndex} />
                 </Box>
             </Container>
         </ThemeProvider>

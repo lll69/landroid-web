@@ -155,7 +155,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15,
                 "  ATMO: " + it.atmosphere + "\n" +
                 " FAUNA: " + it.fauna + "\n" +
                 " FLORA: " + it.flora + "\n");
-        const topString = "  STAR: " + star.name + " (UDC-" + (universe.randomSeed % 100_000n) + ")\n" +
+        const topString = "  STAR: " + star.name + " (VIC-" + (universe.randomSeed % 100_000n) + ")\n" +
             " CLASS: " + StarClassNames[star.cls] + "\n" +
             "RADIUS: " + floor(star.radius) + "\n" +
             cachedMassString +
