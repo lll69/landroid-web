@@ -144,7 +144,7 @@ const PlanetCard = ({ planet, index, count, color, truncate }:
     const isStar = planet instanceof Star;
     const truncate3 = truncate ? ((n: number) => n.toFixed(3)) : ((n: number) => n);
     return (
-        <Card raised style={{ margin: "16px 0", borderRadius: "16px" }}>
+        <Card raised sx={{ margin: "16px 0", borderRadius: "16px" }}>
             <CardHeader
                 avatar={
                     <Avatar
@@ -276,30 +276,28 @@ const CalendarPart = ({ topRef, showCount, setShowCount, date, setDate, truncate
         );
     }
     return (
-        <Box id="top" textAlign="center" style={{ userSelect: "none" }} ref={topRef}>
+        <Box id="top" textAlign="center" sx={{ userSelect: "none" }} ref={topRef}>
             <FormControlLabel
                 control={<Checkbox checked={!truncate} onChange={e => setTruncate(!e.target.checked)} />}
                 label="Show all decimal places"
-                style={{ textAlign: "left" }} />
+                sx={{ textAlign: "left" }} />
             <br />
             <FormControlLabel
                 control={<Checkbox checked={showCount} onChange={e => setShowCount(e.target.checked)} />}
                 label="Show the number of planets on the calendar"
-                style={{ textAlign: "left" }} />
+                sx={{ textAlign: "left" }} />
             <br />
-            <div style={{ display: "inline-block" }}>
-                <Card elevation={4} style={{ borderRadius: "8px" }}>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <CalendarPicker
-                            dayOfWeekFormatter={x => x}
-                            minDate={minDate}
-                            date={date}
-                            onChange={(date) => { setDate(date!) }}
-                            reduceAnimations={false}
-                            renderDay={renderDay} />
-                    </LocalizationProvider>
-                </Card>
-            </div>
+            <Card elevation={4} sx={{ borderRadius: "32px", display: "inline-block" }}>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <CalendarPicker
+                        dayOfWeekFormatter={x => x}
+                        minDate={minDate}
+                        date={date}
+                        onChange={(date) => { setDate(date!) }}
+                        reduceAnimations={false}
+                        renderDay={renderDay} />
+                </LocalizationProvider>
+            </Card>
         </Box>
     );
 };
@@ -360,7 +358,7 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
             <Box>
                 <p>
                     <b>Easter egg content on {date.format("L")}:</b>
-                    <Button style={{ margin: "0 8px 0 8px" }} variant="contained" onClick={() => setShowDialog(true)}>Play Online</Button>
+                    <Button sx={{ margin: "0 8px" }} variant="contained" onClick={() => setShowDialog(true)}>Play Online</Button>
                     <br />Number of planets: <b>{count}</b>
                 </p>
             </Box>
