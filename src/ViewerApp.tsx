@@ -1,12 +1,6 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-
 import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
 import { sprintf } from 'sprintf-js';
-import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useScrollTrigger } from '@mui/material';
+import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, CircularProgress, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useScrollTrigger } from '@mui/material';
 import { CalendarPicker, LocalizationProvider, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { Moment } from 'moment';
@@ -375,10 +369,10 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
     );
 }
 
-const App = () => {
+export const ViewerApp = ({ P }: { P?: boolean }) => {
     const [themeIndex, setThemeIndex] = React.useState(initialStarClass as number);
     return (
-        <ThemeProvider theme={themes[themeIndex]}>
+        <ThemeProvider theme={P ? theme : themes[themeIndex]}>
             <CssBaseline />
             <HideOnScroll>
                 <AppBar>
@@ -400,18 +394,9 @@ const App = () => {
                     <center>
                         <Typography variant="h5" component="p" gutterBottom>↓ SELECT A DATE BELOW TO VIEW THE CONTENT ↓</Typography>
                     </center>
-                    <AppContent setTheme={setThemeIndex} />
+                    {P ? <center><CircularProgress /></center> : <AppContent setTheme={setThemeIndex} />}
                 </Box>
             </Container>
         </ThemeProvider>
     );
 }
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-    <App />
-);
-
-const script = document.createElement("script");
-script.src = "/counter.js";
-script.defer = script.async = true;
-document.head.appendChild(script);
