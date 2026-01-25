@@ -239,12 +239,15 @@ function handleWheel(e: WheelEvent) {
 document.addEventListener("wheel", handleWheel);
 
 const autopilotCheck = document.getElementById("autopilotCheck") as HTMLInputElement;
+autopilotCheck.checked = false;
 autopilotCheck.addEventListener("change", function () {
     setAutopilot(autopilotCheck.checked);
     showControlsAutoHide();
 });
+
 const pauseCheck = document.getElementById("pauseCheck") as HTMLInputElement;
-pauseCheck.addEventListener("change", function () {
+pauseCheck.checked = false;
+function onPauseCheck() {
     if (pauseCheck.checked) {
         pauseTime = performance.now();
         paused = true;
@@ -255,7 +258,8 @@ pauseCheck.addEventListener("change", function () {
         enableTouch();
     }
     showControlsAutoHide();
-})
+}
+pauseCheck.addEventListener("change", onPauseCheck);
 
 zoomSelect.addEventListener("focus", showControlsAutoHide);
 zoomSelect.addEventListener("blur", showControlsAutoHide);
@@ -263,6 +267,18 @@ zoomSelect.addEventListener("change", showControlsAutoHide);
 
 const speedButton = document.getElementById("speedButton")!;
 speedButton.addEventListener("click", initSpeedControl((newSpeed: number, text: string) => {
+    if (newSpeed === 0) {
+        if (!pauseCheck.checked) {
+            pauseCheck.checked = true;
+            onPauseCheck();
+        }
+        return;
+    } else {
+        if (pauseCheck.checked) {
+            pauseCheck.checked = false;
+            onPauseCheck();
+        }
+    }
     speedButton.textContent = text + "x";
     const lastSpeed = playSpeed;
     playSpeed = newSpeed;

@@ -114,26 +114,27 @@ export function initSpeedControl(setSpeed: (speed: number, text: string) => void
     integralUpButton.style.fontWeight = integralDownButton.style.fontWeight =
         integralCloseButton.style.fontWeight = decimalCloseButton.style.fontWeight =
         integralButton.style.fontWeight = decimalButton.style.fontWeight = "bold";
-    decimalDiv.style.display = "none";
     integralCloseButton.addEventListener("click", closeControl);
     integralUpButton.addEventListener("click", integralUp);
     integralDownButton.addEventListener("click", integralDown);
     decimalCloseButton.addEventListener("click", closeControl);
     speedContainerMask.addEventListener("click", closeControl);
     document.getElementById("speedContainer")!.addEventListener("click", e => e.stopPropagation());
-    integralButton.addEventListener("click", () => {
-        integralDiv.style.display = "";
-        decimalDiv.style.display = "none";
+    integralDiv.addEventListener("mouseenter", () => {
+        integralButton.className = "speed-highlight";
     });
-    decimalButton.addEventListener("click", () => {
-        integralDiv.style.display = "none";
-        decimalDiv.style.display = "";
+    integralDiv.addEventListener("mouseleave", () => {
+        integralButton.className = "";
+    });
+    decimalDiv.addEventListener("mouseenter", () => {
+        decimalButton.className = "speed-highlight";
+    });
+    decimalDiv.addEventListener("mouseleave", () => {
+        decimalButton.className = "";
     });
     refreshIntegralButton();
     refreshIntegralButtonText();
     return () => {
-        integralDiv.style.display = "";
-        decimalDiv.style.display = "none";
         integralPageOffset = 0;
         refreshIntegralButton();
         refreshIntegralButtonText();

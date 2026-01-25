@@ -94,8 +94,8 @@ function renderPlayer15() {
                         <table><tbody><tr><td>
                             <div id="speedContainer">
                                 <div id="speedIntegral"></div>
+                                <div id="speedContainerButton"><span id="butIntegral"></span><span id="butDecimal"></span>x</div>
                                 <div id="speedDecimal"></div>
-                                <div id="speedContainerButton"><button id="butIntegral"></button><button id="butDecimal"></button></div>
                             </div>
                         </td></tr></tbody></table>
                     </div>

@@ -137,6 +137,7 @@ body {
     position: fixed;
     width: 100vw;
     height: 100vh;
+    color: initial;
 }
 
 .speed-container-hide {
@@ -149,6 +150,10 @@ body {
     opacity: 1;
     visibility: visible;
     transition: opacity 200ms linear, visibility 0ms step-start;
+}
+
+.speed-highlight {
+    background-color: var(--color-Eigengrau4);
 }
 
 #speedContainerMask>table {
