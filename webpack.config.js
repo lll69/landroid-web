@@ -82,18 +82,18 @@ export default {
           test: /[\\/]node_modules[\\/](@emotion|@fontsource|@mui)[\\/]/,
           priority: 20,
           reuseExistingChunk: true,
-          filename: "[name].bundle.js"
+          filename: "U[name].[contenthash].js" // Ui
         },
         moment: {
           test: /[\\/]node_modules[\\/](@date-io|dayjs)[\\/]/,
           priority: 10,
           reuseExistingChunk: true,
-          filename: "[name].bundle.js"
+          filename: "D[name].[contenthash].js" // Date
         },
         default: {
           priority: -20,
           reuseExistingChunk: true,
-          filename: "[name].bundle.js"
+          filename: "A[name].[contenthash].js" // App
         },
       }
     },
