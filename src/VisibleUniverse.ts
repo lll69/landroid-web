@@ -49,10 +49,6 @@ const enum VisibleUniverseConst {
     MIN_REFRESH_MILLIS = 24
 }
 
-export const spaceshipPath = parseSvgPathData("\nM11.853 0\nC11.853 -4.418 8.374 -8 4.083 -8\nL-5.5 -8\nC-6.328 -8 -7 -7.328 -7 -6.5\nC-7 -5.672 -6.328 -5 -5.5 -5\nL-2.917 -5\nC-1.26 -5 0.083 -3.657 0.083 -2\nL0.083 2\nC0.083 3.657 -1.26 5 -2.917 5\nL-5.5 5\nC-6.328 5 -7 5.672 -7 6.5\nC-7 7.328 -6.328 8 -5.5 8\nL4.083 8\nC8.374 8 11.853 4.418 11.853 0\nZ\n");
-
-const thrustPath = createPolygon(-3, 3, -4, 0);
-
 const PI = Math.PI;
 const ceil = Math.ceil;
 const max = Math.max;
@@ -67,6 +63,10 @@ export class ZoomedDrawScope {
     context: CanvasRenderingContext2D;
     helper: CanvasHelper;
     containerDash: Array<number> = [0, 0];
+
+    readonly spaceshipPath = parseSvgPathData("\nM11.853 0\nC11.853 -4.418 8.374 -8 4.083 -8\nL-5.5 -8\nC-6.328 -8 -7 -7.328 -7 -6.5\nC-7 -5.672 -6.328 -5 -5.5 -5\nL-2.917 -5\nC-1.26 -5 0.083 -3.657 0.083 -2\nL0.083 2\nC0.083 3.657 -1.26 5 -2.917 5\nL-5.5 5\nC-6.328 5 -7 5.672 -7 6.5\nC-7 7.328 -6.328 8 -5.5 8\nL4.083 8\nC8.374 8 11.853 4.418 11.853 0\nZ\n");
+
+    readonly thrustPath = createPolygon(-3, 3, -4, 0);
 
     drawUniverse(universe: VisibleUniverse) {
         // triggerDraw.value // Please recompose when this value changes.
@@ -205,15 +205,15 @@ export class ZoomedDrawScope {
         //                    style = Stroke(width = 2f / zoom)
         //                )
         context.fillStyle = Colors.Eigengrau;
-        context.fill(spaceshipPath); // fauxpaque
+        context.fill(this.spaceshipPath); // fauxpaque
         context.strokeStyle = ship.transit ? Colors.Black : Colors.White;
         context.lineWidth = 2 / this.zoom;
-        context.stroke(spaceshipPath);
+        context.stroke(this.spaceshipPath);
         if (ship.thrust.x !== 0 || ship.thrust.y !== 0) {
             context.strokeStyle = "#FF8800";
             context.lineJoin = "round";
             context.lineWidth = 2 / this.zoom;
-            context.stroke(thrustPath);
+            context.stroke(this.thrustPath);
         }
         //                drawRect(
         //                    topLeft = Offset(-1f, -1f),

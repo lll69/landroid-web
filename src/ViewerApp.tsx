@@ -10,7 +10,7 @@ import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Check
 import { CalendarPicker, LocalizationProvider, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { Moment } from 'moment';
-import * as moment from 'moment';
+import moment from 'moment';
 import { VisibleUniverse15 } from './VisibleUniverse15';
 import { Namer15 } from './Namer15';
 import { Planet, Star, StarClass, StarClassNames } from './Universe';
@@ -52,7 +52,7 @@ declare module "@mui/material/Badge" {
     }
 }
 
-if (navigator.language !== "en") {
+if (typeof navigator !== "undefined" && navigator.language !== "en") {
     let dateLocalized = false;
     const localizeDate = (lang: string) => {
         if (!dateLocalized) {

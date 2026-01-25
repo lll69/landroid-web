@@ -40,10 +40,8 @@ import { chooseRandom } from "./Randomness";
 import { Landing, Planet, Spacecraft, Spark, SparkStyle, Star, StarClass, StarClasses, UniverseConst } from "./Universe";
 import { Landing15, Spacecraft15 } from "./Universe15";
 import { Vec2, Vec2_angle, Vec2_copy, Vec2_makeWithAngleMag } from "./Vec2";
-import { spaceshipPath, VisibleUniverse, ZoomedDrawScope } from "./VisibleUniverse";
+import { VisibleUniverse, ZoomedDrawScope } from "./VisibleUniverse";
 
-const spaceshipLegs = parseSvgPathData("\nM-7   -6.5\nl-3.5  0\nl-1   -2\nl 0    4\nl 1   -2\nZ\nM-7    6.5\nl-3.5  0\nl-1   -2\nl 0    4\nl 1   -2\nZ\n")
-const thrustPath = createPolygon(-3, 3, -5, 0);
 const solveSimulator = Simulator.prototype.solveAll;
 
 const PI = Math.PI;
@@ -51,6 +49,9 @@ const abs = Math.abs;
 const sqrt = Math.sqrt;
 
 export class ZoomedDrawScope15 extends ZoomedDrawScope {
+    readonly spaceshipLegs = parseSvgPathData("\nM-7   -6.5\nl-3.5  0\nl-1   -2\nl 0    4\nl 1   -2\nZ\nM-7    6.5\nl-3.5  0\nl-1   -2\nl 0    4\nl 1   -2\nZ\n")
+    readonly thrustPath = createPolygon(-3, 3, -5, 0);
+
     drawUniverse(universe: VisibleUniverse) {
         universe.constraints.forEach(it => {
             if (it instanceof Landing) {
@@ -89,20 +90,20 @@ export class ZoomedDrawScope15 extends ZoomedDrawScope {
         if (ship.landing !== null) {
             context.strokeStyle = "#CCCCCC";
             context.lineWidth = 2 / this.zoom;
-            context.stroke(spaceshipLegs);
+            context.stroke(this.spaceshipLegs);
         }
         // draw the ship
         context.fillStyle = Colors.Eigengrau;
-        context.fill(spaceshipPath); // fauxpaque
+        context.fill(this.spaceshipPath); // fauxpaque
         context.strokeStyle = ship.transit ? Colors.Black : Colors.White;
         context.lineWidth = 2 / this.zoom;
-        context.stroke(spaceshipPath);
+        context.stroke(this.spaceshipPath);
         // draw thrust
         if (ship.thrust.x !== 0 || ship.thrust.y !== 0) {
             context.strokeStyle = "#FF8800";
             context.lineJoin = "round";
             context.lineWidth = 2 / this.zoom;
-            context.stroke(thrustPath);
+            context.stroke(this.thrustPath);
         }
         context.restore();
         helper.x = oldHelperX;
