@@ -13,7 +13,7 @@ function renderViewer() {
             <head>
                 <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
-                <title>LAndroid Easter Egg Planet Viewer</title>
+                <title>LAndroid 14/15/16 Easter Egg Planet Viewer</title>
                 <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
                 <meta name="description" content="Check the daily content of LAndroid Easter Egg (Android 14 and Android 15/16 Easter Egg), including the names, types, and total numbers of stars and planets. You can also view the content for past or future days." />
             </head>

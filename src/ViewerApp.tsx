@@ -387,7 +387,7 @@ export default ({ P }: { P?: boolean }) => {
             <Container>
                 <Box sx={{ my: 2 }}>
                     <p>
-                        Check the daily content of LAndroid Easter Egg (Android 14 and Android 15 Easter Egg), including the names, types, and total numbers of stars and planets.
+                        Check the daily content of LAndroid Easter Egg (Android 14/15/16 Easter Egg), including the names, types, and total numbers of stars and planets.
                         You can also view the content for past or future days.
                     </p>
                     <p>We use the generation algorithm from the original Easter Egg, but the content cannot be guaranteed to match the original.</p>
