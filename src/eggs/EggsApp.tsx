@@ -99,6 +99,11 @@ export default memo(({ P }: { P?: boolean }) => {
             <Toolbar />
             <Container>
                 <EggsPart P={P} />
+                <p>
+                    This project contains different versions of Android Easter eggs,
+                    intended to organize the various versions of Android Easter eggs.
+                    The goal is to allow most devices to experience different versions of the Easter eggs on the web.
+                </p>
             </Container>
         </ThemeProvider>
     )

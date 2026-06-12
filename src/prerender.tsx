@@ -37,7 +37,7 @@ function renderEggsApp() {
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
                 <title>Android Easter Eggs Online</title>
                 <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
-                <meta name="description" content="This project includes different versions of Android Easter eggs, intended to organize the various versions of Android Easter eggs. The goal is to allow most devices to experience different versions of the Easter eggs on the web." />
+                <meta name="description" content="This project contains different versions of Android Easter eggs, intended to organize the various versions of Android Easter eggs. The goal is to allow most devices to experience different versions of the Easter eggs on the web." />
                 <style>{`
 html, body {
 width: 100%;
