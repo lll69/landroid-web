@@ -369,7 +369,7 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
     );
 }
 
-export const ViewerApp = ({ P }: { P?: boolean }) => {
+export default ({ P }: { P?: boolean }) => {
     const [themeIndex, setThemeIndex] = React.useState(initialStarClass as number);
     return (
         <ThemeProvider theme={P ? theme : themes[themeIndex]}>

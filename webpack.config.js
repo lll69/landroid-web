@@ -14,7 +14,8 @@ export default {
   entry: {
     player: "./src/player.ts",
     player15: "./src/player15.ts",
-    viewer: "./src/viewer.tsx"
+    viewer: "./src/viewer.tsx",
+    "eggs/index": "./src/eggs/index.tsx"
   },
   module: {
     rules: [
@@ -77,6 +78,7 @@ export default {
       chunks: "all",
       minSize: 16384,
       minChunks: 2,
+      filename: "A[name].[contenthash].js",
       cacheGroups: {
         mui: {
           test: /[\\/]node_modules[\\/](@emotion|@fontsource|@mui)[\\/]/,

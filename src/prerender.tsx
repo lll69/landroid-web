@@ -1,6 +1,7 @@
 import { argv } from 'node:process';
 import { renderToString } from 'react-dom/server';
-import { ViewerApp } from './ViewerApp';
+import ViewerApp from './ViewerApp';
+import EggsApp from './eggs/EggsApp';
 
 const manifest = JSON.parse(argv[2]);
 const result: string[][] = [];
@@ -13,7 +14,7 @@ function renderViewer() {
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
                 <title>LAndroid Easter Egg Planet Viewer</title>
                 <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
-                <meta name="description" content="Check the daily content of LAndroid Easter Egg (Android 14 and Android 15 Easter Egg), including the names, types, and total numbers of stars and planets. You can also view the content for past or future days." />
+                <meta name="description" content="Check the daily content of LAndroid Easter Egg (Android 14 and Android 15/16 Easter Egg), including the names, types, and total numbers of stars and planets. You can also view the content for past or future days." />
             </head>
             <body>
                 <div id="root">
@@ -25,6 +26,28 @@ function renderViewer() {
         </html>
     );
     result.push(["viewer.html", html]);
+}
+
+function renderEggsApp() {
+    const html = "<!DOCTYPE html>\n" + renderToString(
+        <html>
+            <head>
+                <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
+                <meta name="viewport" content="width=device-width,initial-scale=1" />
+                <title>Android Easter Eggs Online</title>
+                <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+                <meta name="description" content="This project includes different versions of Android Easter eggs, intended to organize the various versions of Android Easter eggs. The goal is to allow most devices to experience different versions of the Easter eggs on the web." />
+            </head>
+            <body>
+                <div id="root">
+                    <EggsApp />
+                    <noscript><center>You need to enable JavaScript to run this app.</center></noscript>
+                </div>
+                {(manifest["eggs/index"] as string[]).map(src => <script src={"/" + src}></script>)}
+            </body>
+        </html>
+    );
+    result.push(["eggs/index.html", html]);
 }
 
 function renderPlayer() {
@@ -111,6 +134,7 @@ function renderPlayer15() {
 
 function main() {
     renderViewer();
+    renderEggsApp();
     renderPlayer();
     renderPlayer15();
 }
