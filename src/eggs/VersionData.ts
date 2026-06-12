@@ -8,6 +8,8 @@ import h_android_logo from "./imgs/h_android_logo";
 import i_platlogo_rectangle from "./imgs/i_platlogo_rectangle";
 import j_android_logo from "./imgs/j_android_logo";
 import k_android_logo from "./imgs/k_android_logo";
+import u_android14_patch_adaptive from "./imgs/u_android14_patch_adaptive";
+import v_android15_patch_adaptive from "./imgs/v_android15_patch_adaptive";
 import { VersionGroup, VersionItem } from "./VersionType";
 
 export const enum VERSION_CODES {
@@ -87,6 +89,24 @@ API_LEVELS[VERSION_CODES.BASE_1_1] = "1.1";
 API_LEVELS[VERSION_CODES.BASE] = "1.0";
 
 export const VERSIONS: VersionGroup[] = [
+    [
+        {
+            minApi: VERSION_CODES.VANILLA_ICE_CREAM,
+            maxApi: VERSION_CODES.VANILLA_ICE_CREAM,
+            eggName: "Landroid",
+            verName: "Vanilla Ice Cream",
+            iconUrl: v_android15_patch_adaptive,
+        }
+    ],
+    [
+        {
+            minApi: VERSION_CODES.UPSIDE_DOWN_CAKE,
+            maxApi: VERSION_CODES.UPSIDE_DOWN_CAKE,
+            eggName: "Landroid",
+            verName: "Upside Down Cake",
+            iconUrl: u_android14_patch_adaptive,
+        }
+    ],
     [
         {
             minApi: VERSION_CODES.KITKAT,
