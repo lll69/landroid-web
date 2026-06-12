@@ -3,6 +3,11 @@ import b_android_cupcake from "./imgs/b_android_cupcake";
 import b_android_donut from "./imgs/b_android_donut";
 import b_android_eclair from "./imgs/b_android_eclair";
 import b_android_froyo from "./imgs/b_android_froyo";
+import g_android_logo from "./imgs/g_android_logo";
+import h_android_logo from "./imgs/h_android_logo";
+import i_platlogo_rectangle from "./imgs/i_platlogo_rectangle";
+import j_android_logo from "./imgs/j_android_logo";
+import k_android_logo from "./imgs/k_android_logo";
 import { VersionGroup, VersionItem } from "./VersionType";
 
 export const enum VERSION_CODES {
@@ -84,45 +89,90 @@ API_LEVELS[VERSION_CODES.BASE] = "1.0";
 export const VERSIONS: VersionGroup[] = [
     [
         {
+            minApi: VERSION_CODES.KITKAT,
+            maxApi: VERSION_CODES.KITKAT_WATCH,
+            eggName: "Dessert Case",
+            verName: "KitKat",
+            iconUrl: k_android_logo,
+        }
+    ],
+    [
+        {
+            minApi: VERSION_CODES.JELLY_BEAN,
+            maxApi: VERSION_CODES.JELLY_BEAN_MR2,
+            eggName: "BeanBag",
+            verName: "Jelly Bean",
+            iconUrl: j_android_logo,
+        }
+    ],
+    [
+        {
+            minApi: VERSION_CODES.ICE_CREAM_SANDWICH,
+            maxApi: VERSION_CODES.ICE_CREAM_SANDWICH_MR1,
+            eggName: "Nyandroid",
+            verName: "Ice Cream Sandwich",
+            iconUrl: i_platlogo_rectangle,
+        }
+    ],
+    [
+        {
+            minApi: VERSION_CODES.HONEYCOMB,
+            maxApi: VERSION_CODES.HONEYCOMB_MR2,
+            eggName: "Honeycomb",
+            verName: "Honeycomb",
+            iconUrl: h_android_logo,
+        }
+    ],
+    [
+        {
+            minApi: VERSION_CODES.GINGERBREAD,
+            maxApi: VERSION_CODES.GINGERBREAD_MR1,
+            eggName: "Gingerbread",
+            verName: "Gingerbread",
+            iconUrl: g_android_logo,
+        }
+    ],
+    [
+        {
             minApi: VERSION_CODES.FROYO,
             maxApi: VERSION_CODES.FROYO,
-            verName: "Froyo",
             eggName: "Froyo",
+            verName: "Froyo",
             iconUrl: b_android_froyo,
         },
         {
             minApi: VERSION_CODES.ECLAIR,
             maxApi: VERSION_CODES.ECLAIR_MR1,
-            verName: "Eclair",
             eggName: "Eclair",
+            verName: "Eclair",
             iconUrl: b_android_eclair,
         },
         {
             minApi: VERSION_CODES.DONUT,
             maxApi: VERSION_CODES.DONUT,
-            verName: "Donut",
             eggName: "Donut",
+            verName: "Donut",
             iconUrl: b_android_donut,
         },
         {
             minApi: VERSION_CODES.CUPCAKE,
             maxApi: VERSION_CODES.CUPCAKE,
-            verName: "Cupcake",
             eggName: "Cupcake",
+            verName: "Cupcake",
             iconUrl: b_android_cupcake,
         },
         {
             minApi: VERSION_CODES.BASE_1_1,
             maxApi: VERSION_CODES.BASE_1_1,
-            verName: "Petit Four",
             eggName: "Petit Four",
+            verName: "Petit Four",
             iconUrl: b_android_classic,
         },
         {
             minApi: VERSION_CODES.BASE,
             maxApi: VERSION_CODES.BASE,
-            verName: "Base",
             eggName: "Base",
+            verName: "Base",
             iconUrl: b_android_classic,
         },
     ],

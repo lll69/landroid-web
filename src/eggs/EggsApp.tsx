@@ -45,11 +45,11 @@ const EggMenuButton = memo(({ group, index, setIndex }: { group: VersionGroup, i
     </>);
 });
 
-const EggGroupCard = memo(({ P, group }: { P?: boolean, group: VersionGroup }) => {
-    const [index, setIndex] = useState(0);
-    const item = group[index];
+const EggGroupCard = memo(({ P, group, index }: { P?: boolean, group: VersionGroup, index: number }) => {
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const item = group[selectedIndex];
     return (<ButtonBase component="div" sx={{ borderRadius: "32px", display: "block" }}>
-        <Card key={item.minApi} component="div" variant="outlined" sx={{ borderRadius: "32px", margin: "8px 0 8px 0", padding: "0 16px 0 16px", display: "flex" }}>
+        <Card key={index} component="div" variant="outlined" sx={{ borderRadius: "32px", margin: "8px 0 8px 0", padding: "0 16px 0 16px", display: "flex" }}>
             <Box sx={{ flex: "1" }}>
                 <CardContent>
                     <Typography component="div" variant="h5">
@@ -57,7 +57,7 @@ const EggGroupCard = memo(({ P, group }: { P?: boolean, group: VersionGroup }) =
                     </Typography>
                     <div>
                         {group.length > 1 ? (
-                            <EggMenuButton group={group} index={index} setIndex={setIndex} />
+                            <EggMenuButton group={group} index={selectedIndex} setIndex={setSelectedIndex} />
                         ) : (
                             <Typography component="span" variant="subtitle1" color="text.primary">
                                 {getItemDesc(item)}
@@ -69,14 +69,13 @@ const EggGroupCard = memo(({ P, group }: { P?: boolean, group: VersionGroup }) =
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {!P && <img src={item.iconUrl} style={{ height: "4rem" }}></img>}
             </Box>
-
         </Card>
     </ButtonBase>);
 });
 
 const EggsPart = memo(({ P }: { P?: boolean }) => {
     return (<Box>
-        {VERSIONS.map((group: VersionGroup) => (<EggGroupCard P={P} group={group} />))}
+        {VERSIONS.map((group: VersionGroup, index: number) => (<EggGroupCard P={P} group={group} index={index} />))}
     </Box>);
 })
 

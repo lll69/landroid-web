@@ -1,8 +1,8 @@
 export type VersionItem = {
     minApi: number;
     maxApi: number;
-    verName: string;
     eggName: string;
+    verName: string;
     iconUrl: string;
 }
 
