@@ -46,7 +46,7 @@ margin: 0;
 overflow: hidden;
 }
 .animatable {
-position: absolute;
+position: fixed;
 width: 100%;
 height: 100%;
 transition: left 0.25s ease-in, top 0.25s ease-in;
