@@ -2,6 +2,7 @@ import { argv } from 'node:process';
 import { renderToString } from 'react-dom/server';
 import ViewerApp from './ViewerApp';
 import EggsApp from './eggs/EggsApp';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const manifest = JSON.parse(argv[2]);
 const result: string[][] = [];
@@ -35,13 +36,43 @@ function renderEggsApp() {
                 <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
                 <title>Android Easter Eggs Online</title>
-                <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+                <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
                 <meta name="description" content="This project includes different versions of Android Easter eggs, intended to organize the various versions of Android Easter eggs. The goal is to allow most devices to experience different versions of the Easter eggs on the web." />
+                <style>{`
+html, body {
+width: 100%;
+height: 100%;
+margin: 0;
+overflow: hidden;
+}
+.animatable {
+position: absolute;
+width: 100%;
+height: 100%;
+transition: left 0.25s ease-in, top 0.25s ease-in;
+overflow: auto;
+}
+.animatable-left {
+left: -100%;
+}
+.animatable-mid {
+left: 0%;
+}
+.animatable-right {
+left: 100%;
+}
+`}</style>
             </head>
             <body>
-                <div id="root">
-                    <EggsApp />
-                    <noscript><center>You need to enable JavaScript to run this app.</center></noscript>
+                <div id="root" className="animatable animatable-mid">
+                    <Backdrop
+                        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important", backdropFilter: "blur(4px)" })}
+                        open>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                    <EggsApp P />
+                </div>
+                <div id="egg-content" className="animatable animatable-right">
                 </div>
                 {(manifest["eggs/index"] as string[]).map(src => <script src={"/" + src}></script>)}
             </body>
