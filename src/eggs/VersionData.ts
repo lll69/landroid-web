@@ -3,6 +3,7 @@ import b_android_cupcake from "./imgs/b_android_cupcake";
 import b_android_donut from "./imgs/b_android_donut";
 import b_android_eclair from "./imgs/b_android_eclair";
 import b_android_froyo from "./imgs/b_android_froyo";
+import baklava_platlogo from "./imgs/baklava_platlogo";
 import g_android_logo from "./imgs/g_android_logo";
 import h_android_logo from "./imgs/h_android_logo";
 import i_platlogo_rectangle from "./imgs/i_platlogo_rectangle";
@@ -49,9 +50,11 @@ export const enum VERSION_CODES {
     TIRAMISU = 33,
     UPSIDE_DOWN_CAKE = 34,
     VANILLA_ICE_CREAM = 35,
+    BAKLAVA = 36,
 }
 
-export const API_LEVELS = Array<string>(VERSION_CODES.VANILLA_ICE_CREAM + 1);
+export const API_LEVELS = Array<string>(VERSION_CODES.BAKLAVA + 1);
+API_LEVELS[VERSION_CODES.BAKLAVA] = "16"
 API_LEVELS[VERSION_CODES.VANILLA_ICE_CREAM] = "15";
 API_LEVELS[VERSION_CODES.UPSIDE_DOWN_CAKE] = "14";
 API_LEVELS[VERSION_CODES.TIRAMISU] = "13";
@@ -89,6 +92,15 @@ API_LEVELS[VERSION_CODES.BASE_1_1] = "1.1";
 API_LEVELS[VERSION_CODES.BASE] = "1.0";
 
 export const VERSIONS: VersionGroup[] = [
+    [
+        {
+            minApi: VERSION_CODES.BAKLAVA,
+            maxApi: VERSION_CODES.BAKLAVA,
+            eggName: "Landroid",
+            verName: "Baklava",
+            iconUrl: baklava_platlogo,
+        }
+    ],
     [
         {
             minApi: VERSION_CODES.VANILLA_ICE_CREAM,
