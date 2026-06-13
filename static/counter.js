@@ -1,6 +1,6 @@
 (function () {
     window.goatcounter = {
-        allow_frame: true,
+        allow_frame: false,
         path: function (p) { return location.host + p }
     };
     function filter() {

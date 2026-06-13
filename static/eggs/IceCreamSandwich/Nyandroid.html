@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Nyandroid</title>
+    <style>
+        html {
+            overflow: hidden;
+            background-color: #003366;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .star {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            animation: star-anim 1.2s step-start infinite;
+            background-position: 0 0;
+            background-repeat: no-repeat;
+        }
+
+        @keyframes star-anim {
+
+            0.0%,
+            100.0% {
+                background-image: url("i_star0.webp");
+            }
+
+            16.666666666666668% {
+                background-image: url("i_star1.webp");
+            }
+
+            33.333333333333336% {
+                background-image: url("i_star2.webp");
+            }
+
+            50.0% {
+                background-image: url("i_star3.webp");
+            }
+
+            66.66666666666667% {
+                background-image: url("i_star4.webp");
+            }
+
+            83.33333333333333% {
+                background-image: url("i_star5.webp");
+            }
+        }
+
+        .nyandroid {
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            animation: nyandroid-anim 0.96s step-start infinite;
+            background-position: 0 0;
+            background-repeat: no-repeat;
+        }
+
+        @keyframes nyandroid-anim {
+
+            0.0%,
+            100.0% {
+                background-image: url("i_nyandroid00.webp");
+            }
+
+            8.333333333333334% {
+                background-image: url("i_nyandroid01.webp");
+            }
+
+            16.666666666666668% {
+                background-image: url("i_nyandroid02.webp");
+            }
+
+            25.0% {
+                background-image: url("i_nyandroid03.webp");
+            }
+
+            33.333333333333336% {
+                background-image: url("i_nyandroid04.webp");
+            }
+
+            41.666666666666664% {
+                background-image: url("i_nyandroid05.webp");
+            }
+
+            50.0% {
+                background-image: url("i_nyandroid06.webp");
+            }
+
+            58.333333333333336% {
+                background-image: url("i_nyandroid07.webp");
+            }
+
+            66.66666666666667% {
+                background-image: url("i_nyandroid08.webp");
+            }
+
+            75.0% {
+                background-image: url("i_nyandroid09.webp");
+            }
+
+            83.33333333333333% {
+                background-image: url("i_nyandroid10.webp");
+            }
+
+            91.66666666666667% {
+                background-image: url("i_nyandroid11.webp");
+            }
+        }
+    </style>
+    <link rel="shortcut icon" type="image/webp" href="i_nyandroid04.webp">
+    <link rel="stylesheet" href="../normalize.css">
+    <link rel="preload" as="image" href="i_nyandroid00.webp">
+    <link rel="preload" as="image" href="i_nyandroid01.webp">
+    <link rel="preload" as="image" href="i_nyandroid02.webp">
+    <link rel="preload" as="image" href="i_nyandroid03.webp">
+    <link rel="preload" as="image" href="i_nyandroid04.webp">
+    <link rel="preload" as="image" href="i_nyandroid05.webp">
+    <link rel="preload" as="image" href="i_nyandroid06.webp">
+    <link rel="preload" as="image" href="i_nyandroid07.webp">
+    <link rel="preload" as="image" href="i_nyandroid08.webp">
+    <link rel="preload" as="image" href="i_nyandroid09.webp">
+    <link rel="preload" as="image" href="i_nyandroid10.webp">
+    <link rel="preload" as="image" href="i_nyandroid11.webp">
+    <link rel="preload" as="image" href="i_star0.webp">
+    <link rel="preload" as="image" href="i_star1.webp">
+    <link rel="preload" as="image" href="i_star2.webp">
+    <link rel="preload" as="image" href="i_star3.webp">
+    <link rel="preload" as="image" href="i_star4.webp">
+    <link rel="preload" as="image" href="i_star5.webp">
+</head>
+
+<body>
+    <script src="Nyandroid.js"></script>
+</body>
+
+</html>

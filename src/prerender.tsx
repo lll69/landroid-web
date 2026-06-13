@@ -45,26 +45,26 @@ height: 100%;
 margin: 0;
 overflow: hidden;
 }
-.animatable {
+.animatable-left, .animatable-mid, .animatable-right {
 position: fixed;
 width: 100%;
 height: 100%;
-transition: left 0.25s ease-in, top 0.25s ease-in;
-overflow: auto;
+transition: transform 0.2s ease-in;
+`/*overflow: auto;*/ + `
 }
 .animatable-left {
-left: -100%;
+transform: translate(-100%, 0);
 }
 .animatable-mid {
-left: 0%;
+transform: translate(0%, 0);
 }
 .animatable-right {
-left: 100%;
+transform: translate(100%, 0);
 }
 `}</style>
             </head>
             <body>
-                <div id="root" className="animatable animatable-mid">
+                <div id="root" className="animatable-mid">
                     <Backdrop
                         sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important", backdropFilter: "blur(4px)" })}
                         open>
@@ -72,9 +72,10 @@ left: 100%;
                     </Backdrop>
                     <EggsApp P />
                 </div>
-                <div id="egg-content" className="animatable animatable-right">
+                <div id="egg-content" className="animatable-right">
                 </div>
                 {(manifest["eggs/index"] as string[]).map(src => <script src={"/" + src}></script>)}
+                <script defer async src="/counter.js"></script>
             </body>
         </html>
     );

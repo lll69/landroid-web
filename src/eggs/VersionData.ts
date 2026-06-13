@@ -11,47 +11,8 @@ import j_android_logo from "./imgs/j_android_logo";
 import k_android_logo from "./imgs/k_android_logo";
 import u_android14_patch_adaptive from "./imgs/u_android14_patch_adaptive";
 import v_android15_patch_adaptive from "./imgs/v_android15_patch_adaptive";
+import { VERSION_CODES } from "./VersionCode";
 import { VersionGroup, VersionItem } from "./VersionType";
-
-export const enum VERSION_CODES {
-    BASE = 1,
-    BASE_1_1 = 2,
-    CUPCAKE = 3,
-    DONUT = 4,
-    ECLAIR = 5,
-    ECLAIR_0_1 = 6,
-    ECLAIR_MR1 = 7,
-    FROYO = 8,
-    GINGERBREAD = 9,
-    GINGERBREAD_MR1 = 10,
-    HONEYCOMB = 11,
-    HONEYCOMB_MR1 = 12,
-    HONEYCOMB_MR2 = 13,
-    ICE_CREAM_SANDWICH = 14,
-    ICE_CREAM_SANDWICH_MR1 = 15,
-    JELLY_BEAN = 16,
-    JELLY_BEAN_MR1 = 17,
-    JELLY_BEAN_MR2 = 18,
-    KITKAT = 19,
-    KITKAT_WATCH = 20,
-    L = 21,
-    LOLLIPOP = 21,
-    LOLLIPOP_MR1 = 22,
-    M = 23,
-    N = 24,
-    N_MR1 = 25,
-    O = 26,
-    O_MR1 = 27,
-    P = 28,
-    Q = 29,
-    R = 30,
-    S = 31,
-    S_V2 = 32,
-    TIRAMISU = 33,
-    UPSIDE_DOWN_CAKE = 34,
-    VANILLA_ICE_CREAM = 35,
-    BAKLAVA = 36,
-}
 
 export const API_LEVELS = Array<string>(VERSION_CODES.BAKLAVA + 1);
 API_LEVELS[VERSION_CODES.BAKLAVA] = "16"
@@ -119,7 +80,7 @@ export const VERSIONS: VersionGroup[] = [
             iconUrl: u_android14_patch_adaptive,
         }
     ],
-    [
+    /*[
         {
             minApi: VERSION_CODES.KITKAT,
             maxApi: VERSION_CODES.KITKAT_WATCH,
@@ -127,8 +88,8 @@ export const VERSIONS: VersionGroup[] = [
             verName: "KitKat",
             iconUrl: k_android_logo,
         }
-    ],
-    [
+    ],*/
+    /*[
         {
             minApi: VERSION_CODES.JELLY_BEAN,
             maxApi: VERSION_CODES.JELLY_BEAN_MR2,
@@ -136,7 +97,7 @@ export const VERSIONS: VersionGroup[] = [
             verName: "Jelly Bean",
             iconUrl: j_android_logo,
         }
-    ],
+    ],*/
     [
         {
             minApi: VERSION_CODES.ICE_CREAM_SANDWICH,

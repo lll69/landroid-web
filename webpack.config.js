@@ -15,7 +15,9 @@ export default {
     player: "./src/player.ts",
     player15: "./src/player15.ts",
     viewer: "./src/viewer.tsx",
-    "eggs/index": "./src/eggs/index.tsx"
+    "eggs/index": "./src/eggs/index.tsx",
+    "eggs/IceCreamSandwich/PlatLogoActivity": "./src/eggs/IceCreamSandwich/PlatLogoActivity.ts",
+    "eggs/IceCreamSandwich/Nyandroid": "./src/eggs/IceCreamSandwich/Nyandroid.ts",
   },
   module: {
     rules: [
