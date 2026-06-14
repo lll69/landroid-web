@@ -18,6 +18,8 @@ export default {
     "eggs/index": "./src/eggs/index.tsx",
     "eggs/IceCreamSandwich/PlatLogoActivity": "./src/eggs/IceCreamSandwich/PlatLogoActivity.ts",
     "eggs/IceCreamSandwich/Nyandroid": "./src/eggs/IceCreamSandwich/Nyandroid.ts",
+    "eggs/UpsideDownCake/PlatLogoActivity": "./src/eggs/UpsideDownCake/PlatLogoActivity.ts",
+    "eggs/VanillaIceCream/PlatLogoActivity": "./src/eggs/VanillaIceCream/PlatLogoActivity.ts",
   },
   module: {
     rules: [

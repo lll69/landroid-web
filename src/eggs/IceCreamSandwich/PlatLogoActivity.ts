@@ -51,6 +51,7 @@ const DEFAULT_LONG_PRESS_TIMEOUT = 500;
 let mCount = 0;
 let isPressed = false;
 let superLongPressTimeout: any;
+let setHashEnabled = false;
 const content = document.querySelector("img")!!;
 
 function superLongPress() {
@@ -66,7 +67,11 @@ function superLongPress() {
         superLongPressTimeout = setTimeout(superLongPress, DEFAULT_LONG_PRESS_TIMEOUT);
     } else {
         isPressed = false;
-        location.href = "Nyandroid.html";
+        if (setHashEnabled && parent !== null) {
+            parent.postMessage({ type: "setHash", hash: "#Nyandroid" });
+        } else {
+            location.href = "Nyandroid.html";
+        }
     }
 }
 
@@ -113,5 +118,14 @@ content.addEventListener("pointercancel", onTouch);
 content.addEventListener("touchstart", onTouch);
 content.addEventListener("touchend", onTouch);
 content.addEventListener("touchcancel", onTouch);
+content.addEventListener("contextmenu", e => e.preventDefault());
+
+onmessage = (e: MessageEvent) => {
+    if (e.origin === location.origin) {
+        if (e.data.type === "setHashEnabled") {
+            setHashEnabled = true;
+        }
+    }
+}
 
 export { };

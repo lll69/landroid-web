@@ -45,6 +45,11 @@ height: 100%;
 margin: 0;
 overflow: hidden;
 }
+#iframe-backdrop:not([hidden]) {
+position: fixed;
+width: 100%;
+height: 100%;
+}
 .animatable-left, .animatable-mid, .animatable-right {
 position: fixed;
 width: 100%;
@@ -72,7 +77,14 @@ transform: translate(100%, 0);
                     </Backdrop>
                     <EggsApp P />
                 </div>
-                <div id="egg-content" className="animatable-right">
+                <div id="egg-content" className="animatable-right"></div>
+                <div id="egg-content3" className="animatable-right"></div>
+                <div id="iframe-backdrop" hidden>
+                    <Backdrop
+                        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important", backdropFilter: "blur(4px)" })}
+                        open>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </div>
                 {(manifest["eggs/index"] as string[]).map(src => <script src={"/" + src}></script>)}
                 <script defer async src="/counter.js"></script>

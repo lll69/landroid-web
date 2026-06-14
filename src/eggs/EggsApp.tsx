@@ -26,60 +26,120 @@ const eggMap = {
 }
 
 const iframeMap = {
-    "UpsideDownCake": "/player.html",
-    "VanillaIceCream": "/player15.html",
+    "UpsideDownCake": "/eggs/UpsideDownCake/PlatLogoActivity.html",
+    "VanillaIceCream": "/eggs/VanillaIceCream/PlatLogoActivity.html",
+    "UpsideDownCakePlayer": "/player.html",
+    "VanillaIceCreamPlayer": "/player15.html",
     "Baklava": "/player15.html",
     "Gingerbread": "/eggs/Gingerbread/PlatLogoActivity.html",
     "Honeycomb": "/eggs/Honeycomb/PlatLogoActivity.html",
-    "IceCreamSandwich": "/eggs/IceCreamSandwich/PlatLogoActivity.html"
+    "IceCreamSandwich": "/eggs/IceCreamSandwich/PlatLogoActivity.html",
+    "Nyandroid": "/eggs/IceCreamSandwich/Nyandroid.html",
 }
 
-const iframeOverlayList = new Set([
-    "Gingerbread",
-    "Honeycomb",
-    "IceCreamSandwich",
+const iframeNoOverlayList = new Set([
+    "UpsideDownCake",
+    "VanillaIceCream",
+    "UpsideDownCakePlayer",
+    "VanillaIceCreamPlayer",
+    "Baklava",
+    "Nyandroid",
+]);
+
+const iframe3List = new Set([
+    "UpsideDownCakePlayer",
+    "VanillaIceCreamPlayer",
+    "Nyandroid",
 ]);
 
 let currentEgg: string | null = null;
 let currentIframe: HTMLIFrameElement | null = null;
+let currentIframe3: HTMLIFrameElement | null = null;
 const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, setMask: (mask: boolean) => void) => {
     const rootEl = document.getElementById("root") as HTMLDivElement;
     const eggContentEl = document.getElementById("egg-content") as HTMLDivElement;
+    const eggContent3El = document.getElementById("egg-content3") as HTMLDivElement;
     if (name !== null && iframeMap[name] !== undefined) {
         // open iframe
         if (name === currentEgg) return;
         currentEgg = name;
-        const iframe = document.createElement("iframe");
-        iframe.width = iframe.height = "100%";
-        iframe.frameBorder = "0";
-        iframe.style.display = "block";
-        iframe.src = iframeMap[name];
-        iframe.onload = () => {
-            setLoad(false);
-            if (iframeOverlayList.has(name)) {
-                setMask(true);
+        let iframe: HTMLIFrameElement;
+        if (currentIframe !== null && currentIframe.src === iframeMap[name]) {
+            iframe = currentIframe;
+            if (!iframeNoOverlayList.has(name)) {
+                setMask(false);
                 rootEl.className = "animatable-mid";
                 eggContentEl.className = "animatable-mid";
+                eggContent3El.className = "animatable-right";
             } else {
                 setMask(false);
                 rootEl.className = "animatable-left";
                 eggContentEl.className = "animatable-mid";
+                eggContent3El.className = "animatable-right";
+            }
+        } else {
+            iframe = document.createElement("iframe");
+            iframe.width = iframe.height = "100%";
+            iframe.frameBorder = "0";
+            iframe.style.display = "block";
+            iframe.src = iframeMap[name];
+            iframe.onload = () => {
+                setLoad(false);
+                if (iframe3List.has(name)) {
+                    setMask(true);
+                    rootEl.className = "animatable-left";
+                    eggContentEl.className = "animatable-left";
+                    eggContent3El.className = "animatable-mid";
+                } else if (!iframeNoOverlayList.has(name)) {
+                    setMask(true);
+                    rootEl.className = "animatable-mid";
+                    eggContentEl.className = "animatable-mid";
+                    eggContent3El.className = "animatable-right";
+                } else {
+                    setMask(false);
+                    rootEl.className = "animatable-left";
+                    eggContentEl.className = "animatable-mid";
+                    eggContent3El.className = "animatable-right";
+                }
+                try {
+                    iframe.contentWindow!.postMessage({ type: "setHashEnabled" });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            iframe.onerror = (e) => {
+                setLoad(false);
+                setMask(false);
+                console.error(e);
             }
         }
-        iframe.onerror = (e) => {
-            setLoad(false);
-            setMask(false);
-            console.error(e);
+        if (iframe3List.has(name)) {
+            eggContent3El.innerHTML = "";
+            eggContent3El.appendChild(iframe);
+            if (currentIframe3 !== null) {
+                currentIframe3.onload = null;
+                currentIframe3.onerror = null;
+            }
+            currentIframe3 = iframe;
+        } else {
+            eggContentEl.innerHTML = "";
+            eggContentEl.appendChild(iframe);
+            if (currentIframe !== null) {
+                currentIframe.onload = null;
+                currentIframe.onerror = null;
+            }
+            currentIframe = iframe;
+            if (currentIframe3 !== null) {
+                currentIframe3.onload = null;
+                currentIframe3.onerror = null;
+                currentIframe3 = null;
+                setTimeout(() => {
+                    if (currentIframe3 === null) eggContent3El.innerHTML = "";
+                }, 200);
+            }
         }
-        eggContentEl.innerHTML = "";
-        eggContentEl.appendChild(iframe);
         setLoad(true);
         setMask(false);
-        if (currentIframe !== null) {
-            currentIframe.onload = null;
-            currentIframe.onerror = null;
-        }
-        currentIframe = iframe;
         return;
     }
 
@@ -90,14 +150,28 @@ const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, s
         currentIframe.onload = null;
         currentIframe.onerror = null;
     }
+    if (currentIframe3 !== null) {
+        currentIframe3.onload = null;
+        currentIframe3.onerror = null;
+    }
     setLoad(false);
     setMask(false);
     currentIframe = null;
     rootEl.className = "animatable-mid";
     eggContentEl.className = "animatable-right";
+    eggContent3El.className = "animatable-right";
     setTimeout(() => {
         if (currentIframe === null) eggContentEl.innerHTML = "";
+        if (currentIframe3 === null) eggContent3El.innerHTML = "";
     }, 200);
+}
+
+onmessage = (e: MessageEvent) => {
+    if (e.origin === location.origin) {
+        if (e.data.type === "setHash") {
+            location.hash = e.data.hash;
+        }
+    }
 }
 
 const getItemDesc = (item: VersionItem) => (
@@ -225,6 +299,9 @@ export default memo(({ P }: { P?: boolean }) => {
         }
     }, [fsEl]);
     useEffect(() => {
+        document.getElementById("iframe-backdrop")!.hidden = !loading;
+    }, [loading]);
+    useEffect(() => {
         const hashChange = () => {
             const newHash = location.hash;
             if (newHash.length <= 1) {
@@ -272,9 +349,7 @@ export default memo(({ P }: { P?: boolean }) => {
                 </Container>
                 <Backdrop
                     sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important", backdropFilter: "blur(4px)" })}
-                    open={loading || showMask}>
-                    {loading && <CircularProgress color="inherit" />}
-                </Backdrop>
+                    open={showMask} />
             </ThemeProvider>
         </FillScrollDiv>
     )
