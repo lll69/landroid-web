@@ -89,7 +89,7 @@ export const VERSIONS: VersionGroup[] = [
             iconUrl: k_android_logo,
         }
     ],*/
-    /*[
+    [
         {
             minApi: VERSION_CODES.JELLY_BEAN,
             maxApi: VERSION_CODES.JELLY_BEAN_MR2,
@@ -97,7 +97,7 @@ export const VERSIONS: VersionGroup[] = [
             verName: "Jelly Bean",
             iconUrl: j_android_logo,
         }
-    ],*/
+    ],
     [
         {
             minApi: VERSION_CODES.ICE_CREAM_SANDWICH,

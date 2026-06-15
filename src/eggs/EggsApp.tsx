@@ -35,6 +35,7 @@ const iframeMap = {
     "Honeycomb": "/eggs/Honeycomb/PlatLogoActivity.html",
     "IceCreamSandwich": "/eggs/IceCreamSandwich/PlatLogoActivity.html",
     "Nyandroid": "/eggs/IceCreamSandwich/Nyandroid.html",
+    "JellyBean": "/eggs/JellyBean/PlatLogoActivity.html",
 }
 
 const iframeNoOverlayList = new Set([
