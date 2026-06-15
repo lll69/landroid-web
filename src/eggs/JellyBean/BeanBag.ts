@@ -233,7 +233,7 @@ function b64ToBlob(b64: string) {
 async function createImageData() {
     const canvasEl: HTMLCanvasElement = document.createElement("canvas");
     const ctx = canvasEl.getContext("2d", { willReadFrequently: true })!;
-    for (const name of BEANS) {
+    for (const name in imgMap) {
         const imgData: string = imgMap[name];
         const imgBitmap = await createImageBitmap(b64ToBlob(imgData));
         const width = imgBitmap.width;
