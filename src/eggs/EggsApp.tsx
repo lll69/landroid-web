@@ -212,7 +212,8 @@ const EggMenuButton = memo(({ group, index, setIndex }: { group: VersionGroup, i
         <Menu
             anchorEl={anchorEl}
             open={!!anchorEl}
-            onClose={close}>
+            onClose={close}
+            onClick={e => e.stopPropagation()}>
             {group.map((item: VersionItem, index: number) => (
                 <MenuItem key={index} onClick={(e) => { e.stopPropagation(); onIndexClick(index); }}>
                     <ListItemIcon>
