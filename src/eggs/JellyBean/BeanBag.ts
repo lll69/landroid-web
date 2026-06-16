@@ -235,7 +235,9 @@ async function createImageData() {
     const ctx = canvasEl.getContext("2d", { willReadFrequently: true })!;
     for (const name in imgMap) {
         const imgData: string = imgMap[name];
-        const imgBitmap = await createImageBitmap(b64ToBlob(imgData));
+        const imgBlob = b64ToBlob(imgData);
+        imgMap[name] = URL.createObjectURL(imgBlob);
+        const imgBitmap = await createImageBitmap(imgBlob);
         const width = imgBitmap.width;
         const height = imgBitmap.height;
         canvasEl.width = width;
@@ -307,8 +309,7 @@ class Bean {
         this.h = imgHeight;
         const svgNS = "http://www.w3.org/2000/svg";
         const svgEl = this.svgEl;
-        svgEl.style.position = "fixed";
-        svgEl.style.touchAction = "none";
+        svgEl.setAttribute("class", "bean");
         svgEl.innerHTML = "";
         // @ts-ignore
         svgEl.setAttribute("width", imgWidth);
@@ -562,7 +563,10 @@ class Board {
     }
 }
 
+let loaded = false;
 async function loadAsync() {
+    if (loaded) return;
+    loaded = true;
     await createImageData();
     createColorFilters();
     const board = new Board();
