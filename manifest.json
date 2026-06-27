@@ -1,0 +1,38 @@
+{
+  "player": [
+    "A36.92cfa9ac6afd00920bb9.js",
+    "A725.b642bfae5240e2bd2532.js",
+    "player.js"
+  ],
+  "player15": [
+    "A36.92cfa9ac6afd00920bb9.js",
+    "player15.js"
+  ],
+  "viewer": [
+    "U840.fca30c8b272162eb0dd2.js",
+    "A662.4942211aa372967e0745.js",
+    "A36.92cfa9ac6afd00920bb9.js",
+    "A725.b642bfae5240e2bd2532.js",
+    "viewer.js"
+  ],
+  "eggs/index": [
+    "U840.fca30c8b272162eb0dd2.js",
+    "A662.4942211aa372967e0745.js",
+    "eggs/index.js"
+  ],
+  "eggs/IceCreamSandwich/PlatLogoActivity": [
+    "eggs/IceCreamSandwich/PlatLogoActivity.js"
+  ],
+  "eggs/IceCreamSandwich/Nyandroid": [
+    "eggs/IceCreamSandwich/Nyandroid.js"
+  ],
+  "eggs/JellyBean/BeanBag": [
+    "eggs/JellyBean/BeanBag.js"
+  ],
+  "eggs/UpsideDownCake/PlatLogoActivity": [
+    "eggs/UpsideDownCake/PlatLogoActivity.js"
+  ],
+  "eggs/VanillaIceCream/PlatLogoActivity": [
+    "eggs/VanillaIceCream/PlatLogoActivity.js"
+  ]
+}
