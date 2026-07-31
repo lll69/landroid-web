@@ -175,11 +175,14 @@ onmessage = (e: MessageEvent) => {
     }
 }
 
-const getItemDesc = (item: VersionItem) => (
-    "Android " +
-    (item.minApi === item.maxApi ? API_LEVELS[item.minApi] : API_LEVELS[item.minApi] + "-" + API_LEVELS[item.maxApi]) +
-    " (" + item.verName + ")"
-);
+const getItemDesc = (item: VersionItem) => {
+    if (item.specialType) {
+        return item.verName;
+    }
+    return "Android " +
+        (item.minApi === item.maxApi ? API_LEVELS[item.minApi] : API_LEVELS[item.minApi] + "-" + API_LEVELS[item.maxApi]) +
+        " (" + item.verName + ")"
+};
 
 const FillScrollDiv = styled.div({
     overflow: "auto",
@@ -259,6 +262,10 @@ const EggsPart = memo(({ P }: { P?: boolean }) => {
     const [message, setMessage] = useState<string | null>(null);
     const closeSnackbar = useCallback(() => setMessage(null), []);
     const onItemClick = useCallback((item: VersionItem) => {
+        if (item.minApi === VERSION_CODES.UPSIDE_DOWN_CAKE && item.maxApi === VERSION_CODES.BAKLAVA) {
+            open("/viewer.html", "_blank");
+            return;
+        }
         const mapEgg = eggMap[item.minApi];
         if (typeof mapEgg === "string") {
             if (mapEgg === NO_EGG) {

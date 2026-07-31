@@ -4,6 +4,7 @@ export type VersionItem = {
     eggName: string;
     verName: string;
     iconUrl: string;
+    specialType?: boolean;
 }
 
 export type VersionGroup = VersionItem[];
