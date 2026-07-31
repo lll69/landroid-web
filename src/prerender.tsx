@@ -132,6 +132,11 @@ function renderPlayer15() {
                 <meta name="description" content="LAndroid - Play Android 15(V) Easter Egg game online in the browser!" />
                 <link rel="stylesheet" href="player.css" />
                 <link rel="shortcut icon" type="image/svg+xml" href="favicon15.svg" />
+                <style>{`
+.speed-container-hide {
+visibility: hidden;
+}
+`}</style>
             </head>
             <body>
                 <noscript>You need to enable JavaScript to run this app.</noscript>

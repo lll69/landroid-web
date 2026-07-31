@@ -15,7 +15,7 @@
  */
 
 export function initSpeedControl(setSpeed: (speed: number, text: string) => void): (() => void) {
-    const maxIntegralPart = 32;
+    const maxIntegralPart = 50;
     const INTEGRAL_PAGE_SIZE = 18;
     const speedContainerMask = document.getElementById("speedContainerMask")!;
     const integralDiv = document.getElementById("speedIntegral")!;
@@ -135,7 +135,6 @@ export function initSpeedControl(setSpeed: (speed: number, text: string) => void
     refreshIntegralButton();
     refreshIntegralButtonText();
     return () => {
-        integralPageOffset = 0;
         refreshIntegralButton();
         refreshIntegralButtonText();
         speedContainerMask.className = "speed-container-show";
