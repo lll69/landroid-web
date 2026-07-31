@@ -96,6 +96,7 @@ canvas.addEventListener("pointermove", pointerInput);
 canvas.addEventListener("pointerup", pointerInput);
 canvas.addEventListener("pointercancel", pointerInput);
 canvas.addEventListener("dblclick", pointerInput);
+canvas.addEventListener("contextmenu", pointerInput);
 
 let isTwoFingerDown = false;
 let downZoom = 0;

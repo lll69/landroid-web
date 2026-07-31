@@ -208,10 +208,10 @@ export function FlightStick(
                 isDown = true;
             }
         } else {
-            if (e.type === "touchend" || e.type === "touchcancel" || e.type === "pointerup" || e.type === "pointercancel" || e.type === "dblclick") {
+            if (e.type === "touchend" || e.type === "touchcancel" || e.type === "pointerup" || e.type === "pointercancel" || e.type === "dblclick" || e.type === "contextmenu") {
                 isDown = false;
                 onStickChanged(0, 0);
-                e.preventDefault();
+                if (e.type !== "contextmenu") e.preventDefault();
             } else if (e.type === "touchmove") {
                 const touch = (e as TouchEvent).touches[0];
                 targetX = touch.clientX * window.devicePixelRatio;

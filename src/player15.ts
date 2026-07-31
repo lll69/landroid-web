@@ -155,6 +155,7 @@ function enableTouch() {
     canvas.addEventListener("pointerup", pointerInput);
     canvas.addEventListener("pointercancel", pointerInput);
     canvas.addEventListener("dblclick", pointerInput);
+    canvas.addEventListener("contextmenu", pointerInput);
 }
 function disableTouch() {
     canvas.removeEventListener("touchstart", pointerInput);
@@ -166,6 +167,7 @@ function disableTouch() {
     canvas.removeEventListener("pointerup", pointerInput);
     canvas.removeEventListener("pointercancel", pointerInput);
     canvas.removeEventListener("dblclick", pointerInput);
+    canvas.removeEventListener("contextmenu", pointerInput);
 }
 enableTouch();
 
