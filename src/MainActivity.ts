@@ -185,6 +185,7 @@ export function FlightStick(
     let targetX: number;
     let targetY: number;
     let isDown: boolean = false;
+    let isDownTouch: boolean = false;
 
     function pointerInput(e: Event) {
         if (!isDown) {
@@ -194,12 +195,14 @@ export function FlightStick(
                     originX = targetX = touch.clientX * window.devicePixelRatio;
                     originY = targetY = touch.clientY * window.devicePixelRatio;
                     isDown = true;
+                    isDownTouch = true;
                     e.preventDefault();
                 }
             } else if (e.type === "pointerdown") {
                 originX = targetX = (e as PointerEvent).clientX * window.devicePixelRatio;
                 originY = targetY = (e as PointerEvent).clientY * window.devicePixelRatio;
                 isDown = true;
+                isDownTouch = (e as PointerEvent).pointerType === "touch";
                 e.preventDefault();
                 (e.target as Element).setPointerCapture((e as PointerEvent).pointerId);
             } else if (e.type === "dblclick") {
@@ -208,10 +211,9 @@ export function FlightStick(
                 isDown = true;
             }
         } else {
-            if (e.type === "touchend" || e.type === "touchcancel" || e.type === "pointerup" || e.type === "pointercancel" || e.type === "dblclick" || e.type === "contextmenu") {
+            if (e.type === "touchend" || e.type === "touchcancel" || e.type === "pointerup" || e.type === "pointercancel" || e.type === "dblclick") {
                 isDown = false;
                 onStickChanged(0, 0);
-                if (e.type !== "contextmenu") e.preventDefault();
             } else if (e.type === "touchmove") {
                 const touch = (e as TouchEvent).touches[0];
                 targetX = touch.clientX * window.devicePixelRatio;
@@ -228,6 +230,9 @@ export function FlightStick(
                     isDown = false;
                     onStickChanged(0, 0);
                 }
+            } else if (e.type === "contextmenu" && !isDownTouch) {
+                isDown = false;
+                onStickChanged(0, 0);
             }
         }
     }
