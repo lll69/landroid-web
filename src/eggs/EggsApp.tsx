@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import { Fullscreen, FullscreenExit, KeyboardArrowDown } from "@mui/icons-material";
-import { AppBar, Backdrop, Box, Button, ButtonBase, Card, CardContent, CircularProgress, Container, createTheme, CssBaseline, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { Fullscreen, FullscreenExit, KeyboardArrowDown, OpenInNew } from "@mui/icons-material";
+import { AppBar, Backdrop, Box, Button, ButtonBase, Card, CardContent, CircularProgress, Container, createTheme, CssBaseline, IconButton, Link, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import { memo, MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { API_LEVELS, VERSIONS } from "./VersionData";
 import { VersionGroup, VersionItem } from "./VersionType";
@@ -355,6 +355,7 @@ export default memo(({ P }: { P?: boolean }) => {
                         intended to organize the various versions of Android Easter eggs.
                         The goal is to allow most devices to experience different versions of the Easter eggs on the web.
                     </p>
+                    <p><Link target="_blank" href="https://github.com/lll69/landroid-web">Source Code<OpenInNew fontSize="inherit" /></Link></p>
                 </Container>
                 <Backdrop
                     sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important", backdropFilter: "blur(4px)" })}

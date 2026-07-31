@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { sprintf } from 'sprintf-js';
+import { OpenInNew } from "@mui/icons-material";
 import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, CircularProgress, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useScrollTrigger } from '@mui/material';
 import { CalendarPicker, LocalizationProvider, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -57,7 +58,41 @@ if (typeof navigator !== "undefined" && navigator.language !== "en") {
     navigator.languages.forEach(localizeDate);
 }
 
-const initialDate = moment();
+const isInt = (str: string) => {
+    for (const chr of str) {
+        if (chr < "0" || chr > "9") return false;
+    }
+    return true;
+}
+
+const computeInitialDate: (() => Moment) = () => {
+    let initialDate: Moment | null = null;
+    if (typeof location !== "undefined") {
+        const hash = location.hash;
+        if (hash.length === 9) {
+            const yearStr = hash.substring(1, 5);
+            const monthStr = hash.substring(5, 7);
+            const dayStr = hash.substring(7, 9);
+            if (isInt(yearStr) && isInt(monthStr) && isInt(dayStr)) {
+                const year = parseInt(yearStr, 10);
+                const month = parseInt(monthStr, 10);
+                const day = parseInt(dayStr, 10);
+                if (year >= 2020 && year <= 2099 && month >= 0 && month < 12 && day >= 1 && day <= 31) {
+                    const newDate = moment({ year: year, month: month, date: day });
+                    if (newDate.isValid()) {
+                        initialDate = newDate;
+                    }
+                }
+            }
+        }
+    }
+    if (initialDate === null) {
+        initialDate = moment();
+    }
+    return initialDate;
+}
+
+const initialDate = computeInitialDate();
 const minDate = moment("2020-01-01");
 const universeMap = new Map<number, VisibleUniverse15>();
 let lastYear = 0, lastMonth = 0;
@@ -278,7 +313,7 @@ const CalendarPart = ({ topRef, showCount, setShowCount, date, setDate, truncate
             <br />
             <FormControlLabel
                 control={<Checkbox checked={showCount} onChange={e => setShowCount(e.target.checked)} />}
-                label="Show the number of planets on the calendar"
+                label="Show number of planets on calendar"
                 sx={{ textAlign: "left" }} />
             <br />
             <Card elevation={4} sx={{ borderRadius: "32px", display: "inline-block" }}>
@@ -338,6 +373,7 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
     const setDateDispatch = (date: Moment) => {
         setDate(date);
         setTheme(getUniverse(date).star.cls);
+        location.hash = "#" + momentToSeed(date);
     }
     return (
         <>
@@ -361,6 +397,8 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
                 {universe.planets.map((planet, index) => (<PlanetCard key={index} planet={planet} index={index} count={count} color={starColor} truncate={truncateResult} />))}
             </Box>
             <Link href="#top" onClick={e => { if (topRef.current) { e.preventDefault(); topRef.current.scrollIntoView({ behavior: "smooth" }) } }}>Back to Top</Link>
+            {" | "}
+            <Link target="_blank" href="https://github.com/lll69/landroid-web">Source Code<OpenInNew fontSize="inherit" /></Link>
             <DialogPart
                 seed={seed}
                 show={showDialog}
