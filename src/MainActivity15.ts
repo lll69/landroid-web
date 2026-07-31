@@ -176,11 +176,8 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15,
         } else if (distToClosest < 10_000) {
             bottomString += "ALT: " + distToClosest;
         }
-        if (ship.thrust.x !== 0 || ship.thrust.y !== 0) {
-            if (bottomString.length > 0) bottomString += "\n";
-            bottomString += "THR: " + (ship.thrust.mag() * 100).toFixed(0) + "%";
-        }
         if (bottomString.length > 0) bottomString += "\n";
+        bottomString += "THR: " + (ship.thrust.mag() * 100).toFixed(0) + "%\n";
         bottomString += "POS: " + ship.pos.str() + "\n";
         bottomString += "VEL: " + ship.velocity.mag().toFixed(0);
         bottomTextNode.textContent = bottomString;
