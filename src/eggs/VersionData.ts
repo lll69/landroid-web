@@ -52,7 +52,7 @@ API_LEVELS[VERSION_CODES.CUPCAKE] = "1.5";
 API_LEVELS[VERSION_CODES.BASE_1_1] = "1.1";
 API_LEVELS[VERSION_CODES.BASE] = "1.0";
 
-const EMPTY_SVG = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%2F%3E";
+const EMPTY_SVG = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%220%22%20height%3D%220%22%2F%3E";
 
 export const VERSIONS: VersionGroup[] = [
     [
