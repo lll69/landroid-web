@@ -351,9 +351,9 @@ export default memo(({ P }: { P?: boolean }) => {
                 <Container>
                     <EggsPart P={P} />
                     <p>
-                        This project contains different versions of Android Easter eggs,
-                        intended to organize the various versions of Android Easter eggs.
-                        The goal is to allow most devices to experience different versions of the Easter eggs on the web.
+                        This project contains different versions of Android Easter Eggs,
+                        intended to organize the various versions of Android Easter Eggs.
+                        The goal is to allow most devices to experience different versions of the Easter Eggs on the web.
                     </p>
                     <p><Link target="_blank" href="https://github.com/lll69/landroid-web">Source Code<OpenInNew fontSize="inherit" /></Link></p>
                 </Container>

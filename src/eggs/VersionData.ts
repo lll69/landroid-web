@@ -59,8 +59,8 @@ export const VERSIONS: VersionGroup[] = [
         {
             minApi: VERSION_CODES.UPSIDE_DOWN_CAKE,
             maxApi: VERSION_CODES.BAKLAVA,
-            eggName: "Landroid Content Viewer",
-            verName: "Check the daily content of Android 14/15/16 Easter Egg",
+            eggName: "Landroid Planet Viewer",
+            verName: "View the daily planets of Android 14/15/16 Easter Egg",
             iconUrl: EMPTY_SVG,
             specialType: true,
         }
