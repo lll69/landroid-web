@@ -19,6 +19,7 @@ export default {
     "eggs/IceCreamSandwich/PlatLogoActivity": "./src/eggs/IceCreamSandwich/PlatLogoActivity.ts",
     "eggs/IceCreamSandwich/Nyandroid": "./src/eggs/IceCreamSandwich/Nyandroid.ts",
     "eggs/JellyBean/BeanBag": "./src/eggs/JellyBean/BeanBag.ts",
+    "eggs/KitKat/main": "./src/eggs/KitKat/main.ts",
     "eggs/UpsideDownCake/PlatLogoActivity": "./src/eggs/UpsideDownCake/PlatLogoActivity.ts",
     "eggs/VanillaIceCream/PlatLogoActivity": "./src/eggs/VanillaIceCream/PlatLogoActivity.ts",
   },

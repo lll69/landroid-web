@@ -19,6 +19,8 @@ import { TimeInterpolator } from "./TimeInterpolator";
 
 const { cos, PI } = Math;
 
+let instance: AccelerateDecelerateInterpolator | undefined;
+
 /**
  * An interpolator where the rate of change starts and ends slowly but
  * accelerates through the middle.
@@ -26,5 +28,12 @@ const { cos, PI } = Math;
 export class AccelerateDecelerateInterpolator implements TimeInterpolator {
     getInterpolation(input: number) {
         return (cos((input + 1) * PI) / 2.0) + 0.5;
+    }
+    
+    static getInstance(): AccelerateDecelerateInterpolator {
+        if (!instance) {
+            instance = new AccelerateDecelerateInterpolator();
+        }
+        return instance;
     }
 }

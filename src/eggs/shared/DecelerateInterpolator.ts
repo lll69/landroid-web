@@ -19,6 +19,8 @@ import { TimeInterpolator } from "./TimeInterpolator";
 
 const { pow } = Math;
 
+let instance: DecelerateInterpolator | undefined;
+
 /**
  * An interpolator where the rate of change starts out quickly and
  * and then decelerates.
@@ -46,5 +48,12 @@ export class DecelerateInterpolator implements TimeInterpolator {
             result = (1.0 - pow((1.0 - input), 2 * this.mFactor));
         }
         return result;
+    }
+    
+    static getInstance(): DecelerateInterpolator {
+        if (!instance) {
+            instance = new DecelerateInterpolator();
+        }
+        return instance;
     }
 }

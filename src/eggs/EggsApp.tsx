@@ -5,6 +5,7 @@ import { memo, MouseEvent, useCallback, useEffect, useMemo, useState } from "rea
 import { API_LEVELS, VERSIONS } from "./VersionData";
 import { VersionGroup, VersionItem } from "./VersionType";
 import { VERSION_CODES } from "./VersionCode";
+import { KitKatPlugin } from "./KitKat/types";
 
 const NO_EGG = "NO_EGG";
 
@@ -56,43 +57,22 @@ const iframe3List = new Set([
 let currentEgg: string | null = null;
 let currentIframe: HTMLIFrameElement | null = null;
 let currentIframe3: HTMLIFrameElement | null = null;
+let currentCanvas: HTMLCanvasElement | null = null;
+let currentCancelFunction: (() => void) | null = null;
 const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, setMask: (mask: boolean) => void) => {
     const rootEl = document.getElementById("root") as HTMLDivElement;
     const eggContentEl = document.getElementById("egg-content") as HTMLDivElement;
     const eggContent3El = document.getElementById("egg-content3") as HTMLDivElement;
-    if (name !== null && iframeMap[name] !== undefined) {
-        // open iframe
-        if (name === currentEgg) return;
-        currentEgg = name;
-        let iframe: HTMLIFrameElement;
-        if (currentIframe !== null && currentIframe.src === iframeMap[name]) {
-            iframe = currentIframe;
-            if (!iframeNoOverlayList.has(name)) {
-                setMask(false);
-                rootEl.className = "animatable-mid";
-                eggContentEl.className = "animatable-mid";
-                eggContent3El.className = "animatable-right";
-            } else {
-                setMask(false);
-                rootEl.className = "animatable-left";
-                eggContentEl.className = "animatable-mid";
-                eggContent3El.className = "animatable-right";
-            }
-        } else {
-            iframe = document.createElement("iframe");
-            iframe.width = iframe.height = "100%";
-            iframe.frameBorder = "0";
-            iframe.style.display = "block";
-            iframe.src = iframeMap[name];
-            iframe.onload = () => {
-                setLoad(false);
-                if (iframe3List.has(name)) {
-                    setMask(true);
-                    rootEl.className = "animatable-left";
-                    eggContentEl.className = "animatable-left";
-                    eggContent3El.className = "animatable-mid";
-                } else if (!iframeNoOverlayList.has(name)) {
-                    setMask(true);
+    if (name !== null) {
+        if (iframeMap[name] !== undefined) {
+            // open iframe
+            if (name === currentEgg) return;
+            currentEgg = name;
+            let iframe: HTMLIFrameElement;
+            if (currentIframe !== null && currentIframe.src === iframeMap[name]) {
+                iframe = currentIframe;
+                if (!iframeNoOverlayList.has(name)) {
+                    setMask(false);
                     rootEl.className = "animatable-mid";
                     eggContentEl.className = "animatable-mid";
                     eggContent3El.className = "animatable-right";
@@ -102,46 +82,111 @@ const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, s
                     eggContentEl.className = "animatable-mid";
                     eggContent3El.className = "animatable-right";
                 }
-                try {
-                    iframe.contentWindow!.postMessage({ type: "setHashEnabled" });
-                } catch (e) {
+            } else {
+                iframe = document.createElement("iframe");
+                iframe.width = iframe.height = "100%";
+                iframe.frameBorder = "0";
+                iframe.style.display = "block";
+                iframe.src = iframeMap[name];
+                iframe.onload = () => {
+                    setLoad(false);
+                    if (iframe3List.has(name)) {
+                        setMask(true);
+                        rootEl.className = "animatable-left";
+                        eggContentEl.className = "animatable-left";
+                        eggContent3El.className = "animatable-mid";
+                    } else if (!iframeNoOverlayList.has(name)) {
+                        setMask(true);
+                        rootEl.className = "animatable-mid";
+                        eggContentEl.className = "animatable-mid";
+                        eggContent3El.className = "animatable-right";
+                    } else {
+                        setMask(false);
+                        rootEl.className = "animatable-left";
+                        eggContentEl.className = "animatable-mid";
+                        eggContent3El.className = "animatable-right";
+                    }
+                    try {
+                        iframe.contentWindow!.postMessage({ type: "setHashEnabled" });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+                iframe.onerror = (e) => {
+                    setLoad(false);
+                    setMask(false);
                     console.error(e);
                 }
             }
-            iframe.onerror = (e) => {
-                setLoad(false);
+            if (iframe3List.has(name)) {
+                eggContent3El.innerHTML = "";
+                eggContent3El.appendChild(iframe);
+                if (currentIframe3 !== null) {
+                    currentIframe3.onload = null;
+                    currentIframe3.onerror = null;
+                }
+                currentIframe3 = iframe;
+            } else {
+                eggContentEl.innerHTML = "";
+                eggContentEl.appendChild(iframe);
+                if (currentIframe !== null) {
+                    currentIframe.onload = null;
+                    currentIframe.onerror = null;
+                }
+                currentIframe = iframe;
+                if (currentIframe3 !== null) {
+                    currentIframe3.onload = null;
+                    currentIframe3.onerror = null;
+                    currentIframe3 = null;
+                    setTimeout(() => {
+                        if (currentIframe3 === null) eggContent3El.innerHTML = "";
+                    }, 200);
+                }
+            }
+            setLoad(true);
+            setMask(false);
+            return;
+        } else switch (name) {
+            case "KitKat": {
+                if (name === currentEgg) return;
+                currentEgg = name;
+                if (currentCanvas !== null) {
+                    currentCanvas.remove();
+                }
+                setLoad(true);
                 setMask(false);
-                console.error(e);
+                async function onLoad() {
+                    const KitKatPlugin = (window as any).KitKatPlugin as (KitKatPlugin | undefined);
+                    if (!KitKatPlugin) {
+                        throw new Error("KitKatPlugin Not Found");
+                    }
+                    currentCanvas = document.createElement("canvas");
+                    currentCanvas.style.width = currentCanvas.style.height = "100%";
+                    eggContentEl.appendChild(currentCanvas);
+                    currentCancelFunction = await KitKatPlugin.showDessertCaseView(currentCanvas);
+                    setLoad(false);
+                    setMask(true);
+                    rootEl.className = "animatable-mid";
+                    eggContentEl.className = "animatable-mid";
+                }
+                if (!((window as any).KitKatPlugin)) {
+                    (async () => {
+                        try {
+                            const jsContent = await (await fetch("/eggs/KitKat/main.js")).text();
+                            Function(jsContent)();
+                            onLoad();
+                        } catch (e) {
+                            setLoad(false);
+                            setMask(false);
+                            console.error(e);
+                        }
+                    })();
+                } else {
+                    onLoad();
+                }
+                return;
             }
         }
-        if (iframe3List.has(name)) {
-            eggContent3El.innerHTML = "";
-            eggContent3El.appendChild(iframe);
-            if (currentIframe3 !== null) {
-                currentIframe3.onload = null;
-                currentIframe3.onerror = null;
-            }
-            currentIframe3 = iframe;
-        } else {
-            eggContentEl.innerHTML = "";
-            eggContentEl.appendChild(iframe);
-            if (currentIframe !== null) {
-                currentIframe.onload = null;
-                currentIframe.onerror = null;
-            }
-            currentIframe = iframe;
-            if (currentIframe3 !== null) {
-                currentIframe3.onload = null;
-                currentIframe3.onerror = null;
-                currentIframe3 = null;
-                setTimeout(() => {
-                    if (currentIframe3 === null) eggContent3El.innerHTML = "";
-                }, 200);
-            }
-        }
-        setLoad(true);
-        setMask(false);
-        return;
     }
 
     // null or default
@@ -155,14 +200,19 @@ const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, s
         currentIframe3.onload = null;
         currentIframe3.onerror = null;
     }
+    if (currentCancelFunction != null) {
+        currentCancelFunction();
+        currentCancelFunction = null;
+    }
     setLoad(false);
     setMask(false);
     currentIframe = null;
+    currentCanvas = null;
     rootEl.className = "animatable-mid";
     eggContentEl.className = "animatable-right";
     eggContent3El.className = "animatable-right";
     setTimeout(() => {
-        if (currentIframe === null) eggContentEl.innerHTML = "";
+        if (currentIframe === null && currentCanvas === null) eggContentEl.innerHTML = "";
         if (currentIframe3 === null) eggContent3El.innerHTML = "";
     }, 200);
 }

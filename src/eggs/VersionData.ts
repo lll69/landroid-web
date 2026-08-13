@@ -92,7 +92,7 @@ export const VERSIONS: VersionGroup[] = [
             iconUrl: u_android14_patch_adaptive,
         }
     ],
-    /*[
+    [
         {
             minApi: VERSION_CODES.KITKAT,
             maxApi: VERSION_CODES.KITKAT_WATCH,
@@ -100,7 +100,7 @@ export const VERSIONS: VersionGroup[] = [
             verName: "KitKat",
             iconUrl: k_android_logo,
         }
-    ],*/
+    ],
     [
         {
             minApi: VERSION_CODES.JELLY_BEAN,
