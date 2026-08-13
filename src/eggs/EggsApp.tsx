@@ -166,7 +166,7 @@ const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, s
                     currentCancelFunction = await KitKatPlugin.showDessertCaseView(currentCanvas);
                     setLoad(false);
                     setMask(true);
-                    rootEl.className = "animatable-mid";
+                    rootEl.className = "animatable-left";
                     eggContentEl.className = "animatable-mid";
                 }
                 if (!((window as any).KitKatPlugin)) {

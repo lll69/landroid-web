@@ -550,6 +550,8 @@ export function DessertCaseView(canvas: HTMLCanvasElement) {
 
     function draw() {
         ctx.clearRect(0, 0, mWidth, mHeight);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, mWidth, mHeight);
         ctx.save();
         ctx.scale(canvasScale, canvasScale);
         ctx.translate(0.5 * (mWidth - mCellSize * mColumns * canvasScale) / canvasScale, 0.5 * (mHeight - mCellSize * mRows * canvasScale) / canvasScale)
