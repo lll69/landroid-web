@@ -98,6 +98,33 @@ body {
     transition: visibility 0s linear 0.2s, opacity 0.2s ease-in-out;
 }
 
+.autopilot-button {
+    padding: 8px;
+    position: fixed;
+    bottom: 8px;
+    right: 8px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.2s, opacity 0.2s ease-in-out;
+    color: var(--color-Console);
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    width: 5ch;
+    height: 5ch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: var(--color-Console);
+    border-width: 1px;
+    border-style: solid;
+    font-family: "Roboto Mono", monospace;
+}
+
+.autopilot-button-selected {
+    background-color: var(--color-Autopilot);
+}
+
 .controls-show {
     visibility: visible;
     opacity: 1;

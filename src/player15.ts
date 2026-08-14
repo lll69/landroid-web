@@ -16,7 +16,7 @@
 
 import { CanvasHelper } from "./CanvasHelper";
 import { setDrawFlag } from "./Flag15";
-import { DEFAULT_CAMERA_ZOOM, getCamZoom, MainActivity15, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setIsBaklava, setPlaySpeed, setRandomSeedType } from "./MainActivity15";
+import { DEFAULT_CAMERA_ZOOM, getCamZoom, getIsBaklava, MainActivity15, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setIsBaklava, setPlaySpeed, setRandomSeedType } from "./MainActivity15";
 import { initSpeedControl } from "./playerSpeed";
 
 const unsupportedFeatures: Array<String> = [];
@@ -40,7 +40,14 @@ if (!canvasContext) {
 }
 const helper = new CanvasHelper(canvasContext);
 
+let isTwoFingerDown = false;
+let downZoom = 0;
+let downDistance = 0;
+let controlsInterval: any = -1;
+let controlsShow = false;
+
 const controlsContainer = document.getElementById("rightContainer")!;
+const autopilotButton = document.getElementById("autoPilotButton")!;
 let selectedZoomIndex = 0;
 const zoomSelect = document.getElementById("zoomSelect") as HTMLSelectElement;
 function zoomSelectChange() {
@@ -107,8 +114,10 @@ function loadParams() {
     const baklavaStr = params.get("is16");
     if (baklavaStr === "true" || baklavaStr === "1") {
         setIsBaklava(true);
+        if (typeof updateAutopilotButton !== "undefined") updateAutopilotButton();
     } else if (baklavaStr === "false" || baklavaStr === "0") {
         setIsBaklava(false);
+        if (typeof updateAutopilotButton !== "undefined") updateAutopilotButton();
     }
 }
 loadParams();
@@ -177,19 +186,35 @@ function disableTouch() {
 }
 enableTouch();
 
-let isTwoFingerDown = false;
-let downZoom = 0;
-let downDistance = 0;
-let controlsInterval: any = -1;
+function updateAutopilotButton() {
+    if (getIsBaklava() && !controlsShow) {
+        autopilotButton.classList.add("controls-show");
+    } else {
+        autopilotButton.classList.remove("controls-show");
+    }
+}
+
+function setAutoPilotState(newState: boolean) {
+    setAutopilot(newState);
+    if (newState) {
+        autopilotButton.classList.add("autopilot-button-selected");
+    } else {
+        autopilotButton.classList.remove("autopilot-button-selected");
+    }
+}
 
 function hideControls() {
+    controlsShow = false;
     zoomSelect.blur();
     clearInterval(controlsInterval);
     controlsContainer.classList.remove("controls-show");
+    updateAutopilotButton();
 }
 
 function showControlsNoHide() {
+    controlsShow = true;
     controlsContainer.classList.add("controls-show");
+    updateAutopilotButton();
     clearInterval(controlsInterval);
 }
 
@@ -248,10 +273,20 @@ document.addEventListener("wheel", handleWheel);
 
 const autopilotCheck = document.getElementById("autopilotCheck") as HTMLInputElement;
 autopilotCheck.checked = false;
-autopilotCheck.addEventListener("change", function () {
-    setAutopilot(autopilotCheck.checked);
+function onAutopilotCheck() {
+    setAutoPilotState(autopilotCheck.checked);
     showControlsAutoHide();
-});
+}
+autopilotCheck.addEventListener("change", onAutopilotCheck);
+autopilotButton.addEventListener("click", function () {
+    autopilotCheck.checked = !autopilotCheck.checked;
+    if (autopilotCheck.checked) {
+        setDynamicZoom(true);
+    } else {
+        setDynamicZoom(false);
+    }
+    setAutoPilotState(autopilotCheck.checked);
+})
 
 const pauseCheck = document.getElementById("pauseCheck") as HTMLInputElement;
 pauseCheck.checked = false;
@@ -297,6 +332,6 @@ speedButton.addEventListener("click", initSpeedControl((newSpeed: number, text: 
 setTimeout(function () {
     onCanvasResize();
     new ResizeObserver(onCanvasResize).observe(canvas);
-    showControlsAutoHide();
+    if (!getIsBaklava()) showControlsAutoHide();
     setTimeout(() => animationID = requestAnimationFrame(animation), 0);
 }, 0);

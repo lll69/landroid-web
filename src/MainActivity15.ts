@@ -35,7 +35,7 @@ import { VisibleUniverse } from "./VisibleUniverse";
 import { Namer15 } from "./Namer15";
 import { Colors } from "./Colors";
 import { Vec2_makeWithAngleMag } from "./Vec2";
-import { clamp, lexp } from "./Maths";
+import { clamp, expSmooth, lexp } from "./Maths";
 import { CanvasHelper } from "./CanvasHelper";
 import { VisibleUniverse15, ZoomedDrawScope15 } from "./VisibleUniverse15";
 import { FlightStick } from "./MainActivity";
@@ -208,7 +208,8 @@ function Spaaaace(
             const closest = u.closestPlanetForZoom();
             const distToNearestSurf = max(0, (u.ship.pos.distance(closest.pos)) - closest.radius * 1.2);
             //            cameraZoom = lerp(0.1f, 5f, smooth(1f-normalizedDist))
-            cameraZoom = clamp(500 / distToNearestSurf, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+            const targetZoom = clamp(500 / distToNearestSurf, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+            cameraZoom = isBaklava ? expSmooth(cameraZoom, targetZoom, u.dt, 1.5) : targetZoom;
         } else if (!TOUCH_CAMERA_ZOOM) cameraZoom = DEFAULT_CAMERA_ZOOM;
         else cameraZoom = camZoom;
         if (!TOUCH_CAMERA_PAN) {
@@ -314,6 +315,10 @@ export function setPlaySpeed(speed: number) {
 
 export function setIsBaklava(baklava: boolean) {
     isBaklava = baklava;
+}
+
+export function getIsBaklava() {
+    return isBaklava;
 }
 
 export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement,

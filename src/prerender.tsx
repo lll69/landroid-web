@@ -162,6 +162,7 @@ visibility: hidden;
                         <br />
                         <label className="autopilot-label"><input type="checkbox" id="pauseCheck" />Pause</label>
                     </div>
+                    <div id="autoPilotButton" className="autopilot-button"><span>AUTO</span></div>
                     <div id="speedContainerMask" className="speed-container-hide">
                         <table><tbody><tr><td>
                             <div id="speedContainer">

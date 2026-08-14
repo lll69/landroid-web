@@ -64,11 +64,11 @@
         <h1>LAndroid-Web</h1>
         <section>
             <p>Play <b>Android 14 (Upside Down Cake) and Android 15 (Vanilla Ice Cream) / 16 (Baklava) Easter Egg</b> game online!</p>
-            <a class="play-link play-link-main" href="player.html"><button><b>Click here to play Android 14(U) Easter Egg</b></button></a>
+            <a class="play-link play-link-main" href="player.html"><button style="margin-bottom:8px"><b>Click here to play Android 14(U) Easter Egg</b></button></a>
             <br>
+            <a class="play-link play-link-main" href="player15.html"><button style="margin-bottom:8px"><b>Click here to play Android 15(V) Easter Egg</b></button></a>
             <br>
-            <a class="play-link play-link-main" href="player15.html"><button><b>Click here to play Android 15(V)/16(Baklava) Easter Egg</b></button></a>
-            <br>
+            <a class="play-link play-link-main" href="player15.html#is16=1"><button style="margin-bottom:8px"><b>Click here to play Android 16(Baklava) Easter Egg</b></button></a>
             <br>
             <p><a href="viewer.html">Android 14/15/16 Easter Egg Planet Viewer</a></p>
             <p><a href="eggs/">Fullscreen / Other Versions of Android Easter Eggs</a></p>
@@ -86,7 +86,9 @@
                 <legend>Version</legend>
                 <label><input type="radio" name="version" id="version14"> Android 14 (Upside Down Cake)</label>
                 <br>
-                <label><input type="radio" name="version" id="version15" checked> Android 15 (Vanilla Ice Cream) / 16 (Baklava)</label>
+                <label><input type="radio" name="version" id="version15" checked> Android 15 (Vanilla Ice Cream)</label>
+                <br>
+                <label><input type="radio" name="version" id="version16"> Android 16 (Baklava)</label>
             </fieldset>
             <fieldset>
                 <legend>Random seed</legend>
@@ -158,7 +160,7 @@
             } else {
                 zoomOption = "manual";
             }
-            location.href = "player" + (document.getElementById("version15").checked ? "15" : "") + ".html#seed=" + seedOption + "&zoom=" + zoomOption;
+            location.href = "player" + (!document.getElementById("version14").checked ? "15" : "") + ".html#seed=" + seedOption + "&zoom=" + zoomOption + (document.getElementById("version16").checked ? "&is16=1" : "");
         });
     </script>
     <script defer async src="/counter.js"></script>
