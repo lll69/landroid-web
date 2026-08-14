@@ -69,7 +69,10 @@ export function PlatLogoActivityKitKat(canvas: HTMLCanvasElement, enterDessertCa
     }
 
     function onSizeChanged(w: number, h: number) {
-        if (mWidth == w && mHeight == h) return;
+        if (mWidth == w && mHeight == h) {
+            draw(); // avoid black screen
+            return;
+        }
         mWidth = w;
         mHeight = h;
         draw();

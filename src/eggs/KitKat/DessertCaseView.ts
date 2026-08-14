@@ -329,7 +329,10 @@ export function DessertCaseView(canvas: HTMLCanvasElement) {
     }
 
     function onSizeChanged(w: number, h: number) {
-        if (mWidth == w && mHeight == h) return;
+        if (mWidth == w && mHeight == h) {
+            draw(); // avoid black screen
+            return;
+        }
 
         const wasStarted = mStarted;
         if (wasStarted) {
