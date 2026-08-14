@@ -537,15 +537,19 @@ export function DessertCaseView(canvas: HTMLCanvasElement) {
 
     function tick(time: number) {
         let i = 0;
+        let hasAnim = false;
         while (i < animList.length) {
             const anim = animList[i];
+            hasAnim = true;
             if (!anim.tick(time)) {
                 animList.splice(i, 1);
             } else {
                 i++;
             }
         }
-        draw();
+        if (hasAnim) {
+            draw();
+        }
     }
 
     function draw() {

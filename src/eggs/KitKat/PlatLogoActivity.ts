@@ -82,8 +82,10 @@ export function PlatLogoActivityKitKat(canvas: HTMLCanvasElement, enterDessertCa
 
     function tick(time: number) {
         let i = 0;
+        let hasAnim = false;
         while (i < animList.length) {
             const anim = animList[i];
+            hasAnim = true;
             if (!anim.tick(time)) {
                 anim.tick(time);
                 animList.splice(i, 1);
@@ -91,7 +93,9 @@ export function PlatLogoActivityKitKat(canvas: HTMLCanvasElement, enterDessertCa
                 i++;
             }
         }
-        draw();
+        if (hasAnim) {
+            draw();
+        }
     }
 
     function drawText(text: string, font: string, alpha: number, rotation: number, fill: string, bottom: boolean) {
@@ -158,6 +162,10 @@ export function PlatLogoActivityKitKat(canvas: HTMLCanvasElement, enterDessertCa
         drawText("ANDROID 4.4", `${textSize}px sans-serif-light`, tv.alpha, tv.rotation, "white", true);
     }
 
+    function start() {
+        letterView.animate().setDuration(2000).start(); // avoid black screen
+    }
+
     function onClick(longClick: boolean) {
         if (!logoShown) {
             if (!longClick) {
@@ -204,5 +212,5 @@ export function PlatLogoActivityKitKat(canvas: HTMLCanvasElement, enterDessertCa
     tv = new ChildViewBase(startAnim);
     tv.alpha = 0;
 
-    return [initAsync, tick, onSizeChanged, onClick] as [typeof initAsync, typeof tick, typeof onSizeChanged, typeof onClick];
+    return [initAsync, start, tick, onSizeChanged, onClick] as [typeof initAsync, typeof start, typeof tick, typeof onSizeChanged, typeof onClick];
 }

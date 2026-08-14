@@ -48,7 +48,7 @@ const DEFAULT_LONG_PRESS_TIMEOUT = 500;
         ];
     },
     createPlatLogoActivity: async (c: HTMLCanvasElement, enterDessertCase: () => void) => {
-        const [initAsync, tick, onSizeChanged, onClick] = PlatLogoActivityKitKat(c, enterDessertCase);
+        const [initAsync, start, tick, onSizeChanged, onClick] = PlatLogoActivityKitKat(c, enterDessertCase);
         let resizeObserver: ResizeObserver | undefined;
         let animFrame = -1, down = false, longTimeout: any = -1;
         function resize() {
@@ -98,6 +98,7 @@ const DEFAULT_LONG_PRESS_TIMEOUT = 500;
                 c.addEventListener("pointercancel", handler);
                 resize();
                 (resizeObserver = new ResizeObserver(resize)).observe(c);
+                start();
                 anim(performance.now());
             },
             () => { // stop
