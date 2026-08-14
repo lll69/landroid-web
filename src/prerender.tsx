@@ -128,8 +128,8 @@ function renderPlayer15() {
             <head>
                 <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
-                <title>LAndroid 15(V) Easter Egg Simulator</title>
-                <meta name="description" content="LAndroid - Play Android 15(V) Easter Egg game online in the browser!" />
+                <title>LAndroid 15(V)/16(Baklava) Easter Egg Simulator</title>
+                <meta name="description" content="LAndroid - Play Android 15(V)/16(Baklava) Easter Egg game online in the browser!" />
                 <link rel="stylesheet" href="player.css" />
                 <link rel="shortcut icon" type="image/svg+xml" href="favicon15.svg" />
                 <style>{`
