@@ -162,12 +162,21 @@ const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, s
                     }
                     currentCanvas = document.createElement("canvas");
                     currentCanvas.style.width = currentCanvas.style.height = "100%";
+                    currentCanvas.style.backgroundColor = "black";
                     eggContentEl.appendChild(currentCanvas);
-                    currentCancelFunction = await KitKatPlugin.showDessertCaseView(currentCanvas);
+                    function enterDessertCase() {
+                        stopPlatLogo();
+                        currentCancelFunction = stopDessertCase;
+                        startDessertCase();
+                    }
+                    const [startPlatLogo, stopPlatLogo] = await KitKatPlugin.createPlatLogoActivity(currentCanvas, enterDessertCase);
+                    const [startDessertCase, stopDessertCase] = await KitKatPlugin.createDessertCaseView(currentCanvas);
                     setLoad(false);
-                    setMask(true);
+                    setMask(false);
                     rootEl.className = "animatable-left";
                     eggContentEl.className = "animatable-mid";
+                    currentCancelFunction = stopPlatLogo;
+                    startPlatLogo();
                 }
                 if (!((window as any).KitKatPlugin)) {
                     (async () => {

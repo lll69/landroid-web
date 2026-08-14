@@ -1,3 +1,4 @@
 export type KitKatPlugin = {
-    showDessertCaseView: (c: HTMLCanvasElement) => Promise<() => void>;
+    createDessertCaseView: (c: HTMLCanvasElement) => Promise<[start: () => void, stop: () => void]>;
+    createPlatLogoActivity: (c: HTMLCanvasElement, enterDessertCase: () => void) => Promise<[start: () => void, stop: () => void]>;
 }

@@ -25,6 +25,8 @@ function o(t: number, s: number) {
     return t * t * ((s + 1) * t + s);
 }
 
+let instance: AnticipateOvershootInterpolator | undefined;
+
 /**
  * An interpolator where the change starts backward then flings forward and overshoots
  * the target value and finally goes back to the final value.
@@ -51,5 +53,12 @@ export class AnticipateOvershootInterpolator implements TimeInterpolator {
         // f(t) = 0.5 * (o(t * 2 - 2, tension * extraTension) + 2), when t <= 1.0
         if (t < 0.5) return 0.5 * a(t * 2.0, this.mTension);
         else return 0.5 * (o(t * 2.0 - 2.0, this.mTension) + 2.0);
+    }
+    
+    static getInstance(): AnticipateOvershootInterpolator {
+        if (!instance) {
+            instance = new AnticipateOvershootInterpolator();
+        }
+        return instance;
     }
 }

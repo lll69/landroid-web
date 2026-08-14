@@ -36,7 +36,7 @@ export class ViewAnimation {
         this.startRotation = this.endRotation = view.rotation;
         this.startAlpha = this.endAlpha = view.alpha;
 
-        this.duration = 1;
+        this.duration = 300;
         this.startTime = 0;
         this.startDelayTime = 0;
         this.cancelled = false;
@@ -92,8 +92,9 @@ export class ViewAnimation {
         return this;
     }
 
-    startDelay(startDelayTime: number) {
+    setStartDelay(startDelayTime: number) {
         this.startDelayTime = startDelayTime;
+        return this;
     }
 
     start() {
@@ -113,7 +114,7 @@ export class ViewAnimation {
         this.view.scaleX = lerp(this.startScaleX, this.endScaleX, pct);
         this.view.scaleY = lerp(this.startScaleY, this.endScaleY, pct);
         this.view.rotation = lerp(this.startRotation, this.endRotation, pct);
-        this.view.alpha = lerp(this.startAlpha, this.endAlpha, pct);
+        this.view.alpha = clamp(lerp(this.startAlpha, this.endAlpha, pct), 0, 1);
         return !end;
     }
 

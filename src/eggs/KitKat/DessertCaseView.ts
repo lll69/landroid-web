@@ -549,6 +549,7 @@ export function DessertCaseView(canvas: HTMLCanvasElement) {
     }
 
     function draw() {
+        ctx.globalAlpha = 1;
         ctx.clearRect(0, 0, mWidth, mHeight);
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, mWidth, mHeight);
