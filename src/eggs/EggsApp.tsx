@@ -31,7 +31,7 @@ const iframeMap = {
     "VanillaIceCream": "/eggs/VanillaIceCream/PlatLogoActivity.html",
     "UpsideDownCakePlayer": "/player.html",
     "VanillaIceCreamPlayer": "/player15.html",
-    "Baklava": "/player15.html",
+    "Baklava": "/player15.html#is16=1",
     "Gingerbread": "/eggs/Gingerbread/PlatLogoActivity.html",
     "Honeycomb": "/eggs/Honeycomb/PlatLogoActivity.html",
     "IceCreamSandwich": "/eggs/IceCreamSandwich/PlatLogoActivity.html",

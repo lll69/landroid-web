@@ -16,7 +16,7 @@
 
 import { CanvasHelper } from "./CanvasHelper";
 import { setDrawFlag } from "./Flag15";
-import { DEFAULT_CAMERA_ZOOM, getCamZoom, MainActivity15, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setPlaySpeed, setRandomSeedType } from "./MainActivity15";
+import { DEFAULT_CAMERA_ZOOM, getCamZoom, MainActivity15, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setIsBaklava, setPlaySpeed, setRandomSeedType } from "./MainActivity15";
 import { initSpeedControl } from "./playerSpeed";
 
 const unsupportedFeatures: Array<String> = [];
@@ -103,6 +103,12 @@ function loadParams() {
         setDrawFlag(true);
     } else if (drawFlagStr === "false" || drawFlagStr === "0") {
         setDrawFlag(false);
+    }
+    const baklavaStr = params.get("is16");
+    if (baklavaStr === "true" || baklavaStr === "1") {
+        setIsBaklava(true);
+    } else if (baklavaStr === "false" || baklavaStr === "0") {
+        setIsBaklava(false);
     }
 }
 loadParams();

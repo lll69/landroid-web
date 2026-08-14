@@ -64,6 +64,8 @@ let playSpeed = 1;
 let camZoom = DEFAULT_CAMERA_ZOOM;
 let cachedMassString = "";
 
+let isBaklava = false;
+
 const atan2 = Math.atan2;
 const floor = Math.floor;
 const max = Math.max;
@@ -155,7 +157,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15,
                 "  ATMO: " + it.atmosphere + "\n" +
                 " FAUNA: " + it.fauna + "\n" +
                 " FLORA: " + it.flora + "\n");
-        const topString = "  STAR: " + star.name + " (VIC-" + (universe.randomSeed % 100_000n) + ")\n" +
+        const topString = "  STAR: " + star.name + " (" + (isBaklava ? "BKL" : "VIC") + "-" + (universe.randomSeed % 100_000n) + ")\n" +
             " CLASS: " + StarClassNames[star.cls] + "\n" +
             "RADIUS: " + floor(star.radius) + "\n" +
             cachedMassString +
@@ -308,6 +310,10 @@ export function setFixedRandomSeed(seed: bigint) {
 
 export function setPlaySpeed(speed: number) {
     playSpeed = speed;
+}
+
+export function setIsBaklava(baklava: boolean) {
+    isBaklava = baklava;
 }
 
 export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement,
