@@ -86,6 +86,9 @@ const DEFAULT_LONG_PRESS_TIMEOUT = 500;
                         onClick(false);
                     }
                     break;
+                case "contextmenu":
+                    e.preventDefault();
+                    break;
             }
         };
         await initAsync();
@@ -96,6 +99,7 @@ const DEFAULT_LONG_PRESS_TIMEOUT = 500;
                 c.addEventListener("pointerdown", handler);
                 c.addEventListener("pointerup", handler);
                 c.addEventListener("pointercancel", handler);
+                c.addEventListener("contextmenu", handler);
                 resize();
                 (resizeObserver = new ResizeObserver(resize)).observe(c);
                 start();
@@ -108,6 +112,7 @@ const DEFAULT_LONG_PRESS_TIMEOUT = 500;
                 c.removeEventListener("pointerdown", handler);
                 c.removeEventListener("pointerup", handler);
                 c.removeEventListener("pointercancel", handler);
+                c.removeEventListener("contextmenu", handler);
             }
         ];
     },
