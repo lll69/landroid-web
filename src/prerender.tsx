@@ -54,7 +54,7 @@ height: 100%;
 position: fixed;
 width: 100%;
 height: 100%;
-transition: transform 0.2s ease-in;
+transition: transform 0.2s ease-out;
 `/*overflow: auto;*/ + `
 }
 .animatable-left {
