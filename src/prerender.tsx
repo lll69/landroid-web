@@ -1,4 +1,5 @@
 import { argv } from 'node:process';
+import { readFileSync } from 'node:fs';
 import { renderToString } from 'react-dom/server';
 import ViewerApp from './ViewerApp';
 import EggsApp from './eggs/EggsApp';
@@ -102,8 +103,8 @@ function renderPlayer() {
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
                 <title>LAndroid 14(U) Easter Egg Simulator</title>
                 <meta name="description" content="LAndroid - Play Android 14(U) Easter Egg game online in the browser!" />
-                <link rel="stylesheet" href="player.css" />
                 <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+                <style dangerouslySetInnerHTML={{ __html: readFileSync("./static/player.css", "utf-8") }}></style>
             </head>
             <body>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -130,8 +131,8 @@ function renderPlayer15() {
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
                 <title>LAndroid 15(V)/16(Baklava) Easter Egg Simulator</title>
                 <meta name="description" content="LAndroid - Play Android 15(V)/16(Baklava) Easter Egg game online in the browser!" />
-                <link rel="stylesheet" href="player.css" />
                 <link rel="shortcut icon" type="image/svg+xml" href="favicon15.svg" />
+                <style dangerouslySetInnerHTML={{ __html: readFileSync("./static/player.css", "utf-8") }}></style>
                 <style>{`
 .speed-container-hide {
 visibility: hidden;
