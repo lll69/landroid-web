@@ -65,6 +65,7 @@ let camZoom = DEFAULT_CAMERA_ZOOM;
 let cachedMassString = "";
 
 let isBaklava = false;
+let isControlsShow = false;
 
 const atan2 = Math.atan2;
 const floor = Math.floor;
@@ -164,7 +165,7 @@ function Telemetry(universe: VisibleUniverse, autopilot: Autopilot15,
             "BODIES: " + explored.length + " / " + universe.planets.length + "\n" +
             "   FPS: " + ((universe.realDt * playSpeed) === 0 ? "Paused" : fps.toFixed(1)) + "\n" +
             "  vFPS: " + ((universe.dt * playSpeed) === 0 ? "Paused" : vFps.toFixed(1)) + "\n" +
-            " SPEED: " + playSpeed.toFixed(2) + "x"
+            (isControlsShow ? " SPEED: " + playSpeed.toFixed(2) + "x" : "")
             + "\n\n"
             + explored.join("\n");
         topTextNode.textContent = topString;
@@ -390,6 +391,9 @@ export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement,
             space(context, helper);
             flightStickDraw(context, helper);
             telemetry(millis);
+        },
+        setControlsShow: (show: boolean) => {
+            isControlsShow = show;
         }
     };
 }
