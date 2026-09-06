@@ -210,8 +210,8 @@ function Spaaaace(
             //            cameraZoom = lerp(0.1f, 5f, smooth(1f-normalizedDist))
             const targetZoom = clamp(500 / distToNearestSurf, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
             cameraZoom = isBaklava ? expSmooth(cameraZoom, targetZoom, u.dt, 1.5) : targetZoom;
-        } else if (!TOUCH_CAMERA_ZOOM) cameraZoom = DEFAULT_CAMERA_ZOOM;
-        else cameraZoom = camZoom;
+        } else if (!TOUCH_CAMERA_ZOOM) cameraZoom = isBaklava ? expSmooth(cameraZoom, DEFAULT_CAMERA_ZOOM, u.dt, 5) : DEFAULT_CAMERA_ZOOM;
+        else cameraZoom = isBaklava ? expSmooth(cameraZoom, camZoom, u.dt, 5) : camZoom;
         if (!TOUCH_CAMERA_PAN) {
             const follow = u.follow;
             if (follow !== null) {
