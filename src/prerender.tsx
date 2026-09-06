@@ -82,7 +82,7 @@ transform: translate(100%, 0);
                 <div id="egg-content3" className="animatable-right"></div>
                 <div id="iframe-backdrop" hidden>
                     <Backdrop
-                        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important", backdropFilter: "blur(4px)" })}
+                        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important" })}
                         open>
                         <CircularProgress color="inherit" />
                     </Backdrop>

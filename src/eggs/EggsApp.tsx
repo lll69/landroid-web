@@ -417,7 +417,7 @@ export default memo(({ P }: { P?: boolean }) => {
                     <p><Link target="_blank" href="https://github.com/lll69/landroid-web">Source Code<OpenInNew fontSize="inherit" /></Link></p>
                 </Container>
                 <Backdrop
-                    sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important", backdropFilter: "blur(4px)" })}
+                    sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1, opacity: "1 !important" })}
                     open={showMask} />
             </ThemeProvider>
         </FillScrollDiv>
