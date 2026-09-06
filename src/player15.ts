@@ -332,6 +332,5 @@ speedButton.addEventListener("click", initSpeedControl((newSpeed: number, text: 
 setTimeout(function () {
     onCanvasResize();
     new ResizeObserver(onCanvasResize).observe(canvas);
-    if (!getIsBaklava()) showControlsAutoHide();
     setTimeout(() => animationID = requestAnimationFrame(animation), 0);
 }, 0);
