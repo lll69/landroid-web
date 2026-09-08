@@ -206,7 +206,9 @@ function setAutoPilotState(newState: boolean) {
 function hideControls() {
     controlsShow = false;
     activity.setControlsShow(false);
+    zoomSelect.removeEventListener("blur", showControlsAutoHide);
     zoomSelect.blur();
+    zoomSelect.addEventListener("blur", showControlsAutoHide);
     clearInterval(controlsInterval);
     controlsContainer.classList.remove("controls-show");
     updateAutopilotButton();
