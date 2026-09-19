@@ -190,7 +190,7 @@ function render404() {
                 <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
                 <title>404 Not Found</title>
-                <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+                <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
             </head>
             <body>
                 <h1>404 Not Found</h1>
