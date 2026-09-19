@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { renderToString } from 'react-dom/server';
 import ViewerApp from './ViewerApp';
 import EggsApp from './eggs/EggsApp';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Link } from '@mui/material';
 
 const manifest = JSON.parse(argv[2]);
 const result: string[][] = [];
@@ -183,11 +183,32 @@ visibility: hidden;
     result.push(["player15.html", html]);
 }
 
+function render404() {
+    const html = "<!DOCTYPE html>\n" + renderToString(
+        <html>
+            <head>
+                <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
+                <meta name="viewport" content="width=device-width,initial-scale=1" />
+                <title>404 Not Found</title>
+                <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+            </head>
+            <body>
+                <h1>404 Not Found</h1>
+                <Link href="/">Back to Home</Link>
+                <br />
+                <Link href="/eggs/">Back to Eggs</Link>
+            </body>
+        </html>
+    );
+    result.push(["404.html", html]);
+}
+
 function main() {
     renderViewer();
     renderEggsApp();
     renderPlayer();
     renderPlayer15();
+    render404();
 }
 
 main();
