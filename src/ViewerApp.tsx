@@ -333,7 +333,7 @@ const CalendarPart = ({ topRef, showCount, setShowCount, date, setDate, truncate
 
 const DialogPart = ({ seed, show, setShow }: { seed: number, show: boolean, setShow: (_: boolean) => void }) => {
     const [version, setVersion] = React.useState("v15");
-    const link = "player" + (version === "v15" ? "15" : "") + ".html#seed=" + seed;
+    const link = "player" + (version !== "v14" ? "15" : "") + ".html#seed=" + seed + (version === "v16" ? "&is16=1" : "");
     const closeDialog = () => setShow(false);
     return (
         <Dialog
@@ -350,6 +350,7 @@ const DialogPart = ({ seed, show, setShow }: { seed: number, show: boolean, setS
                         name="radio-buttons-group">
                         <FormControlLabel value="v14" control={<Radio />} label="Android 14 (Upside Down Cake)" />
                         <FormControlLabel value="v15" control={<Radio />} label="Android 15 (Vanilla Ice Cream)" />
+                        <FormControlLabel value="v16" control={<Radio />} label="Android 16 (Baklava)" />
                     </RadioGroup>
                 </FormControl>
             </DialogContent>
@@ -426,7 +427,7 @@ export default ({ P }: { P?: boolean }) => {
                 <Box sx={{ my: 2 }}>
                     <p>
                         View the daily planets of LAndroid Easter Egg (Android 14/15/16 Easter Egg), including the names, types, and total numbers of stars and planets.
-                        You can also view the content for past or future days.
+                        You can also view the content for past or future days, and play LAndroid Easter Egg for specific days.
                     </p>
                     <p>We use the generation algorithm from the original Easter Egg, but the content cannot be guaranteed to match the original.</p>
                     <center>
