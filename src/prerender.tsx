@@ -97,7 +97,7 @@ transform: translate(100%, 0);
 
 function renderPlayer() {
     const html = "<!DOCTYPE html>\n" + renderToString(
-        <html>
+        <html style={{ "colorScheme": "light dark" }}>
             <head>
                 <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -125,7 +125,7 @@ function renderPlayer() {
 
 function renderPlayer15() {
     const html = "<!DOCTYPE html>\n" + renderToString(
-        <html>
+        <html style={{ "colorScheme": "light dark" }}>
             <head>
                 <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
