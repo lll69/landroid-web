@@ -315,6 +315,13 @@ export function setPlaySpeed(speed: number) {
 }
 
 export function setIsBaklava(baklava: boolean) {
+    if (baklava != isBaklava) {
+        const iconLink = document.querySelector("link[rel=\"shortcut icon\"]") as HTMLLinkElement;
+        if (iconLink) {
+            const newUrl = baklava ? "baklava_platlogo.svg" : "favicon15.svg";
+            iconLink.href = newUrl;
+        }
+    }
     isBaklava = baklava;
 }
 
