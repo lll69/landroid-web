@@ -193,8 +193,16 @@ body {
 #speedContainer {
     display: inline-block;
     background-color: white;
+    color: black;
     border-radius: 8px;
     padding: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+    #speedContainer {
+        background-color: #121212;
+        color: white;
+    }
 }
 
 #speedIntegral,
