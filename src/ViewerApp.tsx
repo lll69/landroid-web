@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { sprintf } from 'sprintf-js';
 import { OpenInNew } from "@mui/icons-material";
-import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, CircularProgress, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useScrollTrigger } from '@mui/material';
+import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, CircularProgress, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useMediaQuery, useScrollTrigger } from '@mui/material';
 import { CalendarPicker, LocalizationProvider, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { Moment } from 'moment';
@@ -125,6 +125,32 @@ const themes = [
     themeK,
     themeK,
     createTheme(theme, { palette: { primary: theme.palette.Star_M } }),
+];
+
+let themeDark = createTheme({ palette: { mode: "dark" } });
+
+themeDark = createTheme(themeDark, {
+    palette: {
+        Star_O: themeDark.palette.augmentColor({ color: { main: "#6666FF" } }),
+        Star_B: themeDark.palette.augmentColor({ color: { main: "#CCCCFF" } }),
+        Star_A: themeDark.palette.augmentColor({ color: { main: "#EEEEFF" } }),
+        Star_F: themeDark.palette.augmentColor({ color: { main: "#FFFFFF" } }),
+        Star_G: themeDark.palette.augmentColor({ color: { main: "#FFFF66" } }),
+        Star_K: themeDark.palette.augmentColor({ color: { main: "#FFCC33" } }),
+        Star_M: themeDark.palette.augmentColor({ color: { main: "#FF8800" } }),
+    }
+});
+
+const themeBDark = createTheme(themeDark, { palette: { primary: theme.palette.Star_B } });
+const themeKDark = createTheme(themeDark, { palette: { primary: theme.palette.Star_K } });
+const themesDark = [
+    createTheme(themeDark, { palette: { primary: theme.palette.Star_O } }),
+    themeBDark,
+    themeBDark,
+    themeBDark,
+    themeKDark,
+    themeKDark,
+    createTheme(themeDark, { palette: { primary: theme.palette.Star_M } }),
 ];
 
 const momentToSeed = (moment: Moment) => {
@@ -409,13 +435,14 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
 }
 
 export default ({ P }: { P?: boolean }) => {
+    const darkMode = P || useMediaQuery("(prefers-color-scheme: dark)");
     const [themeIndex, setThemeIndex] = React.useState(initialStarClass as number);
     return (
-        <ThemeProvider theme={P ? theme : themes[themeIndex]}>
+        <ThemeProvider theme={P ? themeDark : (darkMode ? themesDark : themes)[themeIndex]}>
             <CssBaseline />
             <HideOnScroll>
                 <AppBar>
-                    <Toolbar sx={{ bgcolor: "primary.main", transition: colorTransitionStr }}>
+                    <Toolbar sx={{ bgcolor: darkMode ? undefined : "primary.main", transition: colorTransitionStr }}>
                         <Typography variant="h6" component="h1">
                             LAndroid Easter Egg Planet Viewer
                         </Typography>
