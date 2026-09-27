@@ -185,7 +185,7 @@ visibility: hidden;
 
 function render404() {
     const html = "<!DOCTYPE html>\n" + renderToString(
-        <html>
+        <html style={{ "colorScheme": "light dark" }}>
             <head>
                 <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
