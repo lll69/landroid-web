@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { Fullscreen, FullscreenExit, KeyboardArrowDown, OpenInNew } from "@mui/icons-material";
 import { AppBar, Backdrop, Box, Button, ButtonBase, Card, CardContent, CircularProgress, Container, createTheme, CssBaseline, IconButton, Link, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import { memo, MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { API_LEVELS, VERSIONS } from "./VersionData";
+import { API_LEVELS, EMPTY_SVG, VERSIONS } from "./VersionData";
 import { VersionGroup, VersionItem } from "./VersionType";
 import { VERSION_CODES } from "./VersionCode";
 import { KitKatPlugin } from "./KitKat/types";
@@ -48,6 +48,22 @@ const iframeNoOverlayList = new Set([
     "Nyandroid",
 ]);
 
+const DEFAULT_TITLE = "Android Easter Eggs Online";
+const TITLE_SUFFIX = " - landroid.js.org";
+
+const titleMap = {
+    "UpsideDownCake": "Landroid" + TITLE_SUFFIX,
+    "VanillaIceCream": "Landroid" + TITLE_SUFFIX,
+    "UpsideDownCakePlayer": "LAndroid 14(U) Easter Egg Simulator",
+    "VanillaIceCreamPlayer": "LAndroid 15(V) Easter Egg Simulator",
+    "Baklava": "LAndroid 16(Baklava) Easter Egg Simulator",
+    "Gingerbread": "Gingerbread" + TITLE_SUFFIX,
+    "Honeycomb": "Honeycomb" + TITLE_SUFFIX,
+    "IceCreamSandwich": "Nyandroid" + TITLE_SUFFIX,
+    "Nyandroid": "Nyandroid" + TITLE_SUFFIX,
+    "JellyBean": "BeanBag" + TITLE_SUFFIX,
+}
+
 const iframe3List = new Set([
     "UpsideDownCakePlayer",
     "VanillaIceCreamPlayer",
@@ -59,11 +75,20 @@ let currentIframe: HTMLIFrameElement | null = null;
 let currentIframe3: HTMLIFrameElement | null = null;
 let currentCanvas: HTMLCanvasElement | null = null;
 let currentCancelFunction: (() => void) | null = null;
+const replaceIcon = (iconUrl: string) => {
+    const iconLink = document.querySelector("link[rel=\"shortcut icon\"]") as HTMLLinkElement;
+    if (iconLink) {
+        iconLink.href = iconUrl;
+    }
+}
 const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, setMask: (mask: boolean) => void) => {
     const rootEl = document.getElementById("root") as HTMLDivElement;
     const eggContentEl = document.getElementById("egg-content") as HTMLDivElement;
     const eggContent3El = document.getElementById("egg-content3") as HTMLDivElement;
     if (name !== null) {
+        if (titleMap[name] !== undefined) {
+            document.title = titleMap[name];
+        }
         if (iframeMap[name] !== undefined) {
             // open iframe
             if (name === currentEgg) return;
@@ -199,6 +224,8 @@ const switchToEgg = (name: string | null, setLoad: (loading: boolean) => void, s
     }
 
     // null or default
+    document.title = DEFAULT_TITLE;
+    replaceIcon("/favicon.svg");
     if (null === currentEgg) return;
     currentEgg = name;
     if (currentIframe !== null) {
@@ -330,6 +357,9 @@ const EggsPart = memo(({ P }: { P?: boolean }) => {
             if (mapEgg === NO_EGG) {
                 setMessage("🤖🚫🥚");
             } else {
+                if (item.iconUrl !== EMPTY_SVG) {
+                    replaceIcon(item.iconUrl);
+                }
                 location.hash = "#" + mapEgg;
             }
         }
