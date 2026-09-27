@@ -459,8 +459,8 @@ export class Landing implements Constraint {
     }
     solve(sim: Simulator, dt: number) {
         if (this.ship !== null) {
-            this.ship.pos.x = this.ship.pos.x * 0 + (this.planet.pos.x + this.landingVector.x) * 1;
-            this.ship.pos.y = this.ship.pos.y * 0 + (this.planet.pos.y + this.landingVector.y) * 1; // @@@ FIXME
+            this.ship.pos.x = this.ship.pos.x * .5 + (this.planet.pos.x + this.landingVector.x) * .5;
+            this.ship.pos.y = this.ship.pos.y * .5 + (this.planet.pos.y + this.landingVector.y) * .5; // @@@ FIXME
             this.ship.angle = this.angle;
         }
     }
