@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg">
     <style>
+        @media (prefers-color-scheme: dark) {
+            html {
+                -webkit-filter: invert(1) hue-rotate(180deg);
+                filter: invert(1) hue-rotate(180deg);
+            }
+        }
+
         .play-link {
             font-size: 1.5em;
         }
