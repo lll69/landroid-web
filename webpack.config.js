@@ -81,7 +81,14 @@ export default {
   },
   optimization: {
     splitChunks: {
-      chunks: "all",
+      chunks(chunk) {
+        if (chunk.name) {
+          if (chunk.name.startsWith("eggs/")) {
+            return chunk.name == "eggs/index";
+          }
+        }
+        return true;
+      },
       minSize: 16384,
       minChunks: 2,
       filename: "A[name].[contenthash].js",
