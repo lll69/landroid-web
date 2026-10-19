@@ -65,7 +65,9 @@ const isInt = (str: string) => {
     return true;
 }
 
-const computeInitialDate: (() => Moment) = () => {
+const todayDate = moment();
+
+const computeDateByHashOrNull: (() => (Moment | null)) = () => {
     let initialDate: Moment | null = null;
     if (typeof location !== "undefined") {
         const hash = location.hash;
@@ -86,10 +88,12 @@ const computeInitialDate: (() => Moment) = () => {
             }
         }
     }
-    if (initialDate === null) {
-        initialDate = moment();
-    }
     return initialDate;
+}
+
+const computeInitialDate: (() => Moment) = () => {
+    const initialDate: Moment | null = computeDateByHashOrNull();
+    return initialDate == null ? todayDate : initialDate;
 }
 
 const initialDate = computeInitialDate();
@@ -397,11 +401,31 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
     const universe = getUniverse(date);
     const count = universe.planets.length;
     const starColor = ("Star_" + StarClassNames[universe.star.cls]) as StarColor;
-    const setDateDispatch = (date: Moment) => {
+    const setDateWithThemeAndTitle = React.useCallback((date: Moment) => {
         setDate(date);
         setTheme(getUniverse(date).star.cls);
+        if (date === todayDate) {
+            document.title = "LAndroid 14/15/16 Easter Egg Planet Viewer";
+        } else {
+            document.title = `Day ${date.format("L")} - LAndroid 14/15/16 Easter Egg Planet Viewer`;
+        }
+    }, []);
+    React.useEffect(() => setDateWithThemeAndTitle(date), []);
+    React.useEffect(() => {
+        const listener = () => {
+            const newDate: Moment | null = computeDateByHashOrNull();
+            if (!date.isSame(newDate))
+                setDateWithThemeAndTitle(newDate == null ? initialDate : newDate);
+        };
+        window.addEventListener("hashchange", listener);
+        return () => {
+            window.removeEventListener("hashchange", listener);
+        }
+    }, [date]);
+    const setDateDispatch = React.useCallback((date: Moment) => {
+        setDateWithThemeAndTitle(date);
         location.hash = "#" + momentToSeed(date);
-    }
+    }, []);
     return (
         <>
             <CalendarPart
