@@ -141,16 +141,16 @@ themeDark = createTheme(themeDark, {
     }
 });
 
-const themeBDark = createTheme(themeDark, { palette: { primary: theme.palette.Star_B } });
-const themeKDark = createTheme(themeDark, { palette: { primary: theme.palette.Star_K } });
+const themeBDark = createTheme(themeDark, { palette: { primary: themeDark.palette.Star_B } });
+const themeKDark = createTheme(themeDark, { palette: { primary: themeDark.palette.Star_K } });
 const themesDark = [
-    createTheme(themeDark, { palette: { primary: theme.palette.Star_O } }),
+    createTheme(themeDark, { palette: { primary: themeDark.palette.Star_O } }),
     themeBDark,
     themeBDark,
     themeBDark,
     themeKDark,
     themeKDark,
-    createTheme(themeDark, { palette: { primary: theme.palette.Star_M } }),
+    createTheme(themeDark, { palette: { primary: themeDark.palette.Star_M } }),
 ];
 
 const momentToSeed = (moment: Moment) => {
