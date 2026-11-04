@@ -1,6 +1,6 @@
 (function () {
-    const loadingElement = document.getElementById("loading");
-    const unsupportedFeatures = [];
+    var loadingElement = document.getElementById("loading");
+    var unsupportedFeatures = [];
     if (typeof BigInt === "undefined") {
         unsupportedFeatures.push("BigInt");
     }
@@ -8,13 +8,13 @@
         unsupportedFeatures.push("String.prototype.matchAll");
     }
     if (unsupportedFeatures.length > 0) {
-        let text = document.createElement("p");
+        var text = document.createElement("p");
         text.innerHTML = "Your browser does not support the following features:";
         loadingElement.innerHTML = "";
         loadingElement.appendChild(text);
-        const list = document.createElement("ul");
-        unsupportedFeatures.forEach(feature => {
-            const item = document.createElement("li");
+        var list = document.createElement("ul");
+        unsupportedFeatures.forEach(function (feature) {
+            var item = document.createElement("li");
             item.innerHTML = feature;
             list.appendChild(item);
         });
