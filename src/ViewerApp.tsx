@@ -440,6 +440,7 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
                 <p>
                     <b>Easter egg content on {date.format("L")}:</b>
                     <Button sx={{ margin: "0 8px" }} variant="contained" onClick={() => setShowDialog(true)}>Play Online</Button>
+                    <br />Initial Position: <b>{universe.ship.pos.str()}</b>
                     <br />Number of planets: <b>{count}</b>
                 </p>
             </Box>
