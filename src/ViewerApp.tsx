@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { sprintf } from 'sprintf-js';
 import { OpenInNew } from "@mui/icons-material";
-import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, CircularProgress, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, Radio, RadioGroup, Slide, styled, ThemeProvider, Toolbar, Typography, useMediaQuery, useScrollTrigger } from '@mui/material';
+import { AppBar, Avatar, Badge, BadgeProps, Box, Button, Card, CardHeader, Checkbox, CircularProgress, Container, createTheme, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Link, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Slide, styled, TextField, ThemeProvider, Toolbar, Typography, useMediaQuery, useScrollTrigger } from '@mui/material';
 import { CalendarPicker, LocalizationProvider, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { Moment } from 'moment';
@@ -391,12 +391,119 @@ const DialogPart = ({ seed, show, setShow }: { seed: number, show: boolean, setS
         </Dialog>)
 }
 
+const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, findRef: React.RefObject<HTMLElement> }) => {
+    const MIN_NUMBER = 1;
+    const MAX_NUMBER = 91131;
+    const numberRef = React.useRef<HTMLInputElement>(null);
+    const [isNumberError, setNumberError] = React.useState<boolean>(false);
+    const [universeList, setUniverseList] = React.useState<VisibleUniverse15[] | null>(null);
+    const [selectedSeed, setSelectedSeed] = React.useState<string>("0");
+    const validateFindNumber = React.useCallback(() => {
+        const input = numberRef.current;
+        if (input == null) return false;
+        const value = input.valueAsNumber;
+        return value >= MIN_NUMBER && value <= MAX_NUMBER;
+    }, []);
+    const onInputChange = React.useCallback(() => {
+        if (universeList != null) setUniverseList(null);
+    }, [universeList]);
+    const revalidateFindNumber = React.useCallback(() => {
+        setNumberError(!validateFindNumber());
+        onInputChange();
+    }, [onInputChange]);
+    const onFindClick = React.useCallback(() => {
+        const input = numberRef.current;
+        if (input == null) return;
+        if (!validateFindNumber()) return;
+        const value = input.valueAsNumber;
+        const universes: VisibleUniverse15[] = [];
+        for (let base = 202; base <= 209; base++) {
+            const seed = BigInt(base * 100000 + value);
+            const universe = new VisibleUniverse15(new Namer15(), BigInt(seed));
+            universe.initRandom();
+            universes.push(universe);
+        }
+        setUniverseList(universes);
+        setSelectedSeed("0");
+    }, []);
+    const onUniverseSelect = React.useCallback((e: SelectChangeEvent<string>) => {
+        setSelectedSeed(e.target.value as string);
+    }, []);
+    const viewUniverse = React.useCallback(() => {
+        location.hash = "#" + selectedSeed;
+        if (topRef.current) topRef.current.scrollIntoView({ behavior: "smooth" });
+    }, [selectedSeed]);
+    return (
+        <Box id="find-part" textAlign="center" ref={findRef}>
+            <Typography variant="h5" component="p" sx={{ margin: "0.4em 0" }}>↓ ENTER INFO BELOW TO FIND A DAY ↓</Typography>
+            <p>
+                Fill in the information based on the first line on the screen, e.g.<br />
+                STAR: Lollipop Penultima (<b>VIC-60001</b>)
+            </p>
+            <Card sx={{ borderRadius: "16px", display: "inline-block" }}>
+                <Box sx={{ display: "inline-flex", flexDirection: "row", padding: "0 8px", alignItems: "center" }}>
+                    <TextField
+                        select
+                        label="Prefix"
+                        sx={{ margin: "8px 0" }}
+                        defaultValue="any"
+                        onChange={onInputChange}>
+                        <MenuItem value="any">Any-</MenuItem>
+                        <MenuItem value="udc">UDC-</MenuItem>
+                        <MenuItem value="vic">VIC-</MenuItem>
+                        <MenuItem value="bkl">BKL-</MenuItem>
+                        <MenuItem value="other">Other</MenuItem>
+                    </TextField>
+                    <TextField
+                        label="Number"
+                        type="number"
+                        error={isNumberError}
+                        sx={{ margin: "8px 0" }}
+                        inputProps={{ min: MIN_NUMBER, max: MAX_NUMBER }}
+                        inputRef={numberRef}
+                        onInput={revalidateFindNumber}
+                        defaultValue="10101" />
+                    <Button
+                        sx={{ margin: "0 8px" }}
+                        variant="contained"
+                        disabled={isNumberError}
+                        onClick={onFindClick}>Find</Button>
+                </Box>
+                {(universeList != null) && (<>
+                    <br />
+                    <Box sx={{ display: "inline-flex", flexDirection: "row", padding: "0 8px", alignItems: "center" }}>
+                        <Select
+                            sx={{ margin: "8px 0" }}
+                            value={selectedSeed}
+                            onChange={onUniverseSelect}>
+                            <MenuItem value="0">Select Star</MenuItem>
+                            {universeList.map(u => (
+                                <MenuItem
+                                    key={u.randomSeed}
+                                    value={String(u.randomSeed)}>
+                                    {u.star.name} ({String(u.randomSeed / 10000n)})
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <Button
+                            sx={{ margin: "0 8px" }}
+                            variant="contained"
+                            disabled={selectedSeed == "0"}
+                            onClick={viewUniverse}>View</Button>
+                    </Box>
+                </>)}
+            </Card>
+        </Box >
+    );
+}
+
 const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
     const [date, setDate] = React.useState(initialDate);
     const [showCount, setShowCount] = React.useState(false);
     const [showDialog, setShowDialog] = React.useState(false);
     const [truncateResult, setTruncateResult] = React.useState(true);
     const topRef = React.useRef<HTMLElement>(null);
+    const findPartRef = React.useRef<HTMLElement>(null);
     const seed = momentToSeed(date);
     const universe = getUniverse(date);
     const count = universe.planets.length;
@@ -436,10 +543,25 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
                 setDate={setDateDispatch}
                 truncate={truncateResult}
                 setTruncate={setTruncateResult} />
+            <center>
+                <Link
+                    href="#find-part"
+                    onClick={e => {
+                        if (findPartRef.current) {
+                            e.preventDefault();
+                            findPartRef.current.scrollIntoView({ behavior: "smooth" });
+                        }
+                    }}>
+                    Not sure which day? Click here to find out!
+                </Link>
+            </center>
             <Box>
                 <p>
                     <b>Easter egg content on {date.format("L")}:</b>
                     <Button sx={{ margin: "0 8px" }} variant="contained" onClick={() => setShowDialog(true)}>Play Online</Button>
+                    <br />Android 14 <b>STAR: {universe.star.name} (UDC-{String(universe.randomSeed % 100_000n)})</b>
+                    <br />Android 15 <b>STAR: {universe.star.name} (VIC-{String(universe.randomSeed % 100_000n)})</b>
+                    <br />Android 16 <b>STAR: {universe.star.name} (BKL-{String(universe.randomSeed % 100_000n)})</b>
                     <br />Initial Position: <b>{universe.ship.pos.str()}</b>
                     <br />Number of planets: <b>{count}</b>
                 </p>
@@ -448,6 +570,10 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
                 <PlanetCard key={-1} planet={universe.star} index={-1} count={count} color={starColor} truncate={truncateResult} />
                 {universe.planets.map((planet, index) => (<PlanetCard key={index} planet={planet} index={index} count={count} color={starColor} truncate={truncateResult} />))}
             </Box>
+            <Divider />
+            <FindPart
+                topRef={topRef}
+                findRef={findPartRef} />
             <Link href="#top" onClick={e => { if (topRef.current) { e.preventDefault(); topRef.current.scrollIntoView({ behavior: "smooth" }) } }}>Back to Top</Link>
             {" | "}
             <Link target="_blank" href="https://github.com/lll69/landroid-web">Source Code<OpenInNew fontSize="inherit" /></Link>
