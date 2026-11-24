@@ -16,7 +16,7 @@
 
 import { CanvasHelper } from "./CanvasHelper";
 import { setDrawFlag } from "./Flag15";
-import { DEFAULT_CAMERA_ZOOM, getCamZoom, getIsBaklava, MainActivity15, RandomSeedType, setCamZoom, setDynamicZoom, setFixedRandomSeed, setIsBaklava, setPlaySpeed, setRandomSeedType } from "./MainActivity15";
+import { DEFAULT_CAMERA_ZOOM, getCamZoom, getIsBaklava, MainActivity15, RandomSeedType, setCamZoom, setDisableSmoothZoom, setDynamicZoom, setFixedRandomSeed, setIsBaklava, setPlaySpeed, setRandomSeedType } from "./MainActivity15";
 import { initSpeedControl } from "./playerSpeed";
 
 const unsupportedFeatures: Array<String> = [];
@@ -299,10 +299,12 @@ function onPauseCheck() {
         pauseTime = performance.now();
         paused = true;
         disableTouch();
+        setDisableSmoothZoom(true);
     } else {
         pauseOffset += playSpeed * (performance.now() - pauseTime);
         paused = false;
         enableTouch();
+        setDisableSmoothZoom(false);
     }
     showControlsAutoHide();
 }

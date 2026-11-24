@@ -66,6 +66,7 @@ let cachedMassString = "";
 
 let isBaklava = false;
 let isControlsShow = false;
+let disableSmoothZoom = false;
 
 const atan2 = Math.atan2;
 const floor = Math.floor;
@@ -210,9 +211,9 @@ function Spaaaace(
             const distToNearestSurf = max(0, (u.ship.pos.distance(closest.pos)) - closest.radius * 1.2);
             //            cameraZoom = lerp(0.1f, 5f, smooth(1f-normalizedDist))
             const targetZoom = clamp(500 / distToNearestSurf, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
-            cameraZoom = isBaklava ? expSmooth(cameraZoom, targetZoom, u.dt, 1.5) : targetZoom;
-        } else if (!TOUCH_CAMERA_ZOOM) cameraZoom = isBaklava ? expSmooth(cameraZoom, DEFAULT_CAMERA_ZOOM, u.dt, 5) : DEFAULT_CAMERA_ZOOM;
-        else cameraZoom = isBaklava ? expSmooth(cameraZoom, camZoom, u.dt, 5) : camZoom;
+            cameraZoom = (isBaklava && !disableSmoothZoom) ? expSmooth(cameraZoom, targetZoom, u.dt, 1.5) : targetZoom;
+        } else if (!TOUCH_CAMERA_ZOOM) cameraZoom = (isBaklava && !disableSmoothZoom) ? expSmooth(cameraZoom, DEFAULT_CAMERA_ZOOM, u.dt, 5) : DEFAULT_CAMERA_ZOOM;
+        else cameraZoom = (isBaklava && !disableSmoothZoom) ? expSmooth(cameraZoom, camZoom, u.dt, 5) : camZoom;
         if (!TOUCH_CAMERA_PAN) {
             const follow = u.follow;
             if (follow !== null) {
@@ -327,6 +328,10 @@ export function setIsBaklava(baklava: boolean) {
 
 export function getIsBaklava() {
     return isBaklava;
+}
+
+export function setDisableSmoothZoom(newValue: boolean) {
+    disableSmoothZoom = newValue;
 }
 
 export function MainActivity15(topText: HTMLElement, bottomText: HTMLElement,
