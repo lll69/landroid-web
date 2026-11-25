@@ -67,14 +67,16 @@ const isInt = (str: string) => {
 
 const todayDate = moment();
 
-const computeDateByHashOrNull: (() => (Moment | null)) = () => {
+const computeDateByHashOrNull: ((input?: string) => (Moment | null)) = (input?: string) => {
     let initialDate: Moment | null = null;
-    if (typeof location !== "undefined") {
-        const hash = location.hash;
-        if (hash.length === 9) {
-            const yearStr = hash.substring(1, 5);
-            const monthStr = hash.substring(5, 7);
-            const dayStr = hash.substring(7, 9);
+    if (typeof input === "undefined" && typeof location !== "undefined") {
+        input = location.hash;
+    }
+    if (typeof input !== "undefined") {
+        if (input.length === 9) {
+            const yearStr = input.substring(1, 5);
+            const monthStr = input.substring(5, 7);
+            const dayStr = input.substring(7, 9);
             if (isInt(yearStr) && isInt(monthStr) && isInt(dayStr)) {
                 const year = parseInt(yearStr, 10);
                 const month = parseInt(monthStr, 10);
@@ -395,6 +397,7 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
     const MIN_NUMBER = 1;
     const MAX_NUMBER = 91131;
     const numberRef = React.useRef<HTMLInputElement>(null);
+    const [selectedPrefix, setSelectedPrefix] = React.useState<string>("choose");
     const [isNumberError, setNumberError] = React.useState<boolean>(false);
     const [universeList, setUniverseList] = React.useState<VisibleUniverse15[] | null>(null);
     const [selectedSeed, setSelectedSeed] = React.useState<string>("0");
@@ -402,11 +405,16 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
         const input = numberRef.current;
         if (input == null) return false;
         const value = input.valueAsNumber;
-        return value >= MIN_NUMBER && value <= MAX_NUMBER;
+        if (value < MIN_NUMBER || value > MAX_NUMBER) return false;
+        return true;
     }, []);
     const onInputChange = React.useCallback(() => {
         if (universeList != null) setUniverseList(null);
     }, [universeList]);
+    const onPrefixSelect = React.useCallback((e: SelectChangeEvent<string>) => {
+        setSelectedPrefix(e.target.value);
+        onInputChange();
+    }, [onInputChange]);
     const revalidateFindNumber = React.useCallback(() => {
         setNumberError(!validateFindNumber());
         onInputChange();
@@ -419,19 +427,28 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
         const universes: VisibleUniverse15[] = [];
         for (let base = 202; base <= 209; base++) {
             const seed = BigInt(base * 100000 + value);
-            const universe = new VisibleUniverse15(new Namer15(), BigInt(seed));
-            universe.initRandom();
-            universes.push(universe);
+            if (computeDateByHashOrNull("#" + seed) != null) {
+                const universe = new VisibleUniverse15(new Namer15(), BigInt(seed));
+                universe.initRandom();
+                universes.push(universe);
+            }
         }
         setUniverseList(universes);
         setSelectedSeed("0");
     }, []);
     const onUniverseSelect = React.useCallback((e: SelectChangeEvent<string>) => {
-        setSelectedSeed(e.target.value as string);
+        setSelectedSeed(e.target.value);
+    }, []);
+    const onKeyDown = React.useCallback((e: React.KeyboardEvent) => {
+        if ((e.key == "Enter" || e.keyCode == 13)) {
+            onFindClick();
+        }
     }, []);
     const viewUniverse = React.useCallback(() => {
         location.hash = "#" + selectedSeed;
-        if (topRef.current) topRef.current.scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => {
+            if (topRef.current) topRef.current.scrollIntoView({ behavior: "smooth" });
+        }, 100);
     }, [selectedSeed]);
     return (
         <Box id="find-part" textAlign="center" ref={findRef}>
@@ -446,13 +463,16 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
                         select
                         label="Prefix"
                         sx={{ margin: "8px 0" }}
-                        defaultValue="any"
-                        onChange={onInputChange}>
-                        <MenuItem value="any">Any-</MenuItem>
+                        value={selectedPrefix}
+                        SelectProps={{
+                            onChange: onPrefixSelect,
+                        }}>
+                        <MenuItem value="choose">Select Prefix</MenuItem>
                         <MenuItem value="udc">UDC-</MenuItem>
                         <MenuItem value="vic">VIC-</MenuItem>
-                        <MenuItem value="bkl">BKL-</MenuItem>
-                        <MenuItem value="other">Other</MenuItem>
+                        <MenuItem value="16">16-</MenuItem>
+                        <MenuItem value="17" disabled>17- (Unsupported)</MenuItem>
+                        <MenuItem value="other">Other (Might not match)</MenuItem>
                     </TextField>
                     <TextField
                         label="Number"
@@ -462,14 +482,15 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
                         inputProps={{ min: MIN_NUMBER, max: MAX_NUMBER }}
                         inputRef={numberRef}
                         onInput={revalidateFindNumber}
-                        defaultValue="10101" />
+                        onKeyDown={onKeyDown}
+                        defaultValue="60001" />
                     <Button
                         sx={{ margin: "0 8px" }}
                         variant="contained"
-                        disabled={isNumberError}
+                        disabled={isNumberError || selectedPrefix == "choose"}
                         onClick={onFindClick}>Find</Button>
                 </Box>
-                {(universeList != null) && (<>
+                {(universeList != null) && (universeList.length > 0 ? (<>
                     <br />
                     <Box sx={{ display: "inline-flex", flexDirection: "row", padding: "0 8px", alignItems: "center" }}>
                         <Select
@@ -491,7 +512,9 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
                             disabled={selectedSeed == "0"}
                             onClick={viewUniverse}>View</Button>
                     </Box>
-                </>)}
+                </>) : (
+                    <p>Error: Cannot find a valid date</p>
+                ))}
             </Card>
         </Box >
     );
