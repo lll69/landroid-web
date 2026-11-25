@@ -397,6 +397,7 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
     const MIN_NUMBER = 1;
     const MAX_NUMBER = 91131;
     const numberRef = React.useRef<HTMLInputElement>(null);
+    const starSelectRef = React.useRef<HTMLElement>(null);
     const [selectedPrefix, setSelectedPrefix] = React.useState<string>("choose");
     const [isNumberError, setNumberError] = React.useState<boolean>(false);
     const [universeList, setUniverseList] = React.useState<VisibleUniverse15[] | null>(null);
@@ -450,6 +451,11 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
             if (topRef.current) topRef.current.scrollIntoView({ behavior: "smooth" });
         }, 100);
     }, [selectedSeed]);
+    React.useEffect(() => {
+        if (universeList != null && universeList.length) {
+            if (starSelectRef.current != null) starSelectRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [universeList]);
     return (
         <Box id="find-part" textAlign="center" ref={findRef}>
             <Typography variant="h5" component="p" sx={{ margin: "0.4em 0" }}>↓ ENTER INFO BELOW TO FIND A DAY ↓</Typography>
@@ -494,6 +500,7 @@ const FindPart = ({ topRef, findRef }: { topRef: React.RefObject<HTMLElement>, f
                     <br />
                     <Box sx={{ display: "inline-flex", flexDirection: "row", padding: "0 8px", alignItems: "center" }}>
                         <Select
+                            ref={starSelectRef}
                             sx={{ margin: "8px 0" }}
                             value={selectedSeed}
                             onChange={onUniverseSelect}>
