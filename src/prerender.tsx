@@ -144,11 +144,11 @@ visibility: hidden;
                 <div id="app" className="fill">
                     <canvas id="canvasMain" className="canvas fill" hidden></canvas>
                     <div className="top-container" id="topContainer" hidden>
-                        <pre id="topText" className="container-text"></pre>
+                        <pre id="topText" className="container-text container-text-15"></pre>
                     </div>
                     <div className="bottom-container" id="bottomContainer" hidden>
-                        <pre id="autopilotText" className="container-text autopilot"></pre>
-                        <pre id="bottomText" className="container-text"></pre>
+                        <pre id="autopilotText" className="container-text container-text-15 autopilot"></pre>
+                        <pre id="bottomText" className="container-text container-text-15"></pre>
                     </div>
                     <div id="loading" className="loading">Loading...</div>
                     <div id="rightContainer" className="bottom-right-container controls-hidden">
