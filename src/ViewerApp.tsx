@@ -582,9 +582,6 @@ const AppContent = ({ setTheme }: { setTheme: (_: number) => void }) => {
                 <p>
                     <b>Easter egg content on {date.format("L")}:</b>
                     <Button sx={{ margin: "0 8px" }} variant="contained" onClick={() => setShowDialog(true)}>Play Online</Button>
-                    <br />Android 14 <b>STAR: {universe.star.name} (UDC-{String(universe.randomSeed % 100_000n)})</b>
-                    <br />Android 15 <b>STAR: {universe.star.name} (VIC-{String(universe.randomSeed % 100_000n)})</b>
-                    <br />Android 16 <b>STAR: {universe.star.name} (16-{String(universe.randomSeed % 100_000n)})</b>
                     <br />Initial Position: <b>{universe.ship.pos.str()}</b>
                     <br />Number of planets: <b>{count}</b>
                 </p>
